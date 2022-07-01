@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "lua.h": "c",
+        "util.h": "c"
+    }
+}

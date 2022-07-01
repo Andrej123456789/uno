@@ -1,19 +1,46 @@
-#include "lauxlib.h"
-#include "lua.h"
-#include "lualib.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main(int argc, char *argv[]) 
+#include "include/util.h"
+
+const char* logo_row1= " .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
+const char* logo_row2 = "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n";
+const char* logo_row3 = "| | _____  _____ | || | ____  _____  | || |     ____     | || |      _       | || |      _       | |\n";
+const char* logo_row4 = "| ||_   _||_   _|| || ||_   \|_   _| | || |   .'    `.   | || |     | |      | || |     | |      | |\n";
+const char* logo_row5 = "| |  | |    | |  | || |  |   \ | |   | || |  /  .--.  \  | || |  ___| |___   | || |  ___| |___   | |\n";
+const char* logo_row6 = "| |  | '    ' |  | || |  | |\ \| |   | || |  | |    | |  | || | |___   ___|  | || | |___   ___|  | |\n";
+const char* logo_row7 = "| |   \ `--' /   | || | _| |_\   |_  | || |  \  `--'  /  | || |     | |      | || |     | |      | |\n";
+const char* logo_row8 = "| |    `.__.'    | || ||_____|\____| | || |   `.____.'   | || |     |_|      | || |     |_|      | |\n";
+const char* logo_row9 = "| |              | || |              | || |              | || |              | || |              | |\n";
+const char* logo_row10 = "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------'|\n";
+const char* logo_row11 = " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n";
+
+char logo[];
+
+int main(void)
 {
-    printf(" \n ");
-    printf("\tNETWORK UNO - Uno in terminal with network in mind\n");
-    printf(" \n ");
+    strcat(logo, logo_row1);
+    strcat(logo, logo_row2);
+    strcat(logo, logo_row3);
+    strcat(logo, logo_row4);
+    strcat(logo, logo_row5);
+    strcat(logo, logo_row6);
+    strcat(logo, logo_row7);
+    strcat(logo, logo_row8);
+    strcat(logo, logo_row9);
+    strcat(logo, logo_row10);
+    strcat(logo, logo_row11);
 
-    lua_State *L = luaL_newstate();
-    luaL_openlibs(L);
-    luaL_dofile(L, "main.lua");
+    printf("%s\n", logo);
+    printf("\t\t\t\t\t Sorry for bad look! \t \n\n");
 
-    lua_close(L);
+    lua_State *L;
+    call(L, "main.lua", "Hello");
+
     return 0;
 }

@@ -1,1 +1,3 @@
-print("Hello world")
+function Hello()
+    io.write("Hello World from Lua\n")
+end
