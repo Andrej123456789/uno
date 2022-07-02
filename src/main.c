@@ -23,8 +23,9 @@ const char* logo_row10 = "| '--------------' || '--------------' || '-----------
 const char* logo_row11 = " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n";
 
 char logo[];
+int players;
 
-int main(void)
+int main(int argc, const char **argv)
 {
     strcat(logo, logo_row1);
     strcat(logo, logo_row2);
@@ -44,8 +45,23 @@ int main(void)
     /* lua_State *L;
     call(L, "main.lua", "Hello"); */
 
+    if (argc > 1)
+    {
+        players = atoi(argv[1]);
+    }
+
+    else
+    {
+        printf("Usage: ./main <players>\n");
+        printf("Example: ./main 2\n");
+        printf("\n");
+
+        printf("Enter number of players: ");
+        scanf("%d", &players);
+    }
+
     Setup();
-    Gameplay(1);
+    Gameplay(players);
 
     return 0;
 }

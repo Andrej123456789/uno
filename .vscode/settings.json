@@ -3,6 +3,7 @@
         "lua.h": "c",
         "util.h": "c",
         "gameplay.h": "c",
-        "setup.h": "c"
+        "setup.h": "c",
+        "lauxlib.h": "c"
     }
 }

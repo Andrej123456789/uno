@@ -116,9 +116,13 @@ void SetCards(int players)
         }
     }
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < players; i++)
     {
-        player[i].cards[i] = cards[rand() % 107];
-        printf("Player card: %d, Number: %d, Color: %d\n", i, player[i].cards[i].number, player[i].cards[i].color);
+        for (int j = 0; j < 8; j++)
+        {
+            player[j].cards[j] = cards[rand() % 107];
+            printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[j].cards[j].number, player[j].cards[j].color);
+        }
+        printf("\n");
     }
 }
