@@ -7,6 +7,8 @@
 #include <string.h>
 
 #include "include/util.h"
+#include "include/setup.h"
+#include "include/gameplay.h"
 
 const char* logo_row1= " .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
 const char* logo_row2 = "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n";
@@ -39,8 +41,11 @@ int main(void)
     printf("%s\n", logo);
     printf("\t\t\t\t\t Sorry for bad look! \t \n\n");
 
-    lua_State *L;
-    call(L, "main.lua", "Hello");
+    /* lua_State *L;
+    call(L, "main.lua", "Hello"); */
+
+    Setup();
+    Gameplay(1);
 
     return 0;
 }
