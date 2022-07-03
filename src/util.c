@@ -1,4 +1,5 @@
 #include "include/util.h"
+#include "include/gameplay.h"
 
 void bail(lua_State *L, char *msg)
 {
@@ -24,4 +25,12 @@ void call(lua_State *L, char *file, char *function)
 	    bail(L, "lua_pcall() failed");          /* Error out if Lua file has an error */
 
     lua_close(L);                               /* Clean up, free the Lua state var */
+}
+
+void copy(int players, int special_mode, int debug_mode, int swap_card)
+{
+    settings.players = players;
+    settings.special_mode = special_mode;
+    settings.debug_mode = debug_mode;
+    settings.swap_card;
 }

@@ -9,3 +9,5 @@ Written using C and Lua
 - [ ] Dynamic card array
 - [x] Split cards among players
 - [x] Loading Lua files
+
+*One small part was made on my live stream*

@@ -7,7 +7,6 @@
 #include <string.h>
 
 #include "include/util.h"
-#include "include/setup.h"
 #include "include/gameplay.h"
 
 const char* logo_row1= " .----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
@@ -24,6 +23,10 @@ const char* logo_row11 = " '----------------'  '----------------'  '------------
 
 char logo[];
 int players;
+
+int special_mode;
+int debug_mode;
+int swap_card;
 
 int main(int argc, const char **argv)
 {
@@ -45,23 +48,35 @@ int main(int argc, const char **argv)
     /* lua_State *L;
     call(L, "main.lua", "Hello"); */
 
-    if (argc > 1)
+    if (argc > 5)
     {
         players = atoi(argv[1]);
+        special_mode = atoi(argv[2]);
+        debug_mode = atoi(argv[3]);
+        swap_card = atoi(argv[4]);
     }
 
     else
     {
-        printf("Usage: ./main <players>\n");
-        printf("Example: ./main 2\n");
+        printf("Usage: ./main <players> <special_mode> <debug_mode> <swap_card>\n");
+        printf("Example: ./main 2 0 0 1\n");
         printf("\n");
 
         printf("Enter number of players: ");
         scanf("%d", &players);
+
+        printf("Enter special mode [0 - false; 1 - true]: ");
+        scanf("%d", &special_mode);
+
+        printf("Enter debug mode [0 - false; 1 - true]: ");
+        scanf("%d", &debug_mode);
+
+        printf("Enter swap card [0 - false; 1 - true]: ");
+        scanf("%d", &swap_card);
     }
 
-    Setup();
-    Gameplay(players);
+    copy(players, special_mode, debug_mode, swap_card);
+    Gameplay();
 
     return 0;
 }

@@ -1,5 +1,4 @@
 #include "include/gameplay.h"
-#include "include/setup.h"
 
 void Gameplay(int players)
 {
@@ -106,7 +105,7 @@ void SetCards(int players)
         card_id++;
     }
     
-    if (set.debug_mode == 1)
+    if (settings.debug_mode == 1)
     {
         printf("Cards: \n");
 
@@ -118,10 +117,10 @@ void SetCards(int players)
 
     for (int i = 0; i < players; i++)
     {
-        for (int j = 0; j < 8; j++)
+        for (int j = 1; j < 8; j++)
         {
-            player[j].cards[j] = cards[rand() % 107];
-            printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[j].cards[j].number, player[j].cards[j].color);
+            player[i].cards[j] = cards[rand() % 107];
+            printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[i].cards[j].number, player[i].cards[j].color);
         }
         printf("\n");
     }

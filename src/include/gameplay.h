@@ -22,6 +22,14 @@
  * 4 - blue
 */
 
+struct setting_t
+{
+    int players;
+    int special_mode;
+    int debug_mode;
+    int swap_card;
+};
+
 struct cards_t
 {
     int number;
@@ -33,5 +41,7 @@ struct player_t
     struct cards_t cards[52];
 };
 
-void Gameplay(int players);
-void SetCards(int players);
+static struct setting_t settings;
+
+void Gameplay();
+void SetCards();
