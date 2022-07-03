@@ -76,7 +76,7 @@ int main(int argc, const char **argv)
     }
 
     copy(players, special_mode, debug_mode, swap_card);
-    Gameplay();
+    Gameplay(players);
 
     return 0;
 }

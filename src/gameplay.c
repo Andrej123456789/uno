@@ -1,5 +1,23 @@
 #include "include/gameplay.h"
 
+int ifFinished(int players)
+{
+    struct player_t player[players];
+
+    for (int i = 0; i < players; i++)
+    {
+        if (player[i].number_of_cards == 0)
+        {
+            return 1;
+        }
+
+        else
+        {
+            return 0;
+        }
+    }
+}
+
 void Gameplay(int players)
 {
     SetCards(players);
@@ -9,13 +27,19 @@ void SetCards(int players)
 {
     time_t t;
 
-    struct cards_t cards[108];
+    struct cards_t cards[109];
     struct player_t player[players];
+    struct runtime_t runtime;
 
     int card_id = 1;
     int player_id = 1;
+    player->number_of_cards = 0;
+    runtime.avabible_cards = 108;
 
     srand((unsigned) time(&t));
+
+    cards[0].number = 0;
+    cards[0].color = 0;
 
     /* Wild card */
     for (int i = 0; i < 4; i++)
@@ -119,9 +143,25 @@ void SetCards(int players)
     {
         for (int j = 1; j < 8; j++)
         {
-            player[i].cards[j] = cards[rand() % 107];
+            player[i].cards[j] = cards[rand() % (109 - 1 + 1) + 1];
             printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[i].cards[j].number, player[i].cards[j].color);
+            player[i].number_of_cards++;
         }
+        runtime.avabible_cards -= 7;
         printf("\n");
     }
+
+    runtime.top_card[0] = cards[rand() % (runtime.avabible_cards - 1 + 1) + 1];
+    runtime.avabible_cards--;
+    printf("Top card: Number: %d, Color: %d\n", runtime.top_card[0].number, runtime.top_card[0].color);
+
+    if (settings.debug_mode == 1)
+    {
+        printf("[DEBUG] Avabible cards: %d\n", runtime.avabible_cards);
+    }
+}
+
+void Play(int players)
+{
+
 }

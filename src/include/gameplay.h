@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 
 /* 
@@ -39,9 +40,19 @@ struct cards_t
 struct player_t
 {
     struct cards_t cards[52];
+    int number_of_cards;
+};
+
+struct runtime_t
+{
+    int avabible_cards;
+    struct cards_t top_card[1];
 };
 
 static struct setting_t settings;
 
-void Gameplay();
-void SetCards();
+int ifFinished(int players);
+
+void Gameplay(int players);
+void SetCards(int players);
+void Play(int players);
