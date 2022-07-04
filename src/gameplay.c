@@ -1,40 +1,51 @@
 #include "include/gameplay.h"
 
-int ifFinished(int players)
+bool isFinished(int players, struct player_t player[])
 {
-    struct player_t player[players];
-
-    for (int i = 0; i < players; i++)
+    int i;
+    for (i = 0; i < players; i++)
     {
         if (player[i].number_of_cards == 0)
         {
-            return 1;
+            return true;
         }
+    }
+    return false;
+}
 
-        else
-        {
-            return 0;
-        }
+bool isCompatible(struct runtime_t* runtime, struct cards_t player_card[])
+{
+    if (runtime->top_card->number == player_card[runtime->current_card_id].number)
+    {
+        return true;
+    }
+
+    else if (runtime->top_card->color == player_card[runtime->current_card_id].color)
+    {
+        return true;
+    }
+
+    else
+    {
+        return false;
     }
 }
 
 void Gameplay(int players)
 {
-    SetCards(players);
-}
-
-void SetCards(int players)
-{
+    char tmp_input[20];
     time_t t;
 
     struct cards_t cards[109];
     struct player_t player[players];
-    struct runtime_t runtime;
+    struct runtime_t *runtime = malloc(sizeof(struct runtime_t));
 
     int card_id = 1;
     int player_id = 1;
     player->number_of_cards = 0;
-    runtime.avabible_cards = 108;
+    runtime->avabible_cards = 108;
+    runtime->current_card_id = 0;
+    runtime->player_turn = 0;
 
     srand((unsigned) time(&t));
 
@@ -147,21 +158,66 @@ void SetCards(int players)
             printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[i].cards[j].number, player[i].cards[j].color);
             player[i].number_of_cards++;
         }
-        runtime.avabible_cards -= 7;
+        runtime->avabible_cards -= 7;
         printf("\n");
     }
 
-    runtime.top_card[0] = cards[rand() % (runtime.avabible_cards - 1 + 1) + 1];
-    runtime.avabible_cards--;
-    printf("Top card: Number: %d, Color: %d\n", runtime.top_card[0].number, runtime.top_card[0].color);
+    runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+    runtime->avabible_cards--;
+    printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+    printf("\t -------------------- \t \n");
 
     if (settings.debug_mode == 1)
     {
-        printf("[DEBUG] Avabible cards: %d\n", runtime.avabible_cards);
+        printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
     }
-}
 
-void Play(int players)
-{
+    while (isFinished(players, player) == false)
+    {
+        again:
+        printf("Player %d turn\n", runtime->player_turn);
+        try_again:
+        printf("Enter card id or take from deck: ");
+        scanf("%s", &tmp_input);
 
+        if (strcmp(tmp_input, "new") == 0)
+        {
+            player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+            runtime->avabible_cards--;
+            printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards->number, player[player->number_of_cards].cards->color);
+            goto again;
+        }
+
+        else
+        {
+            runtime->current_card_id = atoi(tmp_input);
+        }
+
+        if (isCompatible(runtime, player))
+        {
+            /* take new top card and go to other player */
+            player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+            player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+            player->number_of_cards--;
+
+            runtime->top_card[0].number = 0;
+            runtime->top_card[0].color = 0;
+            runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+            runtime->avabible_cards--;
+            runtime->player_turn++;
+            printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+            printf("\t -------------------- \t \n");
+            if (settings.debug_mode == 1)
+            {
+                printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
+            }
+            goto again;
+        }
+
+        else
+        {
+            printf("Card is not compatible!\n\n");
+            goto try_again;
+        }
+    }
 }

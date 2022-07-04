@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <time.h>
 
 /* 
@@ -30,6 +31,7 @@ struct setting_t
     int debug_mode;
     int swap_card;
 };
+static struct setting_t settings;
 
 struct cards_t
 {
@@ -46,13 +48,11 @@ struct player_t
 struct runtime_t
 {
     int avabible_cards;
+    int current_card_id;
+    int player_turn;
     struct cards_t top_card[1];
 };
 
-static struct setting_t settings;
-
-int ifFinished(int players);
-
+bool isFinished(int players, struct player_t player[]);
+bool isCompatible(struct runtime_t* runtime, struct cards_t player_card[]);
 void Gameplay(int players);
-void SetCards(int players);
-void Play(int players);
