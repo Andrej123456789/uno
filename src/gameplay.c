@@ -187,7 +187,7 @@ void Gameplay(int players)
         printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
     }
 
-    while (isFinished(players, player) == false)
+    while (isFinished(players, player) == false | strcmp(tmp_input, "exit") == 0)
     {
         again:
         printf("Player %d turn\n", runtime->player_turn);
@@ -200,15 +200,15 @@ void Gameplay(int players)
             player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
             printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards[player->number_of_cards].number, player[runtime->player_turn].cards[player->number_of_cards].color);
-            goto again;
+            goto try_again;
         }
 
 		else if (strcmp(tmp_input, "all") == 0)
 		{
-			for (int i = 1; i < player->number_of_cards + 1; i++)
-			{
-				printf("Number: %d, Color: %d\n", player[runtime->player_turn].cards[i].number, player[runtime->player_turn].cards[i].color);
-			}
+            for (int i = 1; i < player->number_of_cards + 1; i++)
+            {
+                printf("Card id: %d, Number: %d, Color: %d\n", i, player[runtime->player_turn].cards[i].number, player[runtime->player_turn].cards[i].color);
+            }
             goto try_again;
 		}
 

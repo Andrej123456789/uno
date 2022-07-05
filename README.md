@@ -6,10 +6,10 @@ Written using C and Lua
 ## TODO
 - [ ] Networking
 - [ ] Basic AI
-- [ ] Gameplay
+- [ ] Gameplay (full gameplay)
 - [ ] Dynamic card array
 - [x] Split cards among players
 - [x] Loading Lua files
 - [ ] Colors
 
-*One small part was made on my live stream*
+*One small part was made on my live stream, just search my name for YouTube channel*
