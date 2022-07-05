@@ -15,14 +15,14 @@ bool isFinished(int players, struct player_t player[])
     return false;
 }
 
-bool isCompatible(struct runtime_t* runtime, struct cards_t player_card[])
+bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
 {
-    if (runtime->top_card->number == player_card[runtime->current_card_id].number)
+    if (runtime->top_card->number == player_card[runtime->player_turn].cards[runtime->current_card_id].number)
     {
         return true;
     }
 
-    else if (runtime->top_card->color == player_card[runtime->current_card_id].color)
+	else if (runtime->top_card->color == player_card[runtime->player_turn].cards[runtime->current_card_id].color)
     {
         return true;
     }
@@ -33,12 +33,25 @@ bool isCompatible(struct runtime_t* runtime, struct cards_t player_card[])
     }
 }
 
+void NextPlayer(struct runtime_t *runtime, int players)
+{
+	if (runtime->player_turn + 1 != players)
+	{
+		runtime->player_turn++;
+	}
+
+	else
+	{
+		runtime->player_turn = 0;
+	}
+}
+
 void Gameplay(int players)
 {
     char tmp_input[20];
     time_t t;
 
-    struct cards_t cards[109];
+    struct cards_t cards[108];
     struct player_t player[players];
     struct runtime_t *runtime = malloc(sizeof(struct runtime_t));
 
@@ -156,7 +169,7 @@ void Gameplay(int players)
     {
         for (int j = 1; j < 8; j++)
         {
-            player[i].cards[j] = cards[rand() % (109 - 1 + 1) + 1];
+            player[i].cards[j] = cards[rand() % (108 - 1 + 1) + 1];
             printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[i].cards[j].number, player[i].cards[j].color);
             player[i].number_of_cards++;
         }
@@ -187,7 +200,6 @@ void Gameplay(int players)
             player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
             printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards[player->number_of_cards].number, player[runtime->player_turn].cards[player->number_of_cards].color);
-			printf("Broj kartica igraca: %d\n\n", player[runtime->player_turn].number_of_cards);
             goto again;
         }
 
@@ -216,7 +228,7 @@ void Gameplay(int players)
             runtime->top_card[0].color = 0;
             runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
-            runtime->player_turn++;
+            NextPlayer(runtime, players);
             printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
             printf("\t -------------------- \t \n");
             if (settings.debug_mode == 1)

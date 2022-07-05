@@ -54,5 +54,6 @@ struct runtime_t
 };
 
 bool isFinished(int players, struct player_t player[]);
-bool isCompatible(struct runtime_t* runtime, struct cards_t player_card[]);
+bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
+void NextPlayer(struct runtime_t* runtime, int players);
 void Gameplay(int players);
