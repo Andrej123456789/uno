@@ -1,4 +1,6 @@
 #include "include/gameplay.h"
+#include <stdio.h>
+#include <string.h>
 
 bool isFinished(int players, struct player_t player[])
 {
@@ -177,16 +179,26 @@ void Gameplay(int players)
         again:
         printf("Player %d turn\n", runtime->player_turn);
         try_again:
-        printf("Enter card id or take from deck: ");
+        printf("Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]: ");
         scanf("%s", &tmp_input);
 
         if (strcmp(tmp_input, "new") == 0)
         {
             player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
-            printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards->number, player[player->number_of_cards].cards->color);
+            printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards[player->number_of_cards].number, player[runtime->player_turn].cards[player->number_of_cards].color);
+			printf("Broj kartica igraca: %d\n\n", player[runtime->player_turn].number_of_cards);
             goto again;
         }
+
+		else if (strcmp(tmp_input, "all") == 0)
+		{
+			for (int i = 1; i < player->number_of_cards + 1; i++)
+			{
+				printf("Number: %d, Color: %d\n", player[runtime->player_turn].cards[i].number, player[runtime->player_turn].cards[i].color);
+			}
+            goto try_again;
+		}
 
         else
         {
