@@ -187,8 +187,14 @@ void Gameplay(int players)
         printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
     }
 
-    while (isFinished(players, player) == false | strcmp(tmp_input, "exit") == 0)
+    while (true)
     {
+        if (isFinished(players, player) == true)
+        {
+            printf("Game finished!\n");
+            break;
+        }
+
         again:
         printf("Player %d turn\n", runtime->player_turn);
         try_again:
@@ -211,6 +217,12 @@ void Gameplay(int players)
             }
             goto try_again;
 		}
+
+        else if (strcmp(tmp_input, "exit") == 0)
+        {
+            printf("Exiting...!\n");
+            break;
+        }
 
         else
         {
