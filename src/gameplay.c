@@ -91,6 +91,13 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
 				return;
 				break;
 
+			case 12:
+				NextPlayer(runtime, players);
+				NextPlayer(runtime, players);
+
+				return;
+				break;
+
 			case 13:
 				printf("Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ");
 				scanf("%s", input);
