@@ -46,6 +46,64 @@ void NextPlayer(struct runtime_t *runtime, int players)
 	}
 }
 
+void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t cards[], int players)
+{
+	int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
+	int color = player[runtime->player_turn].cards[runtime->current_card_id].color;
+
+	if (number > 0 && number < 10)
+	{
+		player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+		player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+        player->number_of_cards--;
+	}
+
+	else
+	{
+		switch (number) 
+		{
+			case 10:
+				player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+				runtime->avabible_cards--;
+				player->number_of_cards++;
+
+				player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+				runtime->avabible_cards--;
+				player->number_of_cards++;
+
+				runtime->top_card[0].number = 0;
+				runtime->top_card[0].color = 0;
+				runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+				runtime->avabible_cards--;
+
+				printf("\t -------------------- \t \n");
+				printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+				printf("\t -------------------- \t \n");
+
+				NextPlayer(runtime, players);
+				NextPlayer(runtime, players);
+				
+				return;
+				break;
+
+			default:
+				return;
+				break;
+		}
+	}
+
+    runtime->top_card[0].number = 0;
+    runtime->top_card[0].color = 0;
+    runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+    runtime->avabible_cards--;
+
+    printf("\t -------------------- \t \n");
+    printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+    printf("\t -------------------- \t \n");
+
+    NextPlayer(runtime, players);
+}
+
 void Gameplay(int players)
 {
     char tmp_input[20];
@@ -234,17 +292,8 @@ void Gameplay(int players)
         if (isCompatible(runtime, player))
         {
             /* take new top card and go to other player */
-            player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
-            player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
-            player->number_of_cards--;
+			Action(runtime, player, cards, players);
 
-            runtime->top_card[0].number = 0;
-            runtime->top_card[0].color = 0;
-            runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-            runtime->avabible_cards--;
-            NextPlayer(runtime, players);
-            printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
-            printf("\t -------------------- \t \n");
             if (settings.debug_mode == 1)
             {
                 printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
