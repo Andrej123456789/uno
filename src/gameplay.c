@@ -49,12 +49,12 @@ void NextPlayer(struct runtime_t *runtime, int players)
 
 void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t cards[], int players)
 {
-	bool can_do_4 = false;
-	char input[6];
-	int temp_color;
+    bool can_do_4 = false;
+    char input[6];
+    int temp_color;
 
-	int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
-	int color = player[runtime->player_turn].cards[runtime->current_card_id].color;
+    int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
+    int color = player[runtime->player_turn].cards[runtime->current_card_id].color;
 
     if (number > 0 && number < 10)
     {
@@ -63,11 +63,11 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
         player->number_of_cards--;
     }
 
-	else
-	{
-		switch (number) 
-		{
-			case 10:
+    else
+    {
+        switch (number) 
+        {
+            case 10:
                 player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
                 player->number_of_cards++;
@@ -87,18 +87,18 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
 
                 NextPlayer(runtime, players);
                 NextPlayer(runtime, players);
-                
+
                 return;
                 break;
 
-			case 12:
+            case 12:
                 NextPlayer(runtime, players);
                 NextPlayer(runtime, players);
 
                 return;
                 break;
 
-			case 13:
+            case 13:
                 printf("Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ");
                 scanf("%s", input);
                 temp_color = atoi(input);
@@ -113,10 +113,10 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
 
                 NextPlayer(runtime, players);
 
-				return;
-				break;
+                return;
+                break;
 
-			case 14:
+            case 14:
                 for (int i = 0; i < player->number_of_cards + 1; i++)
                 {
                     if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
@@ -159,11 +159,11 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
             return;
             break;
 
-			default:
-				return;
-				break;
-		}
-	}
+            default:
+                return;
+                break;
+        }
+    }
 
     runtime->top_card[0].number = 0;
     runtime->top_card[0].color = 0;
