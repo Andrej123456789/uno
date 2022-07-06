@@ -192,6 +192,7 @@ void Gameplay(int players)
         if (isFinished(players, player) == true)
         {
             printf("Game finished!\n");
+			free(runtime);
             break;
         }
 
@@ -221,6 +222,7 @@ void Gameplay(int players)
         else if (strcmp(tmp_input, "exit") == 0)
         {
             printf("Exiting...!\n");
+			free(runtime);
             break;
         }
 
