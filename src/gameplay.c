@@ -92,6 +92,10 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 break;
 
             case 12:
+                player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+                player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+                player->number_of_cards--;
+
                 NextPlayer(runtime, players);
                 NextPlayer(runtime, players);
 
@@ -99,6 +103,10 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 break;
 
             case 13:
+                player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+                player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+                player->number_of_cards--;
+
                 printf("Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ");
                 scanf("%s", input);
                 temp_color = atoi(input);
@@ -127,6 +135,10 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
 
                 if (can_do_4 == true)
                 {
+                    player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+                    player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+                    player->number_of_cards--;
+                    
                     player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
