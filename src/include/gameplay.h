@@ -19,7 +19,7 @@
  * 
  * Colors:
  * 1 - red
- * 2- yellow
+ * 2 - yellow
  * 3 - green
  * 4 - blue
 */
