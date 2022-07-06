@@ -56,108 +56,108 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
 	int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
 	int color = player[runtime->player_turn].cards[runtime->current_card_id].color;
 
-	if (number > 0 && number < 10)
-	{
-		player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
-		player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+    if (number > 0 && number < 10)
+    {
+        player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+        player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
         player->number_of_cards--;
-	}
+    }
 
 	else
 	{
 		switch (number) 
 		{
 			case 10:
-				player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-				runtime->avabible_cards--;
-				player->number_of_cards++;
+                player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                runtime->avabible_cards--;
+                player->number_of_cards++;
 
-				player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-				runtime->avabible_cards--;
-				player->number_of_cards++;
+                player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                runtime->avabible_cards--;
+                player->number_of_cards++;
 
-				runtime->top_card[0].number = 0;
-				runtime->top_card[0].color = 0;
-				runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-				runtime->avabible_cards--;
+                runtime->top_card[0].number = 0;
+                runtime->top_card[0].color = 0;
+                runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                runtime->avabible_cards--;
 
-				printf("\t -------------------- \t \n");
-				printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
-				printf("\t -------------------- \t \n");
+                printf("\t -------------------- \t \n");
+                printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                printf("\t -------------------- \t \n");
 
-				NextPlayer(runtime, players);
-				NextPlayer(runtime, players);
-				
-				return;
-				break;
+                NextPlayer(runtime, players);
+                NextPlayer(runtime, players);
+                
+                return;
+                break;
 
 			case 12:
-				NextPlayer(runtime, players);
-				NextPlayer(runtime, players);
+                NextPlayer(runtime, players);
+                NextPlayer(runtime, players);
 
-				return;
-				break;
+                return;
+                break;
 
 			case 13:
-				printf("Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ");
-				scanf("%s", input);
-				temp_color = atoi(input);
+                printf("Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ");
+                scanf("%s", input);
+                temp_color = atoi(input);
 
-				runtime->top_card[0].number = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1].number;
-				runtime->top_card[0].color = temp_color;
-				runtime->avabible_cards--;
+                runtime->top_card[0].number = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1].number;
+                runtime->top_card[0].color = temp_color;
+                runtime->avabible_cards--;
 
-				printf("\t -------------------- \t \n");
-				printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
-				printf("\t -------------------- \t \n");
+                printf("\t -------------------- \t \n");
+                printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                printf("\t -------------------- \t \n");
 
-				NextPlayer(runtime, players);
+                NextPlayer(runtime, players);
 
 				return;
 				break;
 
 			case 14:
-				for (int i = 0; i < player->number_of_cards + 1; i++)
-				{
-					if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
-					{
-						can_do_4 = true;
-					}
-				}
+                for (int i = 0; i < player->number_of_cards + 1; i++)
+                {
+                    if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
+                    {
+                        can_do_4 = true;
+                    }
+                }
 
-				if (can_do_4 == true)
-				{
-					player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-					runtime->avabible_cards--;
-					player->number_of_cards++;
+                if (can_do_4 == true)
+                {
+                    player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    runtime->avabible_cards--;
+                    player->number_of_cards++;
 
-					player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-					runtime->avabible_cards--;
-					player->number_of_cards++;
+                    player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    runtime->avabible_cards--;
+                    player->number_of_cards++;
 
-					player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-					runtime->avabible_cards--;
-					player->number_of_cards++;
+                    player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    runtime->avabible_cards--;
+                    player->number_of_cards++;
 
-					player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-					runtime->avabible_cards--;
-					player->number_of_cards++;
+                    player[runtime->player_turn + 1].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    runtime->avabible_cards--;
+                    player->number_of_cards++;
 
-					runtime->top_card[0].number = 0;
-					runtime->top_card[0].color = 0;
-					runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-					runtime->avabible_cards--;
+                    runtime->top_card[0].number = 0;
+                    runtime->top_card[0].color = 0;
+                    runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    runtime->avabible_cards--;
 
-					printf("\t -------------------- \t \n");
-					printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
-					printf("\t -------------------- \t \n");
+                    printf("\t -------------------- \t \n");
+                    printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                    printf("\t -------------------- \t \n");
 
-					NextPlayer(runtime, players);
-					NextPlayer(runtime, players);
-				}
+                    NextPlayer(runtime, players);
+                    NextPlayer(runtime, players);
+                }
 
-			return;
-			break;
+            return;
+            break;
 
 			default:
 				return;
@@ -353,7 +353,7 @@ void Gameplay(int players)
         else if (strcmp(tmp_input, "exit") == 0)
         {
             printf("Exiting...!\n");
-			free(runtime);
+            free(runtime);
             break;
         }
 
