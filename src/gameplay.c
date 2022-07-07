@@ -34,22 +34,40 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
     }
 }
 
-void NextPlayer(struct runtime_t *runtime, int players)
+void NextPlayer(struct runtime_t *runtime, int players, bool isPositive)
 {
-	if (runtime->player_turn + 1 != players)
-	{
-		runtime->player_turn++;
-	}
+    if (isPositive == true)
+    {
+        if (runtime->player_turn + 1 != players)
+        {
+            runtime->player_turn++;
+        }
 
-	else
-	{
-		runtime->player_turn = 0;
-	}
+        else
+        {
+            runtime->player_turn = 0;
+        }
+    }
+
+    else
+    {
+        if (runtime->player_turn - 1 != players)
+        {
+            runtime->player_turn--;
+        }
+
+        else
+        {
+            runtime->player_turn = 0;
+        }
+    }
 }
 
 void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t cards[], int players)
 {
     bool can_do_4 = false;
+	bool isPositive = true;
+
     char input[6];
     int temp_color;
 
@@ -85,8 +103,19 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
-                NextPlayer(runtime, players);
-                NextPlayer(runtime, players);
+                NextPlayer(runtime, players, isPositive);
+                NextPlayer(runtime, players, isPositive);
+
+                return;
+                break;
+
+            case 11:
+                if (isPositive == true)
+                    isPositive = false;
+                else
+                    isPositive = true;
+
+                NextPlayer(runtime, players, isPositive);
 
                 return;
                 break;
@@ -95,9 +124,9 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
                 player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                 player->number_of_cards--;
-
-                NextPlayer(runtime, players);
-                NextPlayer(runtime, players);
+		
+                NextPlayer(runtime, players, isPositive);
+                NextPlayer(runtime, players, isPositive);
 
                 return;
                 break;
@@ -119,7 +148,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
-                NextPlayer(runtime, players);
+                NextPlayer(runtime, players, isPositive);
 
                 return;
                 break;
@@ -164,8 +193,8 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                     printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
                     printf("\t -------------------- \t \n");
 
-                    NextPlayer(runtime, players);
-                    NextPlayer(runtime, players);
+                    NextPlayer(runtime, players, isPositive);
+                    NextPlayer(runtime, players, isPositive);
                 }
 
             return;
@@ -186,7 +215,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
     printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
 
-    NextPlayer(runtime, players);
+    NextPlayer(runtime, players, isPositive);
 }
 
 void Gameplay(int players)
