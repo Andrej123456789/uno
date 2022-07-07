@@ -53,8 +53,11 @@ struct runtime_t
     struct cards_t top_card[1];
 };
 
+static bool isPositive = true;
+
 bool isFinished(int players, struct player_t player[]);
 bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
 void NextPlayer(struct runtime_t* runtime, int players, bool isPositive);
 void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
+void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
 void Gameplay(int players);

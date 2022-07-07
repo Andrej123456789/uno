@@ -6,7 +6,7 @@ Written using C and Lua
 ## TODO
 - [ ] Networking
 - [ ] Basic AI
-- [ ] Gameplay (full gameplay)
+- [x] Gameplay (full gameplay)
 - [ ] Dynamic card array
 - [x] Split cards among players
 - [x] Loading Lua files
