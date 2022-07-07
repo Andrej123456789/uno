@@ -73,7 +73,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
     int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
     int color = player[runtime->player_turn].cards[runtime->current_card_id].color;
 
-    if (number == 0 && number < 10)
+    if (number == 0 | number < 10)
     {
         player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
         player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
@@ -221,7 +221,7 @@ void TopCardAction(struct runtime_t *runtime, struct player_t player[], struct c
 {
     int number = runtime->top_card[0].number;
 
-	if (number == 0 && number < 10)
+	if (number == 0 | number < 10)
 	{
 		return;
 	}
@@ -263,7 +263,7 @@ void TopCardAction(struct runtime_t *runtime, struct player_t player[], struct c
 	}	
 }
 
-void Gameplay(int players)
+void Gameplay(struct setting_t* settings, int players)
 {
     char tmp_input[20];
     time_t t;
@@ -372,7 +372,7 @@ void Gameplay(int players)
         card_id++;
     }
     
-    if (settings.debug_mode == 1)
+    if (settings->debug_mode == 1)
     {
         printf("Cards: \n");
 
@@ -409,7 +409,7 @@ void Gameplay(int players)
 
     TopCardAction(runtime, player, cards, players);
 
-    if (settings.debug_mode == 1)
+    if (settings->debug_mode == 1)
     {
         printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
     }
@@ -465,7 +465,7 @@ void Gameplay(int players)
             /* take new top card and go to other player */
             Action(runtime, player, cards, players);
 
-            if (settings.debug_mode == 1)
+            if (settings->debug_mode == 1)
             {
                 printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
             }

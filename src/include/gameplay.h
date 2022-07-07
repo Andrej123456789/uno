@@ -31,7 +31,6 @@ struct setting_t
     int debug_mode;
     int swap_card;
 };
-static struct setting_t settings;
 
 struct cards_t
 {
@@ -60,4 +59,4 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
 void NextPlayer(struct runtime_t* runtime, int players, bool isPositive);
 void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
 void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
-void Gameplay(int players);
+void Gameplay(struct setting_t* settings, int players);

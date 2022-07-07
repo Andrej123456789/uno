@@ -75,8 +75,11 @@ int main(int argc, const char **argv)
         scanf("%d", &swap_card);
     }
 
-    copy(players, special_mode, debug_mode, swap_card);
-    Gameplay(players);
+    struct setting_t* settings = malloc(sizeof(struct setting_t));
 
+    copy(settings, players, special_mode, debug_mode, swap_card);
+    Gameplay(settings, players);
+
+    free(settings);
     return 0;
 }

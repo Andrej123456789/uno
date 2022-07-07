@@ -1,5 +1,4 @@
 #include "include/util.h"
-#include "include/gameplay.h"
 
 void bail(lua_State *L, char *msg)
 {
@@ -27,17 +26,17 @@ void call(lua_State *L, char *file, char *function)
     lua_close(L);                               /* Clean up, free the Lua state var */
 }
 
-void copy(int players, int special_mode, int debug_mode, int swap_card)
+void copy(struct setting_t* settings, int players, int special_mode, int debug_mode, int swap_card)
 {
-    settings.players = players;
-    settings.special_mode = special_mode;
-    settings.debug_mode = debug_mode;
-    settings.swap_card = swap_card;
+    settings->players = players;
+    settings->special_mode = special_mode;
+    settings->debug_mode = debug_mode;
+    settings->swap_card = swap_card;
 
     printf("Your current settings are:\n");
-    printf("\t Players: %d\n", settings.players);
-    printf("\t Special Mode: %d\n", settings.special_mode);
-    printf("\t Debug Mode: %d\n", settings.debug_mode);
-    printf("\t Swap Card: %d\n", settings.swap_card);
+    printf("\t Players: %d\n", settings->players);
+    printf("\t Special Mode: %d\n", settings->special_mode);
+    printf("\t Debug Mode: %d\n", settings->debug_mode);
+    printf("\t Swap Card: %d\n", settings->swap_card);
     printf("\n");
 }
