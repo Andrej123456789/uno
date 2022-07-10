@@ -423,7 +423,7 @@ void Gameplay(struct setting_t* settings, int players)
     {
         printf("Cards: \n");
 
-        for (int i = 0; i < 108; i++)
+        for (int i = 0; i < runtime->avabible_cards; i++)
         {
             printf("\tNumber: %d, Color: %d\n", cards[i].number, cards[i].color);
         }
@@ -480,7 +480,7 @@ void Gameplay(struct setting_t* settings, int players)
                 player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
             printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards[player->number_of_cards].number, 
-																player[runtime->player_turn].cards[player->number_of_cards].color);
+                                                                player[runtime->player_turn].cards[player->number_of_cards].color);
             goto try_again;
         }
 
