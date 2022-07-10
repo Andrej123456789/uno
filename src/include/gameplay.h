@@ -16,6 +16,7 @@
  * 12 - skip card
  * 13 - wild card
  * 14 - wild draw four card
+ * 15 - swap card
  * 
  * Colors:
  * 1 - red
@@ -56,6 +57,7 @@ static bool isPositive = true;
 
 bool isFinished(int players, struct player_t player[]);
 bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
+void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id);
 void NextPlayer(struct runtime_t* runtime, int players, bool isPositive);
 void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
 void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);

@@ -5,6 +5,7 @@
         "gameplay.h": "c",
         "setup.h": "c",
         "lauxlib.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "algorithm": "c"
     }
 }

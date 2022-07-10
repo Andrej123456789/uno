@@ -34,6 +34,18 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
     }
 }
 
+void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id)
+{
+    struct player_t a = player[runtime->player_turn];
+    struct player_t b = player[swap_id];
+    struct player_t temp;
+
+    /* swap cards between players, a array is current player, b array is swap player */
+    temp = a;
+    a = b;
+    b = temp;
+}
+
 void NextPlayer(struct runtime_t *runtime, int players, bool isPositive)
 {
     if (isPositive == true)
@@ -69,6 +81,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
 
     char input[6];
     int temp_color;
+    int temp_player;
 
     int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
     int color = player[runtime->player_turn].cards[runtime->current_card_id].color;
@@ -199,6 +212,28 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
             return;
             break;
 
+            case 15:
+                player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+                player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+                player->number_of_cards--;
+
+                printf("Enter player number: ");
+                scanf("%s", input);
+                temp_player = atoi(input);
+                Swap(runtime, player, players, temp_player);
+
+                runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                runtime->avabible_cards--;
+
+                printf("\t -------------------- \t \n");
+                printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                printf("\t -------------------- \t \n");
+
+                NextPlayer(runtime, players, isPositive);
+
+                return;
+                break;
+
             default:
                 return;
                 break;
@@ -275,19 +310,31 @@ void Gameplay(struct setting_t* settings, int players)
     int card_id = 1;
     int player_id = 1;
     player->number_of_cards = 0;
-    runtime->avabible_cards = 109;
     runtime->current_card_id = 0;
     runtime->player_turn = 0;
 
     srand((unsigned) time(&t));
 
-    cards[0].number = 0;
-    cards[0].color = 0;
+    if (settings->swap_card == 1)
+    {
+        cards[0].number = 15;
+        cards[0].color = 0;
+
+        runtime->avabible_cards = 109;
+    }
+
+    else
+    {
+        cards[0].number = 0;
+        cards[0].color = 0;
+
+        runtime->avabible_cards = 108;
+    }
 
     /* Wild card */
     for (int i = 0; i < 4; i++)
     {
-        cards[card_id].number = 13;
+        cards[card_id].number = 14;
         cards[card_id].color = 0;
         card_id++;
     }
@@ -295,7 +342,7 @@ void Gameplay(struct setting_t* settings, int players)
     /* Wild draw four card */
     for (int i = 0; i < 4; i++)
     {
-        cards[card_id].number = 14;
+        cards[card_id].number = 13;
         cards[card_id].color = 0;
         card_id++;
     }
@@ -385,8 +432,10 @@ void Gameplay(struct setting_t* settings, int players)
     for (int i = 0; i < players; i++)
     {
         for (int j = 1; j < 8; j++)
-        {
-            player[i].cards[j] = cards[rand() % (108 - 1 + 1) + 1];
+        {   if (settings->swap_card == 1)
+                player[i].cards[j] = cards[rand() % (109 - 0 + 0) + 0];
+            else
+                player[i].cards[j] = cards[rand() % (109 - 1 + 1) + 1];
             printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[i].cards[j].number, player[i].cards[j].color);
             player[i].number_of_cards++;
         }
@@ -394,14 +443,8 @@ void Gameplay(struct setting_t* settings, int players)
         printf("\n");
     }
 
-    runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+    runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 5 + 5) + 5];
     runtime->avabible_cards--;
-
-	if (runtime->top_card[0].number == 14)
-	{
-		runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-		runtime->avabible_cards--;
-	}
 
     printf("\t -------------------- \t \n");
     printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
@@ -431,7 +474,10 @@ void Gameplay(struct setting_t* settings, int players)
 
         if (strcmp(tmp_input, "new") == 0)
         {
-            player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+            if (settings->swap_card == 1)
+                player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 0 + 0) + 0];
+            else
+                player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
             printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards[player->number_of_cards].number, 
 																player[runtime->player_turn].cards[player->number_of_cards].color);
