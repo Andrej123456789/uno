@@ -27,6 +27,7 @@ int players;
 int special_mode;
 int debug_mode;
 int swap_card;
+int colors;
 
 int main(int argc, const char **argv)
 {
@@ -48,18 +49,19 @@ int main(int argc, const char **argv)
     /* lua_State *L;
     call(L, "main.lua", "Hello"); */
 
-    if (argc > 5)
+    if (argc == 6)
     {
         players = atoi(argv[1]);
         special_mode = atoi(argv[2]);
         debug_mode = atoi(argv[3]);
         swap_card = atoi(argv[4]);
+        colors = atoi(argv[5]);
     }
 
     else
     {
         printf("Usage: ./main <players> <special_mode> <debug_mode> <swap_card>\n");
-        printf("Example: ./main 2 0 0 1\n");
+        printf("Example: ./main 2 0 0 1 0\n");
         printf("\n");
 
         printf("Enter number of players: ");
@@ -73,11 +75,14 @@ int main(int argc, const char **argv)
 
         printf("Enter swap card [0 - false; 1 - true]: ");
         scanf("%d", &swap_card);
+
+        printf("Enter colors [0 - false; 1 - true] [To colors be properly rendered you need to support ANSI characters!]: ");
+        scanf("%d", &colors);
     }
 
     struct setting_t* settings = malloc(sizeof(struct setting_t));
 
-    copy(settings, players, special_mode, debug_mode, swap_card);
+    copy(settings, players, special_mode, debug_mode, swap_card, colors);
     Gameplay(settings, players);
 
     free(settings);

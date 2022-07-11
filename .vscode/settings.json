@@ -6,6 +6,6 @@
         "setup.h": "c",
         "lauxlib.h": "c",
         "stdlib.h": "c",
-        "algorithm": "c"
+        "ansi.h": "c"
     }
 }

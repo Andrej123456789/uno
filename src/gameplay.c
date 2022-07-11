@@ -1,7 +1,5 @@
 #include "include/gameplay.h"
-#include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
+#include "include/strings.h"
 
 bool isFinished(int players, struct player_t player[])
 {
@@ -75,7 +73,7 @@ void NextPlayer(struct runtime_t *runtime, int players, bool isPositive)
     }
 }
 
-void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t cards[], int players)
+void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players)
 {
     bool can_do_4 = false;
 
@@ -112,7 +110,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 runtime->avabible_cards--;
 
                 printf("\t -------------------- \t \n");
-                printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
                 NextPlayer(runtime, players, isPositive);
@@ -148,7 +146,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                 player->number_of_cards--;
 
-                printf("Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ");
+                printf("%s", (settings->colors == 1) ? enter_color_color : enter_color);
                 scanf("%s", input);
                 temp_color = atoi(input);
 
@@ -157,7 +155,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 runtime->avabible_cards--;
 
                 printf("\t -------------------- \t \n");
-                printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
                 NextPlayer(runtime, players, isPositive);
@@ -202,7 +200,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                     runtime->avabible_cards--;
 
                     printf("\t -------------------- \t \n");
-                    printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                    printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                     printf("\t -------------------- \t \n");
 
                     NextPlayer(runtime, players, isPositive);
@@ -226,7 +224,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
                 runtime->avabible_cards--;
 
                 printf("\t -------------------- \t \n");
-                printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+                printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
                 NextPlayer(runtime, players, isPositive);
@@ -246,7 +244,7 @@ void Action(struct runtime_t *runtime, struct player_t player[], struct cards_t 
     runtime->avabible_cards--;
 
     printf("\t -------------------- \t \n");
-    printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+    printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
 
     NextPlayer(runtime, players, isPositive);
@@ -425,7 +423,7 @@ void Gameplay(struct setting_t* settings, int players)
 
         for (int i = 0; i < runtime->avabible_cards; i++)
         {
-            printf("\tNumber: %d, Color: %d\n", cards[i].number, cards[i].color);
+            printf((settings->colors == 1) ? all_cards_color : all_cards, cards[i].number, cards[i].color);
         }
     }
 
@@ -436,7 +434,7 @@ void Gameplay(struct setting_t* settings, int players)
                 player[i].cards[j] = cards[rand() % (109 - 0 + 0) + 0];
             else
                 player[i].cards[j] = cards[rand() % (109 - 1 + 1) + 1];
-            printf("Player %d card id: %d, Number: %d, Color: %d\n", i, j, player[i].cards[j].number, player[i].cards[j].color);
+            printf((settings->colors == 1) ? player_card_info_color : player_card_info, i, j, player[i].cards[j].number, player[i].cards[j].color);
             player[i].number_of_cards++;
         }
         runtime->avabible_cards -= 7;
@@ -447,7 +445,7 @@ void Gameplay(struct setting_t* settings, int players)
     runtime->avabible_cards--;
 
     printf("\t -------------------- \t \n");
-    printf("Top card: Number: %d, Color: %d\n", runtime->top_card[0].number, runtime->top_card[0].color);
+    printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
 
     TopCardAction(runtime, player, cards, players);
@@ -461,15 +459,15 @@ void Gameplay(struct setting_t* settings, int players)
     {
         if (isFinished(players, player) == true)
         {
-            printf("Game finished!\n");
+            printf((settings->colors == 1) ? game_finished_color : game_finished);
             free(runtime);
             break;
         }
 
         again:
-        printf("Player %d turn\n", runtime->player_turn);
+        printf((settings->colors == 1) ? player_turn_color : player_turn, runtime->player_turn);
         try_again:
-        printf("Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]: ");
+        printf((settings->colors == 1) ? option_color : option, runtime->player_turn);
         scanf("%s", &tmp_input);
 
         if (strcmp(tmp_input, "new") == 0)
@@ -479,7 +477,7 @@ void Gameplay(struct setting_t* settings, int players)
             else
                 player[runtime->player_turn].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
             runtime->avabible_cards--;
-            printf("Your new card is: Number: %d, Color: %d\n", player[runtime->player_turn].cards[player->number_of_cards].number, 
+            printf((settings->colors == 1) ? new_card_color : new_card, player[runtime->player_turn].cards[player->number_of_cards].number, 
                                                                 player[runtime->player_turn].cards[player->number_of_cards].color);
             goto try_again;
         }
@@ -488,7 +486,7 @@ void Gameplay(struct setting_t* settings, int players)
 		{
 			for (int i = 1; i < player->number_of_cards + 1; i++)
 			{
-				printf("Card id: %d, Number: %d, Color: %d\n", i, player[runtime->player_turn].cards[i].number, 
+				printf((settings->colors == 1) ? card_info_color : card_info_color, i, player[runtime->player_turn].cards[i].number, 
                                                                     player[runtime->player_turn].cards[i].color);
 			}
 			goto try_again;
@@ -496,7 +494,7 @@ void Gameplay(struct setting_t* settings, int players)
 
         else if (strcmp(tmp_input, "exit") == 0)
         {
-            printf("Exiting...!\n");
+            printf((settings->colors == 1) ? exiting_color : exiting);
             free(runtime);
             break;
         }
@@ -509,7 +507,7 @@ void Gameplay(struct setting_t* settings, int players)
         if (isCompatible(runtime, player))
         {
             /* take new top card and go to other player */
-            Action(runtime, player, cards, players);
+            Action(runtime, player, cards, settings, players);
 
             if (settings->debug_mode == 1)
             {
@@ -520,7 +518,7 @@ void Gameplay(struct setting_t* settings, int players)
 
         else
         {
-            printf("Card is not compatible!\n\n");
+            printf((settings->colors == 1) ? card_not_compatible_color : card_not_compatible);
             goto try_again;
         }
     }

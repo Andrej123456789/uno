@@ -8,7 +8,7 @@ Written using C and Lua
 - [x] Loading Lua files
 - [x] Gameplay (full gameplay)
 - [x] Settings
-- [ ] Colors
+- [x] Colors
 - [ ] Basic AI (maybe come)
 
 *One small part was made on my live stream, just search my name for YouTube channel*
