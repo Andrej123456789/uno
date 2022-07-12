@@ -21,7 +21,7 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
         return true;
     }
 
-	else if (runtime->top_card->color == player_card[runtime->player_turn].cards[runtime->current_card_id].color | player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12)
+    else if (runtime->top_card->color == player_card[runtime->player_turn].cards[runtime->current_card_id].color | player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12)
     {
         return true;
     }
@@ -254,16 +254,16 @@ void TopCardAction(struct runtime_t *runtime, struct player_t player[], struct c
 {
     int number = runtime->top_card[0].number;
 
-	if (number == 0 | number < 10)
-	{
-		return;
-	}
+    if (number == 0 | number < 10)
+    {
+        return;
+    }
 
 	else
 	{
-		switch (number) 
-		{
-			case 10:
+        switch (number) 
+        {
+            case 10:
                 player[0].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
 
