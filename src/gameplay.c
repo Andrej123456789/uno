@@ -259,8 +259,8 @@ void TopCardAction(struct runtime_t *runtime, struct player_t player[], struct c
         return;
     }
 
-	else
-	{
+    else
+    {
         switch (number) 
         {
             case 10:
@@ -292,7 +292,7 @@ void TopCardAction(struct runtime_t *runtime, struct player_t player[], struct c
 
             default:
                 break;
-		}
+        }
 	}	
 }
 
