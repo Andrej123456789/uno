@@ -1,11 +1,10 @@
 # uno++
 Simple Uno clone in terminal with some extra features and networking in mind
 
-Written using C and Lua
+Written using C programming language
 
 ## TODO
 - [ ] Networking
-- [x] Loading Lua files
 - [x] Gameplay (full gameplay)
 - [x] Settings
 - [x] Colors
