@@ -1,0 +1,29 @@
+.logo
+{
+    text-align: center;
+    color: red;
+    font-family: 'Droid Sans Mono';
+    font-size: 30px;
+}
+
+.main
+{
+    font-family: 'Droid Sans Mono';
+    font-size: 20px;
+    color: white;
+}
+
+body
+{
+    background-color: white;
+}
+
+button
+{
+    background-color: gray;
+    color: white;
+    padding: 13px 13px;
+    display: inline-block;
+    font-size: 12px;
+    visibility: hidden;
+}
