@@ -43,7 +43,8 @@ int copy(struct setting_t* settings, char path[20])
                 temp++;
                 break;
             
-            default:
+            default: /* ai players */
+                settings->ai_sequence = atoi(line);
                 break;
         }
     }
@@ -56,6 +57,7 @@ int copy(struct setting_t* settings, char path[20])
     printf("\t Debug Mode: %d\n", settings->debug_mode);
     printf("\t Swap Card: %d\n", settings->swap_card);
     printf("\t Colors: %d\n", settings->colors);
+    if (!SetAISequence(settings)) printf("\t Invalid AI sequence!\n");
     printf("\n");
 
     return 0;
