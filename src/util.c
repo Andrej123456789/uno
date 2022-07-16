@@ -1,38 +1,54 @@
 #include "include/util.h"
 
-void bail(lua_State *L, char *msg)
+int copy(struct setting_t* settings, char path[20])
 {
-	fprintf(stderr, "\nFATAL ERROR:\n  %s: %s\n\n",
-		msg, lua_tostring(L, -1));
-	exit(1);
-}
+    char line[256];
+    int temp = 1;
 
-void call(lua_State *L, char *file, char *function)
-{
-    L = luaL_newstate();                        /* Create Lua state variable */
-    luaL_openlibs(L);                           /* Load Lua libraries */
+    FILE* file;
+    file = fopen(path, "r");
 
-    if (luaL_loadfile(L, file))                 /* Load but don't run the Lua script */
-	    bail(L, "luaL_loadfile() failed");      /* Error out if file can't be read */
+    if (file == NULL)
+    {
+        printf("File not found!\n");
+        return 1;
+    }
 
-    if (lua_pcall(L, 0, 0, 0))                  /* PRIMING RUN. FORGET THIS AND YOU'RE TOAST */
-	    bail(L, "lua_pcall() failed");          /* Error out if Lua file has an error */
+    while (fgets(line, sizeof(line), file)) 
+    {
+        switch (temp)
+        {
+            case 1: /* number of players */
+                settings->players = atoi(line);
+                temp++;
+                break;
 
-    lua_getglobal(L, function);                 /* Tell what function to run */
+            case 2: /* special_mode */
+                settings->special_mode = atoi(line);
+                temp++;
+                break;
 
-    if (lua_pcall(L, 0, 0, 0))                  /* Run the function */
-	    bail(L, "lua_pcall() failed");          /* Error out if Lua file has an error */
+            case 3: /* debug_mode */
+                settings->debug_mode = atoi(line);
+                temp++;
+                break;
 
-    lua_close(L);                               /* Clean up, free the Lua state var */
-}
+            case 4: /* swap_card */
+                settings->swap_card = atoi(line);
+                temp++;
+                break;
 
-void copy(struct setting_t* settings, int players, int special_mode, int debug_mode, int swap_card, int colors)
-{
-    settings->players = players;
-    settings->special_mode = special_mode;
-    settings->debug_mode = debug_mode;
-    settings->swap_card = swap_card;
-    settings->colors = colors;
+            case 5: /* colors */
+                settings->colors = atoi(line);
+                temp++;
+                break;
+            
+            default:
+                break;
+        }
+    }
+
+    fclose(file);
 
     printf("Your current settings are:\n");
     printf("\t Players: %d\n", settings->players);
@@ -41,4 +57,6 @@ void copy(struct setting_t* settings, int players, int special_mode, int debug_m
     printf("\t Swap Card: %d\n", settings->swap_card);
     printf("\t Colors: %d\n", settings->colors);
     printf("\n");
+
+    return 0;
 }

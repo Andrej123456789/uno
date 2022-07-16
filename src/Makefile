@@ -12,7 +12,7 @@ $(BIN) : $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(BIN)
+	./$(BIN) default.txt
 
 clean:
 	rm -rf uno $(BIN) *.o

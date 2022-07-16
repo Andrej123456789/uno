@@ -57,9 +57,9 @@ struct runtime_t
 static bool isPositive = true;
 
 bool isFinished(int players, struct player_t player[]);
-bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
-void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id);
-void NextPlayer(struct runtime_t* runtime, int players, bool isPositive);
-void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
-void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
-void Gameplay(struct setting_t* settings, int players);
+bool isCompatible(struct runtime_t runtime, struct player_t player[]);
+void Swap(struct runtime_t runtime, struct player_t player[], int players, int swap_id);
+void NextPlayer(struct runtime_t runtime, int players, bool isPositive);
+void Action(struct runtime_t runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
+void TopCardAction(struct runtime_t runtime, struct player_t player[], struct cards_t cards[], int players);
+void Gameplay(struct setting_t* settings);
