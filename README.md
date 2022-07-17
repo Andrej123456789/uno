@@ -8,7 +8,7 @@ Written using C programming language mainly
 - [x] Gameplay (full gameplay)
 - [x] Settings
 - [x] Colors
-- [ ] Basic AI (on the road)
+- [x] Basic AI (TODO: get rid of cards guesses)
 
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows you can use Microsoft's C compiler but you have to add `#pragma warning(disable : 4996)` on the top of the file
