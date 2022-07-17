@@ -5,13 +5,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
-#include <math.h>
 
 /* 
  * Naming convention for cards:
  *
  * Numbers:
- * 1 - 9 - number cards
+ * 0 - 9 - number cards
  * 10 - +2 card
  * 11 - reverse card
  * 12 - skip card
@@ -62,7 +61,7 @@ static bool isPositive = true;
 bool isFinished(int players, struct player_t player[]);
 bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
 void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id);
-void NextPlayer(struct runtime_t* runtime, int players, bool isPositive);
+int NextPlayer(struct runtime_t* runtime, int players, bool isPositive, bool doReturn);
 void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
 void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
 int SetAISequence(struct setting_t* settings);

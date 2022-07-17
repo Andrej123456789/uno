@@ -29,8 +29,11 @@ static const char player_turn_color[] = "Player \x1b[35m%d\x1b[0m turn\n";
 static const char game_finished[] = "Game finished\n";
 static const char game_finished_color[] = "\x1b[32mGame finished\n\x1b[0m";
 
-static const char exiting[] = "Exiting\n";
-static const char exiting_color[] = "\x1b[31mExiting\n\x1b[0m";
+static const char exiting[] = "Exiting...\n";
+static const char exiting_color[] = "\x1b[31mExiting...\n\x1b[0m";
 
 static const char card_not_compatible[] = "Card is not compatible!\n";
 static const char card_not_compatible_color[] = "\x1b[31mCard is not compatible!\n\x1b[0m";
+
+static const char ai_action[] = "\nAI action\n\n";
+static const char ai_action_color[] = "\n\x1b[32mAI action\n\n\x1b[0m";
