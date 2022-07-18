@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -llua -L../lua -I../lua -lm -ldl
+CFLAGS = -g
 OBJS = $(shell echo $(wildcard *.c) | sed 's/\.c/\.o/g')
 BIN = uno
 
