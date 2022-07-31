@@ -2,6 +2,8 @@
 
 int copy(struct setting_t* settings, char path[20])
 {
+    bool aiDone;
+
     char line[256];
     int temp = 1;
 
@@ -19,6 +21,13 @@ int copy(struct setting_t* settings, char path[20])
         switch (temp)
         {
             case 1: /* number of players */
+                if (atoi(line) > 20)
+                {
+                    printf("Maximum number of players is 20!\n");
+                    printf("Exiting...\n\n");
+                    return 1;
+                }
+
                 settings->players = atoi(line);
                 temp++;
                 break;
@@ -44,7 +53,16 @@ int copy(struct setting_t* settings, char path[20])
                 break;
             
             default: /* ai players */
-                settings->ai_sequence = atoi(line);
+                if (!aiDone)
+                {
+                    settings->ai_sequence = atoi(line);
+                    aiDone = true;
+                }
+
+                else
+                {
+                    settings->network_sequence = atoi(line);
+                }
                 break;
         }
     }
@@ -58,6 +76,7 @@ int copy(struct setting_t* settings, char path[20])
     printf("\t Swap Card: %d\n", settings->swap_card);
     printf("\t Colors: %d\n", settings->colors);
     if (!SetAISequence(settings)) printf("\t Invalid AI sequence!\n");
+    if (!SetNetworkSequence(settings)) printf("\t Invalid Network sequence!\n");
     printf("\n");
 
     return 0;

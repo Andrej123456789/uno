@@ -32,6 +32,7 @@ Logic example:
 `0101`
 Reversed example (what program recognise):
 `1010`
+7. Network sequence, same as AI sequence
 ```
 
 *One small part was made on my live stream, just search my name for YouTube channel*

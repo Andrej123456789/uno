@@ -15,12 +15,14 @@ bool isFinished(int players, struct player_t player[])
 
 bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
 {
-    if (runtime->top_card[0].number == player_card[runtime->player_turn].cards[runtime->current_card_id].number | player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12)
+    if (runtime->top_card[0].number == player_card[runtime->player_turn].cards[runtime->current_card_id].number | 
+                                    player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12)
     {
         return true;
     }
 
-    else if (runtime->top_card[0].color == player_card[runtime->player_turn].cards[runtime->current_card_id].color | player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12)
+    else if (runtime->top_card[0].color == player_card[runtime->player_turn].cards[runtime->current_card_id].color 
+                                    | player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12)
     {
         return true;
     }
@@ -101,11 +103,13 @@ void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t 
         switch (number) 
         {
             case 10:
-                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
                 player->number_of_cards++;
 
-                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
                 player->number_of_cards++;
 
@@ -203,19 +207,23 @@ void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t 
                     player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                     player->number_of_cards--;
                     
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
@@ -412,11 +420,13 @@ void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_
         switch (number)
         {
             case 10:
-                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
                 player->number_of_cards++;
 
-                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
                 player->number_of_cards++;
 
@@ -534,19 +544,23 @@ void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_
                     player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                     player->number_of_cards--;
                     
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
-                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[NextPlayer(runtime, players, isPositive, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
+                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                     runtime->avabible_cards--;
                     player->number_of_cards++;
 
@@ -626,6 +640,55 @@ void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_
     printf("\t -------------------- \t \n");
 
     NextPlayer(runtime, players, isPositive, false);
+}
+
+int SetNetworkSequence(struct setting_t* settings)
+{
+    bool valid = false;
+
+    int c = 0;
+    int n = settings->network_sequence;
+
+    while (n != 0)
+    {
+        n /= 10;
+        c++;
+    }
+
+    int array[c];
+    c = 0;
+    n = settings->network_sequence;
+
+    while (n != 0)
+    {
+        array[c] = n % 10;
+        n /= 10;
+        c++;
+    }
+
+    for (int i = 0; i < c; i++)
+    {
+        if (array[i] == 0 || array[i] == 1)
+        {
+            if (!valid && i != 0) valid = false;
+            else if (!valid && i == 0) valid = true;
+        }
+
+        else
+        {
+            valid = false;
+        }
+    }
+    
+    if (!valid) return valid;
+
+    printf("\t AI Sequence: ");
+    for (int i = 0; i < c; i++)
+    {
+        settings->network_array_sequence[i] = array[i];
+        printf("%d", settings->network_array_sequence[i]);
+    }
+    printf("\n");
 }
 
 void Gameplay(struct setting_t* settings)
@@ -803,6 +866,13 @@ void Gameplay(struct setting_t* settings)
         if (runtime->player_turn != 0 && settings->ai_array_sequence[runtime->player_turn] == 1)
         {
             AIAction(runtime, player, cards, settings, players);
+            goto again;
+        }
+
+        else if (runtime->player_turn != 0 && settings->network_array_sequence[runtime->player_turn] == 1)
+        {
+            printf("Network is WIP (Work in progress)!!\n\n");
+            NextPlayer(runtime, players, isPositive, false);
             goto again;
         }
 

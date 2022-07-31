@@ -33,7 +33,9 @@ struct setting_t
     int swap_card;
     int colors;
     int ai_sequence;
-    int ai_array_sequence[];
+    int ai_array_sequence[21];
+    int network_sequence;
+    int network_array_sequence[21];
 };
 
 struct cards_t
@@ -66,4 +68,5 @@ void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t 
 void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
 int SetAISequence(struct setting_t* settings);
 void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
+int SetNetworkSequence(struct setting_t* settings);
 void Gameplay(struct setting_t* settings);
