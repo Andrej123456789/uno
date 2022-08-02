@@ -55,12 +55,13 @@ struct runtime_t
     int avabible_cards;
     int current_card_id;
     int player_turn;
+    int player_winner;
     struct cards_t top_card[1];
 };
 
 static bool isPositive = true;
 
-bool isFinished(int players, struct player_t player[]);
+bool isFinished(int players, struct player_t player[], struct runtime_t* runtime);
 bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
 void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id);
 int NextPlayer(struct runtime_t* runtime, int players, bool isPositive, bool doReturn);
@@ -69,4 +70,5 @@ void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct c
 int SetAISequence(struct setting_t* settings);
 void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
 int SetNetworkSequence(struct setting_t* settings);
+int Points(struct player_t player[], int players, struct runtime_t* runtime);
 void Gameplay(struct setting_t* settings);

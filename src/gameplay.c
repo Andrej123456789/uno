@@ -1,12 +1,13 @@
 #include "include/gameplay.h"
 #include "include/strings.h"
 
-bool isFinished(int players, struct player_t player[])
+bool isFinished(int players, struct player_t player[], struct runtime_t* runtime)
 {
     for (int i = 0; i < players + 1; i++)
     {
         if (player[i].number_of_cards == 0)
         {
+            runtime->player_winner = i;
             return true;
         }
     }
@@ -691,6 +692,37 @@ int SetNetworkSequence(struct setting_t* settings)
     printf("\n");
 }
 
+int Points(struct player_t player[], int players, struct runtime_t* runtime)
+{
+    int points = 0;
+
+    for (int i = 0; i < players - 1; i++)
+    {
+        for (int j = 1; j < player[i].number_of_cards + 1; j++)
+        {
+            if (player[i].cards[j].number < 10 || player[i].cards[j].number == 15)
+            {
+                points += player[i].cards[j].number;
+            }
+
+            else
+            {
+                if (player[i].cards[j].number >= 10 && player[i].cards[j].number <= 12)
+                {
+                    points += 20;
+                }
+
+                else if (player[i].cards[j].number >= 13 && player[i].cards[j].number < 15)
+                {
+                    points += 40;
+                }
+            }
+        }
+    }
+
+    return points;
+}
+
 void Gameplay(struct setting_t* settings)
 {
     char tmp_input[20];
@@ -855,9 +887,11 @@ void Gameplay(struct setting_t* settings)
 
     while (true)
     {
-        if (isFinished(players, player) == true)
+        if (isFinished(players, player, runtime) == true)
         {
             printf((settings->colors == 1) ? game_finished_color : game_finished);
+            printf("Player %d won!\n", runtime->player_winner);
+            printf("Points: %d\n", Points(player, players, runtime));
             free(runtime);
             break;
         }

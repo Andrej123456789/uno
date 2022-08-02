@@ -15,4 +15,7 @@ run:
 	./$(BIN) default.txt
 
 clean:
-	rm -rf uno $(BIN) *.o
+	rm -rf *.o
+
+full_clean:
+	rm -rf $(BIN) *.o
