@@ -1,3 +1,10 @@
+/**
+ * @author Andrej123456789 (Andrej Bartulin)
+ * PROJECT: uno++, simple game inspired by Uno in terminal
+ * LICENSE: Apache License 2.0
+ * DESCRIPTION: util.h, header file for helper functions
+*/
+
 #pragma once
 
 #include <stdio.h>

@@ -1,8 +1,8 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
- * @project uno++, simple game inspired by Uno in terminal
- * @license Apache License 2.0
- * @description main.c, entry point for the game
+ * PROJECT: uno++, simple game inspired by Uno in terminal
+ * LICENSE: Apache License 2.0
+ * DESCRIPTION: main.c, entry point for the game
 */
 
 #include <stdio.h>

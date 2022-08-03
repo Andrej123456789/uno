@@ -1,8 +1,8 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
- * @project uno++, simple game inspired by Uno in terminal
- * @license Apache License 2.0
- * @description strings.h, strings in the game
+ * PROJECT: uno++, simple game inspired by Uno in terminal
+ * LICENSE: Apache License 2.0
+ * DESCRIPTION: strings.h, strings in the game
 */
 
 #pragma once
