@@ -1,11 +1,8 @@
 {
     "files.associations": {
-        "lua.h": "c",
         "util.h": "c",
         "gameplay.h": "c",
-        "setup.h": "c",
-        "lauxlib.h": "c",
         "stdlib.h": "c",
-        "ansi.h": "c"
+        "ansi.h": "c",
     }
 }

@@ -1,11 +1,17 @@
 #include "include/util.h"
 
-int copy(struct setting_t* settings, char path[20])
+/**
+ * Copying settings from the file to the struct.
+ * @param settings - the struct to copy the settings to
+ * @param points - the struct to copy the points (`match_point` variable) to
+ * @param path - the path to the file, length must be 20
+*/
+int copy(struct setting_t* settings, struct points_t* points, char path[20])
 {
     bool aiDone;
 
     char line[256];
-    int temp = 1;
+    int temp = 0;
 
     FILE* file;
     file = fopen(path, "r");
@@ -20,6 +26,12 @@ int copy(struct setting_t* settings, char path[20])
     {
         switch (temp)
         {
+            case 0: /* match_points */
+                points->match_points = atoi(line);
+                points->match_ended = false;
+                temp++;
+                break;
+
             case 1: /* number of players */
                 if (atoi(line) > 20)
                 {
@@ -80,4 +92,64 @@ int copy(struct setting_t* settings, char path[20])
     printf("\n");
 
     return 0;
+}
+
+/**
+ * Replacing line in the file.
+ * Credits: https://codeforwin.org/2018/02/c-program-replace-specific-line-a-text-file.html
+ * @param path - the path to the file
+ * @param line - the line number
+ * @param text_size - size of new text
+ * @param text - the new text
+*/
+void replace_line(const char* path, int line, int text_size, char new_text[text_size])
+{
+    printf("Here: %s\n", new_text);
+
+    int count;
+    char buffer[1000];
+
+    /* Open all required files */
+    FILE* fPtr = fopen(path, "r");
+    FILE* fTemp = fopen("replace.tmp", "w");
+
+    /* fopen() return NULL if unable to open file in given mode. */
+    if (fPtr == NULL || fTemp == NULL)
+    {
+        /* Unable to open file hence exit */
+        printf("\nUnable to open file.\n");
+        printf("Please check whether file exists and you have read/write privilege.\n");
+        exit(0);
+    }
+
+    /*
+     * Read line from source file and write to destination 
+     * file after replacing given line.
+    */
+    count = 0;
+    while ((fgets(buffer, text_size, fPtr)))
+    {
+        count++;
+
+        /* If current line is line to replace */
+        if (count == line)
+        {
+            fputs(new_text, fTemp);
+        }
+
+        else
+        {
+            fputs(buffer, fTemp);
+        }
+    }
+
+    /* Close all files to release resource */
+    fclose(fPtr);
+    fclose(fTemp);
+
+    /* Delete original source file */
+    remove(path);
+
+    /* Rename temporary file as original file */
+    rename("replace.tmp", path);
 }

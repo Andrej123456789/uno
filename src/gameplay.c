@@ -1,19 +1,39 @@
+/**
+ * @author Andrej123456789 (Andrej Bartulin)
+ * @project uno++, simple game inspired by Uno in terminal
+ * @license Apache License 2.0
+ * @description gameplay.c, c file for gameplay mechanics
+*/
+
 #include "include/gameplay.h"
 #include "include/strings.h"
+#include "include/util.h"
 
-bool isFinished(int players, struct player_t player[], struct runtime_t* runtime)
+/**
+ * Check if some player finished the round.
+ * @param players - number of players
+ * @param player - struct which contains information about player, pointing to player_t
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param points - struct for holding information about points, pointing to points_t
+*/
+bool isFinished(int players, struct player_t player[], struct runtime_t* runtime, struct points_t* points)
 {
     for (int i = 0; i < players + 1; i++)
     {
         if (player[i].number_of_cards == 0)
         {
-            runtime->player_winner = i;
+            points->round_winner = i;
             return true;
         }
     }
     return false;
 }
 
+/**
+ * Check if cards which player wants to play is compatible with the top card.
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param player - struct which contains information about player, pointing to player_t
+*/
 bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
 {
     if (runtime->top_card[0].number == player_card[runtime->player_turn].cards[runtime->current_card_id].number | 
@@ -34,6 +54,13 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
     }
 }
 
+/**
+ * Swap cards bettwen two players.
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param player - struct which contains information about player, pointing to player_t
+ * @param players - number of players
+ * @param swap_id - player which will got the cards from player which asked for swap
+*/
 void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id)
 {
     struct player_t a = player[runtime->player_turn];
@@ -46,6 +73,13 @@ void Swap(struct runtime_t* runtime, struct player_t player[], int players, int 
     b = temp;
 }
 
+/**
+ * Switch turn to the next player.
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param players - number of players
+ * @param isPositive - if the turn is positive or negative, pointing to isPositive in gameplay.h
+ * @param doReturn - do return of next player turn 
+*/
 int NextPlayer(struct runtime_t* runtime, int players, bool isPositive, bool doReturn)
 {
     if (isPositive == true)
@@ -80,6 +114,14 @@ int NextPlayer(struct runtime_t* runtime, int players, bool isPositive, bool doR
     }
 }
 
+/**
+ * Perform action on the card which user wants to play.
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param player - struct which contains information about player, pointing to player_t
+ * @param cards - struct which contains information about cards, pointing to cards_t
+ * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param players - number of players
+*/
 void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players)
 {
     bool can_do_4 = false;
@@ -285,6 +327,13 @@ void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t 
     NextPlayer(runtime, players, isPositive, false);
 }
 
+/**
+ * Perform action on the top card.
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param player - struct which contains information about player, pointing to player_t
+ * @param cards - struct which contains information about cards, pointing to cards_t
+ * @param players - number of players
+*/
 void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players)
 {
     int number = runtime->top_card[0].number;
@@ -331,6 +380,10 @@ void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct c
 	}	
 }
 
+/**
+ * Determine which player is AI.
+ * @param settings - struct which contains information about settings, pointing to setting_t 
+*/
 int SetAISequence(struct setting_t* settings)
 {
     bool valid = false;
@@ -380,6 +433,14 @@ int SetAISequence(struct setting_t* settings)
     printf("\n");
 }
 
+/**
+ * Perform an action on the card which AI wants to play.
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param player - struct which contains information about player, pointing to player_t
+ * @param cards - struct which contains information about cards, pointing to cards_t
+ * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param players - number of players 
+*/
 void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players)
 {
     printf((settings->colors == 1) ? ai_action_color : ai_action);
@@ -643,6 +704,10 @@ void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_
     NextPlayer(runtime, players, isPositive, false);
 }
 
+/**
+ * Determine which player is connected to network.
+ * @param settings - struct which contains information about settings, pointing to setting_t 
+*/
 int SetNetworkSequence(struct setting_t* settings)
 {
     bool valid = false;
@@ -692,9 +757,132 @@ int SetNetworkSequence(struct setting_t* settings)
     printf("\n");
 }
 
-int Points(struct player_t player[], int players, struct runtime_t* runtime)
+/**
+ * Read or write points to text file.
+ * @param points - struct for holding information about points, pointing to points_t
+ * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param write - perform read of write
+ * @param players - number of players
+ * @param point - points, see function code in gameplay.c for naming convention
+*/
+int PointsFromFile(struct points_t* points, struct setting_t* settings, bool write, int player, int point)
 {
-    int points = 0;
+    points->alReadyCreated = false;
+    if (!write)
+    {
+        FILE* read = fopen(".points.txt", "r");
+        char buffer[14];
+        char points_buffer[4]; /* To remove "Player 0: " text */
+        char player_buffer[3]; /* For player id */
+
+        if (read == NULL && !points->alReadyCreated)
+        {
+            /*
+             * If the file doesn't exist, create it and set players' points to 0.
+            */
+
+            FILE* temp = fopen(".points.txt", "w");
+            fclose(temp);
+            points->alReadyCreated = true;
+            PointsFromFile(points, settings, true, 0, 0);
+            PointsFromFile(points, settings, write, player, point);
+        }
+
+        else if (read == NULL && points->alReadyCreated)
+        {
+            printf("Error reading points from file!\n");
+            return 1;
+        }
+
+        while (fgets(buffer, sizeof(buffer), read))
+        {
+            if (strlen(buffer) == 1)
+            {
+                
+            }
+
+            else
+            {
+                if (buffer[12] == '\n')
+                {
+                    buffer[12] = '\0';
+                }
+
+                /* copy points to points_buffer */
+                strncpy(points_buffer, buffer + 10, 3);
+                points_buffer[3] = '\0';
+
+                /* copy player id to player_buffer */
+                strncpy(player_buffer, buffer + 7, 2);
+                player_buffer[2] = '\0';
+
+                if (player_buffer[1] == ':')
+                {
+                    player_buffer[1] = '\0';
+                }
+
+                if (atoi(player_buffer) == player)
+                {
+                    points->temp_points += atoi(points_buffer);
+                }
+            }
+        }
+
+        fclose(read);
+        return 0;
+    }
+
+    else
+    {
+        /*
+        * Naming convention for `point` variabel:
+        * 0 = write defaults
+        * 1 = ignore
+        * other = write a point
+        */
+
+        if (point == 0)
+        {
+            FILE* write = fopen(".points.txt", "w");
+            if (write == NULL)
+            {
+                printf("\t Error: Could not open file\n");
+                return 0;
+            }
+
+            for (int i = 0; i < settings->players; i++)
+            {
+                fprintf(write, "Player %d: 0\n", i);
+            }
+
+            fclose(write);
+        }
+
+        else if (point != 1)
+        {
+            char new_text[14];
+            sprintf(new_text, "Player %d: %d", player, point);
+            replace_line(".points.txt", player + 1, 14, new_text);
+        }
+
+        else
+        {
+            /* ignoring 1 */
+        }
+    }
+}
+
+/**
+ * Assigning points and determining winner of the match.
+ * @param player - struct which contains information about player, pointing to player_t
+ * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param points - struct for holding information about points, pointing to points_t
+ * @param players - number of players
+*/
+void PointsManager(struct player_t player[], struct runtime_t* runtime, struct setting_t* settings, struct points_t* points, int players)
+{
+    int temp_points = 0;
 
     for (int i = 0; i < players - 1; i++)
     {
@@ -702,28 +890,48 @@ int Points(struct player_t player[], int players, struct runtime_t* runtime)
         {
             if (player[i].cards[j].number < 10 || player[i].cards[j].number == 15)
             {
-                points += player[i].cards[j].number;
+                temp_points += player[i].cards[j].number;
             }
 
             else
             {
                 if (player[i].cards[j].number >= 10 && player[i].cards[j].number <= 12)
                 {
-                    points += 20;
+                    temp_points += 20;
                 }
 
                 else if (player[i].cards[j].number >= 13 && player[i].cards[j].number < 15)
                 {
-                    points += 40;
+                    temp_points += 40;
                 }
             }
         }
     }
+    points->temp_points = temp_points;
+    PointsFromFile(points, settings, false, points->round_winner, 0); /* Read points from file */
+    PointsFromFile(points, settings, true, points->round_winner, points->temp_points); /* Write points to file */
+    if (PointsFromFile(points, settings, false, points->round_winner, 0) == 1)
+    {
+        printf("Error reading points from file!\n");
+        printf("Continuing without them!\n");
+        return 2;
+    }
 
-    return points;
+    if (points->temp_points >= points->match_points)
+    {
+        points->match_ended = true;
+        points->match_winner = points->round_winner;
+        remove(".points.txt");
+        return;
+    }
 }
 
-void Gameplay(struct setting_t* settings)
+/**
+ * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.
+ * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param points - struct for holding information about points, pointing to points_t 
+*/
+void Gameplay(struct setting_t* settings, struct points_t* points)
 {
     char tmp_input[20];
     time_t t;
@@ -887,13 +1095,24 @@ void Gameplay(struct setting_t* settings)
 
     while (true)
     {
-        if (isFinished(players, player, runtime) == true)
+        if (isFinished(players, player, runtime, points) == true)
         {
+            PointsManager(player, runtime, settings, points, players);
             printf((settings->colors == 1) ? game_finished_color : game_finished);
-            printf("Player %d won!\n", runtime->player_winner);
-            printf("Points: %d\n", Points(player, players, runtime));
-            free(runtime);
-            break;
+
+            if (points->match_ended)
+            {
+                printf((settings->colors == 1) ? won_match_color : won_match);
+                printf((settings->colors == 1) ? points_color : points);
+                break;
+            }
+
+            else
+            {
+                printf((settings->colors == 1) ? won_round_color : won_round);
+                printf((settings->colors == 1) ? points_color : points);
+                printf("------------------\n");
+            }
         }
 
         again:
@@ -943,7 +1162,6 @@ void Gameplay(struct setting_t* settings)
         else if (strcmp(tmp_input, "exit") == 0)
         {
             printf((settings->colors == 1) ? exiting_color : exiting);
-            free(runtime);
             break;
         }
 
@@ -970,4 +1188,5 @@ void Gameplay(struct setting_t* settings)
             goto try_again;
         }
     }
+    free(runtime);
 }

@@ -1,3 +1,10 @@
+/**
+ * @author Andrej123456789 (Andrej Bartulin)
+ * @project uno++, simple game inspired by Uno in terminal
+ * @license Apache License 2.0
+ * @description ANSI.h, ansi color escape codes for terminal
+*/
+
 #pragma once
 
 #define ANSI_COLOR_RED     "\x1b[31m"

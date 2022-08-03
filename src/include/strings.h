@@ -1,3 +1,10 @@
+/**
+ * @author Andrej123456789 (Andrej Bartulin)
+ * @project uno++, simple game inspired by Uno in terminal
+ * @license Apache License 2.0
+ * @description strings.h, strings in the game
+*/
+
 #pragma once
 
 #include "ANSI.h"
@@ -26,8 +33,17 @@ static const char option_color[] = "Enter card id or do something else ['\x1b[36
 static const char player_turn[] = "Player %d turn\n";
 static const char player_turn_color[] = "Player \x1b[35m%d\x1b[0m turn\n";
 
-static const char game_finished[] = "Game finished\n";
-static const char game_finished_color[] = "\x1b[32mGame finished\n\x1b[0m";
+static const char game_finished[] = "Game finished!\n";
+static const char game_finished_color[] = "\x1b[32mGame finished!\n\x1b[0m";
+
+static const char won_match[] = "Player %d won the match!\n";
+static const char won_match_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the match!\n\x1b[0m";
+
+static const char won_round[] = "Player %d won the round!\n";
+static const char won_round_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the round!\n\x1b[0m";
+
+static const char points[] = "Points: %d\n";
+static const char points_color[] = "Points: \x1b[35m%d\x1b[0m\n";
 
 static const char exiting[] = "Exiting...\n";
 static const char exiting_color[] = "\x1b[31mExiting...\n\x1b[0m";

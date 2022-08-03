@@ -1,3 +1,10 @@
+/**
+ * @author Andrej123456789 (Andrej Bartulin)
+ * @project uno++, simple game inspired by Uno in terminal
+ * @license Apache License 2.0
+ * @description main.c, entry point for the game
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,10 +82,11 @@ int main(int argc, const char **argv)
     }
 
     struct setting_t* settings = malloc(sizeof(struct setting_t));
+    struct points_t* points = malloc(sizeof(struct points_t));
 
-    if (copy(settings, path) == 0)
+    if (copy(settings, points, path) == 0)
     {
-        Gameplay(settings);
+        Gameplay(settings, points);
     }
 
     free(settings);
