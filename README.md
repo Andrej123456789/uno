@@ -20,7 +20,7 @@ will load default config file) type in your terminal (emulator) `make run`.
 3. To clean `*.o`, simply type in your terminal (emulator) `make clean`.
 4. To clean everything (`*.o` files and `uno` executable) type in your terminal (emulator) `make full_clean`
 5. There is also a web version with some better graphics.
-6. If you get segmentaion faults or other runtime errors try running program again, this fixes issue when`.points.txt` is not created already and then report an issue on this GitHub repo.
+6. If you get segmentation faults or other runtime errors try running program again, this fixes issue when`.points.txt` is not created already and then report an issue on this GitHub repo.
 
 ## How to change settings?
 - Follow next rules to see what each settings represents.
