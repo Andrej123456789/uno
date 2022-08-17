@@ -11,6 +11,7 @@
 
 #include "include/util.h"
 #include "include/gameplay.h"
+#include "include/server.h"
 
 const char* logo_row1 = ".----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
 const char* logo_row2 = "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n";
@@ -49,15 +50,24 @@ int main(int argc, const char **argv)
 
     if (argc == 2)
     {
-        if (strlen(argv[1]) < 20)
+        if (strcmp(argv[1], "--s") == 0)
         {
-            strcpy(path, argv[1]);
+            StartServer();
+            return;
         }
 
         else
         {
-            printf("Path is too long!\n");
-            return 0;
+            if (strlen(argv[1]) < 20)
+            {
+                strcpy(path, argv[1]);
+            }
+
+            else
+            {
+                printf("Path is too long!\n");
+                return 0;
+            }
         }
     }
 

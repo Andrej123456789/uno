@@ -2,7 +2,7 @@
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
  * LICENSE: Apache License 2.0
- * DESCRIPTION: util.c, c file for helper functions
+ * DESCRIPTION: util.c, C file for helper functions
 */
 
 #include "include/util.h"
@@ -159,4 +159,48 @@ void replace_line(const char* path, int line, int text_size, char new_text[text_
 
     /* Rename temporary file as original file */
     rename("replace.tmp", path);
+}
+
+/**
+ * Initializes an array
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param a - array, points to Vec struct
+ * @param initSize - size to allocate during initialization
+*/
+void InitArray(Vec *a, size_t initSize)
+{
+    a->array = malloc(initSize * sizeof(int));
+    a->used = 0;
+    a->size = initSize;
+}
+
+/**
+ * Insert an element into an array
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param a - array, points to Vec struct
+ * @param element - element to insert into an array
+*/
+void InsertArray(Vec *a, int element)
+{
+    /* a->used is the number of used entries, because a->array[a->used++] updates a->used only *after* the array has been accessed.
+     * Therefore a->used can go up to a->size 
+    */
+    if (a->used == a->size) 
+    {
+        a->size *= 2;
+        a->array = realloc(a->array, a->size * sizeof(int));
+    }
+    a->array[a->used++] = element;
+}
+
+/**
+ * Frees an array
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param a - array, points to Vec struct
+*/
+void FreeArray(Vec *a)
+{
+    free(a->array);
+    a->array = NULL;
+    a->used = a->size = 0;
 }

@@ -29,3 +29,40 @@ int copy(struct setting_t* settings, struct points_t* points, char path[20]);
  * @param text - the new text
 */
 void replace_line(const char* path, int line, int text_size, char new_text[text_size]);
+
+/**
+ * Dynamically growing array in C
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param array . actual array
+ * @param used - how much elements are used
+ * @param size - size of array
+*/
+typedef struct 
+{
+    int *array;
+    size_t used;
+    size_t size;
+} Vec;
+
+/**
+ * Initializes an array
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param a - array, points to Vec struct
+ * @param initSize - size to allocate during initialization
+*/
+void InitArray(Vec *a, size_t initSize);
+
+/**
+ * Insert an element into an array
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param a - array, points to Vec struct
+ * @param element - element to insert into an array
+*/
+void InsertArray(Vec *a, int element);
+
+/**
+ * Frees an array
+ * Credits: https://stackoverflow.com/questions/3536153/c-dynamically-growing-array
+ * @param a - array, points to Vec struct
+*/
+void FreeArray(Vec *a);

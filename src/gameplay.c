@@ -2,7 +2,7 @@
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
  * LICENSE: Apache License 2.0
- * DESCRIPTION: gameplay.c, c file for gameplay mechanics
+ * DESCRIPTION: gameplay.c, C file for gameplay mechanics
 */
 
 #include "include/gameplay.h"
