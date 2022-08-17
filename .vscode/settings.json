@@ -4,5 +4,7 @@
         "gameplay.h": "c",
         "stdlib.h": "c",
         "ansi.h": "c",
+        "socket.h": "c",
+        "server.h": "c",
     }
 }
