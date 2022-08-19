@@ -82,7 +82,7 @@ static const char socket_bind[] = "Socket successfully binded...\n";
 static const char socket_bind_color[] = "\x1b[32mSocket successfully binded...\n\x1b[0m";
 
 static const char server_listen[] = "Server listening...\n";
-static const char server_listen_color[] = "\x1b[32mServer listening...\nx1b[0m";
+static const char server_listen_color[] = "\x1b[32mServer listening...\n\x1b[0m";
 
 static const char accept_client[] = "Server has accepted client %d...\n"; 
 static const char accept_client_color[] = "\x1b[32mServer has accepted client %d...\n\x1b[0m";
