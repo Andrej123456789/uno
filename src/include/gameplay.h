@@ -88,6 +88,7 @@ struct player_t
  * @param available_cards - cards that are available for the players
  * @param current_card_id - current card id
  * @param player_turn - player turn
+ * @param isPositive - determines if the turn is positive or negative.
  * @param top_card - array which holds information about the top card
  * @param top_card.number - number of the top card
  * @param top_card.color - color of the top card
@@ -97,6 +98,7 @@ struct runtime_t
     int avabible_cards;
     int current_card_id;
     int player_turn;
+    bool isPositive;
     struct cards_t top_card[1];
 };
 
@@ -120,18 +122,12 @@ struct points_t
 };
 
 /**
- * Variable which determines if the turn is positive or negative.
-*/
-static bool isPositive = true;
-
-/**
  * Check if some player finished the round.
  * @param players - number of players
  * @param player - struct which contains information about player, pointing to player_t
- * @param runtime - struct for holding information during the game, pointing to runtime_t
  * @param points - struct for holding information about points, pointing to points_t
 */
-bool isFinished(int players, struct player_t player[], struct runtime_t* runtime, struct points_t* points);
+bool isFinished(int players, struct player_t player[], struct points_t* points);
 
 /**
  * Check if cards which player wants to play is compatible with the top card.
@@ -144,19 +140,17 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
  * Swap cards bettwen two players.
  * @param runtime - struct for holding information during the game, pointing to runtime_t
  * @param player - struct which contains information about player, pointing to player_t
- * @param players - number of players
  * @param swap_id - player which will got the cards from player which asked for swap
 */
-void Swap(struct runtime_t* runtime, struct player_t player[], int players, int swap_id);
+void Swap(struct runtime_t* runtime, struct player_t player[], int swap_id);
 
 /**
  * Switch turn to the next player.
  * @param runtime - struct for holding information during the game, pointing to runtime_t
  * @param players - number of players
- * @param isPositive - if the turn is positive or negative, pointing to isPositive in gameplay.h
  * @param doReturn - do return of next player turn 
 */
-int NextPlayer(struct runtime_t* runtime, int players, bool isPositive, bool doReturn);
+int NextPlayer(struct runtime_t* runtime, int players, bool doReturn);
 
 /**
  * Perform action on the card which user wants to play.
@@ -212,12 +206,11 @@ int PointsFromFile(struct points_t* points, struct setting_t* settings, bool wri
 /**
  * Assigning points and determining winner of the match.
  * @param player - struct which contains information about player, pointing to player_t
- * @param runtime - struct for holding information during the game, pointing to runtime_t
  * @param settings - struct which contains information about settings, pointing to setting_t
  * @param points - struct for holding information about points, pointing to points_t
  * @param players - number of players
 */
-void PointsManager(struct player_t player[], struct runtime_t* runtime, struct setting_t* settings, struct points_t* points, int players);
+void PointsManager(struct player_t player[], struct setting_t* settings, struct points_t* points, int players);
 
 /**
  * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.

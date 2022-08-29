@@ -27,7 +27,7 @@ static const char all_cards_color[] = "\tNumber: \x1b[32m%d\x1b[0m, Color: \x1b[
 static const char new_card[] = "Your new card is: Number: %d, Color: %d\n";
 static const char new_card_color[] = "Your new card is: Number: %d, Color: %d\n";
 
-static const char option[] = "Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]: ";
+static const char option_text[] = "Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]: ";
 static const char option_color[] = "Enter card id or do something else ['\x1b[36mnew\x1b[0m' - take card from deck, '\x1b[31mall\x1b[0m' - show all player's cards]: \x1b[0m";
 
 static const char player_turn[] = "Player %d turn\n";
@@ -42,7 +42,7 @@ static const char won_match_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the
 static const char won_round[] = "Player %d won the round!\n";
 static const char won_round_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the round!\n\x1b[0m";
 
-static const char points[] = "Points: %d\n";
+static const char points_text[] = "Points: %d\n";
 static const char points_color[] = "Points: \x1b[35m%d\x1b[0m\n";
 
 static const char exiting[] = "Exiting...\n";

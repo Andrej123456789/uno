@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g
+CFLAGS = -Wall -Wextra -Werror -pedantic -g
 OBJS = $(shell echo $(wildcard *.c) | sed 's/\.c/\.o/g')
 BIN = uno
 

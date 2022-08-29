@@ -111,8 +111,6 @@ int copy(struct setting_t* settings, struct points_t* points, char path[20])
 */
 void replace_line(const char* path, int line, int text_size, char new_text[text_size])
 {
-    printf("Here: %s\n", new_text);
-
     int count;
     char buffer[1000];
 
