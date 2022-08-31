@@ -3,10 +3,13 @@ CFLAGS = -Wall -Wextra -Werror -pedantic -g
 OBJS = $(shell echo $(wildcard *.c) | sed 's/\.c/\.o/g')
 BIN = uno
 
-all : $(BIN)
+all : $(BIN) 
 
 $(BIN) : $(OBJS)
 	$(CC) $(OBJS) -o $(BIN) $(CFLAGS)
+
+server.o : server.c
+	$(CC) -c $< -o $@
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
