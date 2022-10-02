@@ -28,9 +28,6 @@ const char* logo_row11 =" '----------------'  '----------------'  '-------------
 char logo[1];
 int players;
 
-char path[20];
-char temp[1];
-
 int main(int argc, const char **argv)
 {
     strcat(logo, logo_row1);
@@ -47,6 +44,9 @@ int main(int argc, const char **argv)
 
     printf("%s\n", logo);
 
+	/* Initial size is 20 including \0 character */
+	char* path = malloc(sizeof(char) * 20);
+
     if (argc == 2)
     {
         if (strcmp(argv[1], "--s") == 0)
@@ -57,21 +57,15 @@ int main(int argc, const char **argv)
 
         else
         {
-            if (strlen(argv[1]) < 20)
-            {
-                strcpy(path, argv[1]);
-            }
-
-            else
-            {
-                printf("Path is too long!\n");
-                return 0;
-            }
+			path = (char*)realloc(path, strlen(argv[1]));
+			strcpy(path, argv[1]);
         }
     }
 
     else
     {
+		char* temp = (char*)malloc(sizeof(char) * 20);
+
         printf("Usage: ./main <path to file>\n");
         printf("Example: ./main default.txt\n");
         printf("\n");
@@ -79,25 +73,26 @@ int main(int argc, const char **argv)
         printf("Enter the path to the file: ");
         scanf("%s", temp);
 
-        if (strlen(temp) < 20)
-        {
-            strcpy(path, temp);
-        }
-
-        else
-        {
-            printf("Path is too long!\n");
-        }
+		path = (char*)realloc(path, strlen(temp));
+		strcpy(path, temp);
     }
 
     struct setting_t* settings = malloc(sizeof(struct setting_t));
     struct points_t* points = malloc(sizeof(struct points_t));
 
-    if (copy(settings, points, path) == 0)
-    {
-        Gameplay(settings, points);
-    }
+	if (EndsWith(path, ".json"))
+	{
+		copy_json(settings, points, path);
+	}
 
+	else
+	{
+		copy(settings, points, path);
+	}
+
+	Gameplay(settings, points);
     free(settings);
+	free(path);
+
     return 0;
 }

@@ -6,12 +6,12 @@ Written using C programming language mainly
 *Repo is called `uno` because `++` couldn't fit in repo name*
 
 ## TODO
-- [ ] Networking
-- [x] Gameplay (full gameplay)
-- [x] Settings
-- [x] Colors
 - [x] Basic AI (TODO: get rid of cards guesses)
+- [x] Colors
+- [x] Gameplay (full gameplay)
+- [ ] Networking
 - [ ] Nice graphics
+- [x] Settings (both in .txt and .json files)
 
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.
@@ -29,14 +29,7 @@ will load default config file) type in your terminal (emulator) `make run`.
 3. debug_mode [0 - disabled, 1 - enabled]
 4. swap_card [0 - disabled, 1 - enabled]
 5. colors [0 - disabled, 1 - enabled]
-6. AI sequence {[0 - disabled, 1 - enabled] per player}, it represents if some player is AI, be aware you need to write it reversed. Example:
-```txt
-There are 4 players in game. Player 1 and Player 3 are AI.
-Logic example:
-`0101`
-Reversed example (what program recognise):
-`1010`
-```
+6. AI sequence {[0 - disabled, 1 - enabled] per player}]
 7. Network sequence, same as AI sequence
 
 *One small part was made on my live stream, just search my name for YouTube channel*

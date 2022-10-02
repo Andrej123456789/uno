@@ -1,0 +1,10 @@
+{
+	"match_points": 250,
+	"players": 2,
+	"special_mode": 0,
+	"debug_mode": 0,
+	"swap_card": 1,
+	"colors": 0,
+	"ai_sequence": "00",
+	"network_sequence": "00"
+}

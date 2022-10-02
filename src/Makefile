@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g
+CFLAGS = -Wall -Wextra -Werror -pedantic -g -ljson-c
 OBJS = $(shell echo $(wildcard *.c) | sed 's/\.c/\.o/g')
 BIN = uno
 

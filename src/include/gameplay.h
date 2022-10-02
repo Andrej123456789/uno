@@ -13,6 +13,9 @@
 #include <string.h>
 #include <time.h>
 
+/* Max number of players */
+#define MAX_PLAYERS 20
+
 /*
  * Naming convention for cards:
  *
@@ -51,10 +54,8 @@ struct setting_t
     int debug_mode;
     int swap_card;
     int colors;
-    int ai_sequence;
-    int ai_array_sequence[21];
-    int network_sequence;
-    int network_array_sequence[21];
+	char json_ai_sequence[MAX_PLAYERS];
+	char json_network_sequence[MAX_PLAYERS];
 };
 
 /**

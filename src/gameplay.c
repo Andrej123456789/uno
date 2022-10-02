@@ -384,53 +384,8 @@ void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct c
 */
 int SetAISequence(struct setting_t* settings)
 {
-    bool valid = false;
-
-    int c = 0;
-    int n = settings->ai_sequence;
-
-    while (n != 0)
-    {
-        n /= 10;
-        c++;
-    }
-
-    int array[c];
-    c = 0;
-    n = settings->ai_sequence;
-
-    while (n != 0)
-    {
-        array[c] = n % 10;
-        n /= 10;
-        c++;
-    }
-
-    for (int i = 0; i < c; i++)
-    {
-        if (array[i] == 0 || array[i] == 1)
-        {
-            if (!valid && i != 0) valid = false;
-            else if (!valid && i == 0) valid = true;
-        }
-
-        else
-        {
-            valid = false;
-        }
-    }
-    
-    if (!valid) return valid;
-
-    printf("\t AI Sequence: ");
-    for (int i = 0; i < c; i++)
-    {
-        settings->ai_array_sequence[i] = array[i];
-        printf("%d", settings->ai_array_sequence[i]);
-    }
-    printf("\n");
-
-    return true;
+	printf("%d", settings->colors);
+	return 0;
 }
 
 /**
@@ -709,53 +664,8 @@ void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_
 */
 int SetNetworkSequence(struct setting_t* settings)
 {
-    bool valid = false;
-
-    int c = 0;
-    int n = settings->network_sequence;
-
-    while (n != 0)
-    {
-        n /= 10;
-        c++;
-    }
-
-    int array[c];
-    c = 0;
-    n = settings->network_sequence;
-
-    while (n != 0)
-    {
-        array[c] = n % 10;
-        n /= 10;
-        c++;
-    }
-
-    for (int i = 0; i < c; i++)
-    {
-        if (array[i] == 0 || array[i] == 1)
-        {
-            if (!valid && i != 0) valid = false;
-            else if (!valid && i == 0) valid = true;
-        }
-
-        else
-        {
-            valid = false;
-        }
-    }
-    
-    if (!valid) return valid;
-
-    printf("\t AI Sequence: ");
-    for (int i = 0; i < c; i++)
-    {
-        settings->network_array_sequence[i] = array[i];
-        printf("%d", settings->network_array_sequence[i]);
-    }
-    printf("\n");
-
-    return true;
+	printf("%d", settings->colors);
+	return 0;
 }
 
 /**
@@ -1118,13 +1028,13 @@ void Gameplay(struct setting_t* settings, struct points_t* points)
         }
 
         again:
-        if (runtime->player_turn != 0 && settings->ai_array_sequence[runtime->player_turn] == 1)
+        if (runtime->player_turn != 0 && settings->json_ai_sequence[runtime->player_turn] == '1')
         {
             AIAction(runtime, player, cards, settings, players);
             goto again;
         }
 
-        else if (runtime->player_turn != 0 && settings->network_array_sequence[runtime->player_turn] == 1)
+        else if (runtime->player_turn != 0 && settings->json_network_sequence[runtime->player_turn] == '1')
         {
             printf("Network is WIP (Work in progress)!!\n\n");
             NextPlayer(runtime, players, false);

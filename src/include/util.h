@@ -9,16 +9,25 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <json-c/json.h>
 
 #include "gameplay.h"
 
 /**
  * Copying settings from the file to the struct.
- * @param settings - the struct to copy the settings to
+ * @param settings - struct where to copy most of settings
  * @param points - the struct to copy the points (`match_point` variable) to
- * @param path - the path to the file, length must be 20
+ * @param path - path of the file, length is 40
 */
-int copy(struct setting_t* settings, struct points_t* points, char path[20]);
+int copy(struct setting_t* settings, struct points_t* points, char* path);
+
+/**
+ * Copying settings from JSON file to the struct
+ * @param settings - struct where to copy most of settings 
+ * @param points - struct where is `match_point` variable going
+ * @param path - path of the file, length is 40
+*/
+int copy_json(struct setting_t* settings, struct points_t* points, char* path);
 
 /**
  * Replacing line in the file.
@@ -29,6 +38,14 @@ int copy(struct setting_t* settings, struct points_t* points, char path[20]);
  * @param text - the new text
 */
 void replace_line(const char* path, int line, int text_size, char new_text[text_size]);
+
+/**
+ * Check does string ends with another string
+ * Credits: https://stackoverflow.com/questions/744766/how-to-compare-ends-of-strings-in-c
+ * @param str - base string
+ * @param suffix - second string
+*/
+bool EndsWith(const char* str, const char* suffix);
 
 /**
  * Dynamically growing array in C
