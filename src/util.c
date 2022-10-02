@@ -111,7 +111,7 @@ int copy(struct setting_t* settings, struct points_t* points, char* path)
 */
 int copy_json(struct setting_t* settings, struct points_t* points, char* path)
 {
-	FILE* file;
+    FILE* file;
     file = fopen(path, "r");
 
     if (file == NULL)
@@ -120,65 +120,65 @@ int copy_json(struct setting_t* settings, struct points_t* points, char* path)
         return 1;
     }
 
-	char buffer[1024];
+    char buffer[1024];
 
-	struct json_object* parsed_json;
-	struct json_object* j_match_points;
-	struct json_object* j_players;
-	struct json_object* j_special_mode;
-	struct json_object* j_debug_mode;
-	struct json_object* j_swap_card;
-	struct json_object* j_colors;
-	struct json_object* j_ai_sequence;
-	struct json_object* j_network_sequence;
+    struct json_object* parsed_json;
+    struct json_object* j_match_points;
+    struct json_object* j_players;
+    struct json_object* j_special_mode;
+    struct json_object* j_debug_mode;
+    struct json_object* j_swap_card;
+    struct json_object* j_colors;
+    struct json_object* j_ai_sequence;
+    struct json_object* j_network_sequence;
 
-	int match_points, players, special_mode, debug_mode, swap_card, colors;
+    int match_points, players, special_mode, debug_mode, swap_card, colors;
 
-	fread(buffer, 1024, 1, file);
-	fclose(file);
+    fread(buffer, 1024, 1, file);
+    fclose(file);
 
-	/* Settings which are not sequences */
-	parsed_json = json_tokener_parse(buffer);
-	json_object_object_get_ex(parsed_json, "match_points", &j_match_points);
-	json_object_object_get_ex(parsed_json, "players", &j_players);
-	json_object_object_get_ex(parsed_json, "special_mode", &j_special_mode);
-	json_object_object_get_ex(parsed_json, "debug_mode", &j_debug_mode);
-	json_object_object_get_ex(parsed_json, "swap_card", &j_swap_card);
-	json_object_object_get_ex(parsed_json, "colors", &j_colors);
+    /* Settings which are not sequences */
+    parsed_json = json_tokener_parse(buffer);
+    json_object_object_get_ex(parsed_json, "match_points", &j_match_points);
+    json_object_object_get_ex(parsed_json, "players", &j_players);
+    json_object_object_get_ex(parsed_json, "special_mode", &j_special_mode);
+    json_object_object_get_ex(parsed_json, "debug_mode", &j_debug_mode);
+    json_object_object_get_ex(parsed_json, "swap_card", &j_swap_card);
+    json_object_object_get_ex(parsed_json, "colors", &j_colors);
 
-	match_points = json_object_get_int(j_match_points);
-	players = json_object_get_int(j_players);
-	special_mode = json_object_get_int(j_special_mode);
-	debug_mode = json_object_get_int(j_debug_mode);
-	swap_card = json_object_get_int(j_swap_card);
-	colors = json_object_get_int(j_colors);
+    match_points = json_object_get_int(j_match_points);
+    players = json_object_get_int(j_players);
+    special_mode = json_object_get_int(j_special_mode);
+    debug_mode = json_object_get_int(j_debug_mode);
+    swap_card = json_object_get_int(j_swap_card);
+    colors = json_object_get_int(j_colors);
 
     points->match_points = match_points;
-	settings->players = players;
-	settings->special_mode = special_mode;
-	settings->debug_mode = debug_mode;
-	settings->swap_card = swap_card;
-	settings->colors = colors;
+    settings->players = players;
+    settings->special_mode = special_mode;
+    settings->debug_mode = debug_mode;
+    settings->swap_card = swap_card;
+    settings->colors = colors;
 
-	/* Sequences */
-	json_object_object_get_ex(parsed_json, "ai_sequence", &j_ai_sequence);
-	json_object_object_get_ex(parsed_json, "network_sequence", &j_network_sequence);
+    /* Sequences */
+    json_object_object_get_ex(parsed_json, "ai_sequence", &j_ai_sequence);
+    json_object_object_get_ex(parsed_json, "network_sequence", &j_network_sequence);
 
-	strcpy(settings->json_ai_sequence, json_object_get_string(j_ai_sequence));
-	strcpy(settings->json_network_sequence, json_object_get_string(j_network_sequence));
+    strcpy(settings->json_ai_sequence, json_object_get_string(j_ai_sequence));
+    strcpy(settings->json_network_sequence, json_object_get_string(j_network_sequence));
 
-	/* Print settings */
-	printf("Your current settings are:\n");
+    /* Print settings */
+    printf("Your current settings are:\n");
     printf("\t Players: %d\n", settings->players);
     printf("\t Special Mode: %d\n", settings->special_mode);
     printf("\t Debug Mode: %d\n", settings->debug_mode);
     printf("\t Swap Card: %d\n", settings->swap_card);
     printf("\t Colors: %d\n", settings->colors);
-	printf("\t AI sequence: %s\n", settings->json_ai_sequence);
-	printf("\t Network sequence: %s\n", settings->json_network_sequence);
+    printf("\t AI sequence: %s\n", settings->json_ai_sequence);
+    printf("\t Network sequence: %s\n", settings->json_network_sequence);
     printf("\n");
 
-	return 0;
+    return 0;
 }
 
 /**

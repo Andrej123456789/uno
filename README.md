@@ -15,11 +15,13 @@ Written using C programming language mainly
 
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.
+2. Install `json-c` library
+    - Debian based distos: `apt-get install libjson-c-dev`
+    - Arch based distos: `pacman -S json-c`
 2. Go to `src` folder/directory and type in your terminal (emulator) `make` and then if you want run from `Makefile` (be aware that by default 
 will load default config file) type in your terminal (emulator) `make run`.
 3. To clean `*.o`, simply type in your terminal (emulator) `make clean`.
 4. To clean everything (`*.o` files and `uno` executable) type in your terminal (emulator) `make full_clean`
-5. If you get segmentation faults or other runtime errors try running program again, this fixes issue when`.points.txt` is not created already and then report an issue on this GitHub repo.
 
 ## How to change settings?
 - Follow next rules to see what each settings represents.
@@ -31,5 +33,8 @@ will load default config file) type in your terminal (emulator) `make run`.
 5. colors [0 - disabled, 1 - enabled]
 6. AI sequence {[0 - disabled, 1 - enabled] per player}]
 7. Network sequence, same as AI sequence
+
+## Known issues
+- `points.txt` deleted upon winning match, to fix this problem, restart program
 
 *One small part was made on my live stream, just search my name for YouTube channel*
