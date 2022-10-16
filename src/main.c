@@ -44,8 +44,8 @@ int main(int argc, const char **argv)
 
     printf("%s\n", logo);
 
-	/* Initial size is 20 including \0 character */
-	char* path = malloc(sizeof(char) * 20);
+    /* Initial size is 20 including \0 character */
+    char* path = malloc(sizeof(char) * 20);
 
     if (argc == 2)
     {
@@ -57,8 +57,8 @@ int main(int argc, const char **argv)
 
         else
         {
-			path = (char*)realloc(path, strlen(argv[1]));
-			strcpy(path, argv[1]);
+            path = (char*)realloc(path, strlen(argv[1]));
+            strcpy(path, argv[1]);
         }
     }
 
@@ -80,19 +80,19 @@ int main(int argc, const char **argv)
     struct setting_t* settings = malloc(sizeof(struct setting_t));
     struct points_t* points = malloc(sizeof(struct points_t));
 
-	if (EndsWith(path, ".json"))
-	{
-		copy_json(settings, points, path);
-	}
+    if (EndsWith(path, ".json"))
+    {
+        copy_json(settings, points, path);
+    }
 
-	else
-	{
-		copy(settings, points, path);
-	}
+    else
+    {
+        copy(settings, points, path);
+    }
 
-	Gameplay(settings, points);
+    Gameplay(settings, points);
     free(settings);
-	free(path);
+    free(path);
 
     return 0;
 }
