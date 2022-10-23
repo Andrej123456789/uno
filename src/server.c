@@ -8,16 +8,12 @@
 */
 
 #include "include/server.h"
-#include "include/util.h"
-#include "include/strings.h"
-
-static Vec clients;
 
 /**
  * Sending/receiving text to/from client
  * @param connfd - something important but currently idk what is that
 */
-void SendReceive(int connfd)
+void SendReceive(int connfd, Vector clients)
 {
     char buff[MAX];
     int n;
@@ -47,7 +43,7 @@ void SendReceive(int connfd)
 
         else if (strncmp("all", buff, 3) == 0)
         {
-            printf(special_function_all_color, clients.size);
+            printf(special_function_all_color, clients.pfVectorTotal(&clients));
             write(connfd, "\n", sizeof(buff));
         }
     }
@@ -63,7 +59,7 @@ void StartServer()
     int sockfd, connfd, len;
     struct sockaddr_in servaddr, cli;
 
-    InitArray(&clients, 1);
+    VECTOR_INIT(clients);
    
     /* Socket create and verification */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -122,10 +118,10 @@ void StartServer()
     else
     {
         printf(accept_client_color, client);
-        InsertArray(&clients, client);
+        clients.pfVectorAdd(&clients, client);
         client++;
     }
    
-    SendReceive(connfd);
+    SendReceive(connfd, clients);
     close(sockfd);
 }

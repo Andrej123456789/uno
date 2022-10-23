@@ -17,6 +17,10 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "util.h"
+#include "vec.h"
+#include "strings.h"
+
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
@@ -25,7 +29,7 @@
  * Sending/receiving text to/from client
  * @param connfd - something important but currently idk what is that
 */
-void SendReceive(int connfd);
+void SendReceive(int connfd, Vector clients);
 
 /**
  * Start a server

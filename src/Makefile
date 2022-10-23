@@ -1,24 +1,34 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic -g -ljson-c
-OBJS = $(shell echo $(wildcard *.c) | sed 's/\.c/\.o/g')
-BIN = uno
 
-all : $(BIN) 
+OBJDIR = objects
+OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.c, %.o, $(wildcard *.c)))
+
+BINFOLDER = executable
+BIN = $(BINFOLDER)/uno
+
+all : $(OBJDIR) $(BINFOLDER) $(BIN)
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+$(BINFOLDER):
+	mkdir $(BINFOLDER)
 
 $(BIN) : $(OBJS)
 	$(CC) $(OBJS) -o $(BIN) $(CFLAGS)
 
-server.o : server.c
+$(OBJDIR)/server.o : server.c
 	$(CC) -c $< -o $@
 
-%.o : %.c
+$(OBJDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(BIN) default.txt
+	./$(BIN) settings/default.txt
 
 clean:
-	rm -rf *.o
+	rm -rf $(wildcard *.o) objects
 
 full_clean:
-	rm -rf $(BIN) *.o
+	rm -rf $(BIN) executable $(wildcard *.o) objects
