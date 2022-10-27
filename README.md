@@ -5,12 +5,17 @@ Written using C programming language mainly
 
 *Repo is called `uno` because `++` couldn't fit in repo name*
 
+## Rules
+[Credits](https://en.wikipedia.org/wiki/Uno_(card_game))
+In short, this game uses official uno rules which you can find on link above with swap card and special mode from Crazy Games.
+
 ## TODO
 - [x] Basic AI (TODO: get rid of cards guesses)
 - [x] Colors
 - [x] Gameplay (full gameplay)
 - [ ] Networking
 - [ ] Nice graphics
+- [ ] Nice graphics (in .png, .jpg or .svg format)
 - [x] Settings (both in .txt and .json files)
 
 ## How to compile/run?

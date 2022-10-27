@@ -11,6 +11,7 @@
 
 #include "include/util.h"
 #include "include/gameplay.h"
+#include "include/graphics.h"
 #include "include/server.h"
 
 const char* logo_row1 = ".----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
@@ -73,12 +74,13 @@ int main(int argc, const char **argv)
         printf("Enter the path to the file: ");
         scanf("%s", temp);
 
-		path = (char*)realloc(path, strlen(temp));
-		strcpy(path, temp);
+        path = (char*)realloc(path, strlen(temp));
+        strcpy(path, temp);
     }
 
     struct setting_t* settings = malloc(sizeof(struct setting_t));
     struct points_t* points = malloc(sizeof(struct points_t));
+    struct theme_t* theme = malloc(sizeof(struct theme_t));
 
     if (EndsWith(path, ".json"))
     {
@@ -90,9 +92,12 @@ int main(int argc, const char **argv)
         copy(settings, points, path);
     }
 
-    Gameplay(settings, points);
-    free(settings);
-    free(path);
+    Gameplay(settings, points, theme);
 
+    free(settings);
+    free(points);
+    free(theme);
+
+    free(path);
     return 0;
 }

@@ -6,6 +6,8 @@
         "ansi.h": "c",
         "socket.h": "c",
         "server.h": "c",
-        "strings.h": "c"
+        "strings.h": "c",
+        "json.h": "c",
+        "time.h": "c"
     }
 }

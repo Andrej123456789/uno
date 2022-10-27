@@ -6,7 +6,6 @@
 */
 
 #include "include/util.h"
-#include "include/gameplay.h"
 
 /**
  * Copying settings from the file to the struct.

@@ -13,6 +13,9 @@
 #include <string.h>
 #include <time.h>
 
+#include "graphics.h"
+#include "strings.h"
+
 /* Max number of players */
 #define MAX_PLAYERS 20
 
@@ -125,29 +128,29 @@ struct points_t
 /**
  * Check if some player finished the round.
  * @param players - number of players
- * @param player - struct which contains information about player, pointing to player_t
- * @param points - struct for holding information about points, pointing to points_t
+ * @param player - struct which contains information about player, points to player_t
+ * @param points - struct for holding information about points, points to points_t
 */
 bool isFinished(int players, struct player_t player[], struct points_t* points);
 
 /**
  * Check if cards which player wants to play is compatible with the top card.
- * @param runtime - struct for holding information during the game, pointing to runtime_t
- * @param player - struct which contains information about player, pointing to player_t
+ * @param runtime - struct for holding information during the game, points to runtime_t
+ * @param player - struct which contains information about player, points to player_t
 */
 bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
 
 /**
  * Swap cards bettwen two players.
- * @param runtime - struct for holding information during the game, pointing to runtime_t
- * @param player - struct which contains information about player, pointing to player_t
+ * @param runtime - struct for holding information during the game, points to runtime_t
+ * @param player - struct which contains information about player, points to player_t
  * @param swap_id - player which will got the cards from player which asked for swap
 */
 void Swap(struct runtime_t* runtime, struct player_t player[], int swap_id);
 
 /**
  * Switch turn to the next player.
- * @param runtime - struct for holding information during the game, pointing to runtime_t
+ * @param runtime - struct for holding information during the game, points to runtime_t
  * @param players - number of players
  * @param doReturn - do return of next player turn 
 */
@@ -155,49 +158,49 @@ int NextPlayer(struct runtime_t* runtime, int players, bool doReturn);
 
 /**
  * Perform action on the card which user wants to play.
- * @param runtime - struct for holding information during the game, pointing to runtime_t
- * @param player - struct which contains information about player, pointing to player_t
- * @param cards - struct which contains information about cards, pointing to cards_t
- * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param runtime - struct for holding information during the game, points to runtime_t
+ * @param player - struct which contains information about player, points to player_t
+ * @param cards - struct which contains information about cards, points to cards_t
+ * @param settings - struct which contains information about settings, points to setting_t
  * @param players - number of players
 */
 void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
 
 /**
  * Perform action on the top card.
- * @param runtime - struct for holding information during the game, pointing to runtime_t
- * @param player - struct which contains information about player, pointing to player_t
- * @param cards - struct which contains information about cards, pointing to cards_t
+ * @param runtime - struct for holding information during the game, points to runtime_t
+ * @param player - struct which contains information about player, points to player_t
+ * @param cards - struct which contains information about cards, points to cards_t
  * @param players - number of players
 */
 void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
 
 /**
  * Determine which player is AI.
- * @param settings - struct which contains information about settings, pointing to setting_t 
+ * @param settings - struct which contains information about settings, points to setting_t 
 */
 int SetAISequence(struct setting_t* settings);
 
 /**
  * Perform an action on the card which AI wants to play.
- * @param runtime - struct for holding information during the game, pointing to runtime_t
- * @param player - struct which contains information about player, pointing to player_t
- * @param cards - struct which contains information about cards, pointing to cards_t
- * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param runtime - struct for holding information during the game, points to runtime_t
+ * @param player - struct which contains information about player, points to player_t
+ * @param cards - struct which contains information about cards, points to cards_t
+ * @param settings - struct which contains information about settings, points to setting_t
  * @param players - number of players 
 */
 void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
 
 /**
  * Determine which player is connected to network.
- * @param settings - struct which contains information about settings, pointing to setting_t 
+ * @param settings - struct which contains information about settings, points to setting_t 
 */
 int SetNetworkSequence(struct setting_t* settings);
 
 /**
  * Read or write points to text file.
- * @param points - struct for holding information about points, pointing to points_t
- * @param settings - struct which contains information about settings, pointing to setting_t
+ * @param points - struct for holding information about points, points to points_t
+ * @param settings - struct which contains information about settings, points to setting_t
  * @param write - perform read of write
  * @param players - number of players
  * @param point - points, see function code in gameplay.c for naming convention
@@ -206,16 +209,17 @@ int PointsFromFile(struct points_t* points, struct setting_t* settings, bool wri
 
 /**
  * Assigning points and determining winner of the match.
- * @param player - struct which contains information about player, pointing to player_t
- * @param settings - struct which contains information about settings, pointing to setting_t
- * @param points - struct for holding information about points, pointing to points_t
+ * @param player - struct which contains information about player, points to player_t
+ * @param settings - struct which contains information about settings, points to setting_t
+ * @param points - struct for holding information about points, points to points_t
  * @param players - number of players
 */
 void PointsManager(struct player_t player[], struct setting_t* settings, struct points_t* points, int players);
 
 /**
  * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.
- * @param settings - struct which contains information about settings, pointing to setting_t
- * @param points - struct for holding information about points, pointing to points_t 
+ * @param settings - struct which contains information about settings, points to setting_t
+ * @param points - struct for holding information about points, points to points_t
+ * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_t 
 */
-void Gameplay(struct setting_t* settings, struct points_t* points);
+void Gameplay(struct setting_t* settings, struct points_t* points, struct theme_t* theme);
