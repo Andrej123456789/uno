@@ -13,11 +13,9 @@
 #include <string.h>
 #include <time.h>
 
+#include "runtime.h"
 #include "graphics.h"
 #include "strings.h"
-
-/* Max number of players */
-#define MAX_PLAYERS 20
 
 /*
  * Naming convention for cards:
@@ -39,106 +37,19 @@
 */
 
 /**
- * Struct which contains the settings of the game.
- * @param players - number of players
- * @param special_mode - special mode (0 - off, 1 - on)
- * @param debug_mode - debug mode (0 - off, 1 - on)
- * @param swap_card - swap card (0 - off, 1 - on)
- * @param colors - colors (0 - off, 1 - on)
- * @param ai_sequence - contains which players are AI (needs to be written reversed)
- * @param ai_array_sequence - ai_sequence in array form
- * @param network_sequence - contains which players are network players (needs to be written reversed)
- * @param network_array_sequence - network_sequence in array form
-*/
-struct setting_t
-{
-    int players;
-    int special_mode;
-    int debug_mode;
-    int swap_card;
-    int colors;
-	char json_ai_sequence[MAX_PLAYERS];
-	char json_network_sequence[MAX_PLAYERS];
-};
-
-/**
- * Struct which contains the cards information.
- * @param number - the number of the card
- * @param color - the color of the card
-*/
-struct cards_t
-{
-    int number;
-    int color;
-};
-
-/**
- * Struct which contains informations about player.
- * @param cards - array of cards which player has
- * @param cards.number - number of card
- * @param cards.color - color of card
- * @param number_of_cards - number of cards which player has
- * @param points - points which player has
-*/
-struct player_t
-{
-    struct cards_t cards[52];
-    int number_of_cards;
-    int points;
-};
-
-/**
- * Struct for holding information during the game.
- * @param available_cards - cards that are available for the players
- * @param current_card_id - current card id
- * @param player_turn - player turn
- * @param isPositive - determines if the turn is positive or negative.
- * @param top_card - array which holds information about the top card
- * @param top_card.number - number of the top card
- * @param top_card.color - color of the top card
-*/
-struct runtime_t
-{
-    int avabible_cards;
-    int current_card_id;
-    int player_turn;
-    bool isPositive;
-    struct cards_t top_card[1];
-};
-
-/**
- * Everything releated to points in game is here, even if it is should be in another struct.
- * @param temp_points - points in the round
- * @param match_points - points needed to win the match
- * @param round_winner - player id who won the round
- * @param match_winner - player id who won the match
- * @param match_ended - if the match has ended
- * @param alReadyCreated - if file for points is already created
-*/
-struct points_t
-{
-    int temp_points;
-    int match_points;
-    int round_winner;
-    int match_winner;
-    bool match_ended;
-    bool alReadyCreated;
-};
-
-/**
  * Check if some player finished the round.
  * @param players - number of players
  * @param player - struct which contains information about player, points to player_t
  * @param points - struct for holding information about points, points to points_t
 */
-bool isFinished(int players, struct player_t player[], struct points_t* points);
+bool isFinished(int players, Player player[], Points* points);
 
 /**
  * Check if cards which player wants to play is compatible with the top card.
  * @param runtime - struct for holding information during the game, points to runtime_t
  * @param player - struct which contains information about player, points to player_t
 */
-bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
+bool isCompatible(Runtime* runtime, Player players_card[]);
 
 /**
  * Swap cards bettwen two players.
@@ -146,7 +57,7 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player[]);
  * @param player - struct which contains information about player, points to player_t
  * @param swap_id - player which will got the cards from player which asked for swap
 */
-void Swap(struct runtime_t* runtime, struct player_t player[], int swap_id);
+void Swap(Runtime* runtime, Player player[], int swap_id);
 
 /**
  * Switch turn to the next player.
@@ -154,7 +65,7 @@ void Swap(struct runtime_t* runtime, struct player_t player[], int swap_id);
  * @param players - number of players
  * @param doReturn - do return of next player turn 
 */
-int NextPlayer(struct runtime_t* runtime, int players, bool doReturn);
+int NextPlayer(Runtime* runtime, int players, bool doReturn);
 
 /**
  * Perform action on the card which user wants to play.
@@ -164,7 +75,7 @@ int NextPlayer(struct runtime_t* runtime, int players, bool doReturn);
  * @param settings - struct which contains information about settings, points to setting_t
  * @param players - number of players
 */
-void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
+void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players);
 
 /**
  * Perform action on the top card.
@@ -173,13 +84,13 @@ void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t 
  * @param cards - struct which contains information about cards, points to cards_t
  * @param players - number of players
 */
-void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players);
+void TopCardAction(Runtime* runtime, Player player[], Cards cards[], int players);
 
 /**
  * Determine which player is AI.
  * @param settings - struct which contains information about settings, points to setting_t 
 */
-int SetAISequence(struct setting_t* settings);
+int SetAISequence(Settings* settings);
 
 /**
  * Perform an action on the card which AI wants to play.
@@ -189,13 +100,13 @@ int SetAISequence(struct setting_t* settings);
  * @param settings - struct which contains information about settings, points to setting_t
  * @param players - number of players 
 */
-void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players);
+void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players);
 
 /**
  * Determine which player is connected to network.
  * @param settings - struct which contains information about settings, points to setting_t 
 */
-int SetNetworkSequence(struct setting_t* settings);
+int SetNetworkSequence(Settings* settings);
 
 /**
  * Read or write points to text file.
@@ -205,7 +116,7 @@ int SetNetworkSequence(struct setting_t* settings);
  * @param players - number of players
  * @param point - points, see function code in gameplay.c for naming convention
 */
-int PointsFromFile(struct points_t* points, struct setting_t* settings, bool write, int player, int point);
+int PointsFromFile(Points* points, Settings* settings, bool write, int player, int point);
 
 /**
  * Assigning points and determining winner of the match.
@@ -214,7 +125,7 @@ int PointsFromFile(struct points_t* points, struct setting_t* settings, bool wri
  * @param points - struct for holding information about points, points to points_t
  * @param players - number of players
 */
-void PointsManager(struct player_t player[], struct setting_t* settings, struct points_t* points, int players);
+void PointsManager(Player player[], Settings* settings, Points* points, int players);
 
 /**
  * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.
@@ -222,4 +133,4 @@ void PointsManager(struct player_t player[], struct setting_t* settings, struct 
  * @param points - struct for holding information about points, points to points_t
  * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_t 
 */
-void Gameplay(struct setting_t* settings, struct points_t* points, struct theme_t* theme);
+void Gameplay(Settings* settings, Points* points, Theme* theme);

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "include/runtime.h"
 #include "include/util.h"
 #include "include/gameplay.h"
 #include "include/graphics.h"
@@ -78,9 +79,9 @@ int main(int argc, const char **argv)
         strcpy(path, temp);
     }
 
-    struct setting_t* settings = malloc(sizeof(struct setting_t));
-    struct points_t* points = malloc(sizeof(struct points_t));
-    struct theme_t* theme = malloc(sizeof(struct theme_t));
+    Settings* settings = malloc(sizeof(Settings));
+    Points* points = malloc(sizeof(Points));
+    Theme* theme = malloc(sizeof(Theme));
 
     if (EndsWith(path, ".json"))
     {

@@ -9,23 +9,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 
-/** Struct which holds graphics (theme releated stuff mostly) informations during runtime
- * @param dark - light or dark theme
-*/
-struct theme_t
-{
-    bool dark;
-};
+#include <termios.h>
+#include <unistd.h>
+
+#include "runtime.h"
+#include "ANSI.h"
 
 /** Function which draws deck
  * @param theme - struct which points to theme_t
 */
-//void DrawDeck(struct theme_t* theme);
+//void DrawDeck(Theme* theme);
 
 /** Function which draws card
- * @param theme - struct which points to cards_t
+ * @param card - struct which points to cards_t
 */
-//void DrawCard(struct cards_t cards[]);
+//void DrawCard(Cards* card);

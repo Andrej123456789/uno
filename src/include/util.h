@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <json-c/json.h>
 
-#include "gameplay.h"
+#include "runtime.h"
 
 /**
  * Copying settings from the file to the struct.
@@ -19,7 +19,7 @@
  * @param points - the struct to copy the points (`match_point` variable) to
  * @param path - path of the file, length is 40
 */
-int copy(struct setting_t* settings, struct points_t* points, char* path);
+int copy(Settings* settings, Points* points, char* path);
 
 /**
  * Copying settings from JSON file to the struct
@@ -27,7 +27,7 @@ int copy(struct setting_t* settings, struct points_t* points, char* path);
  * @param points - struct where is `match_point` variable going
  * @param path - path of the file, length is 40
 */
-int copy_json(struct setting_t* settings, struct points_t* points, char* path);
+int copy_json(Settings* settings, Points* points, char* path);
 
 /**
  * Replacing line in the file.

@@ -14,7 +14,7 @@
  * @param player - struct which contains information about player, points to player_t
  * @param points - struct for holding information about points, points to points_t
 */
-bool isFinished(int players, struct player_t player[], struct points_t* points)
+bool isFinished(int players, Player player[], Points* points)
 {
     for (int i = 0; i < players + 1; i++)
     {
@@ -32,16 +32,16 @@ bool isFinished(int players, struct player_t player[], struct points_t* points)
  * @param runtime - struct for holding information during the game, points to runtime_t
  * @param player - struct which contains information about player, points to player_t
 */
-bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
+bool isCompatible(Runtime* runtime, Player players_card[])
 {
-    if ((runtime->top_card[0].number == player_card[runtime->player_turn].cards[runtime->current_card_id].number) | 
-                                    (player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12))
+    if ((runtime->top_card[0].number == players_card[runtime->player_turn].cards[runtime->current_card_id].number) | 
+                                    (players_card[runtime->player_turn].cards[runtime->current_card_id].number > 12))
     {
         return true;
     }
 
-    else if ((runtime->top_card[0].color == player_card[runtime->player_turn].cards[runtime->current_card_id].color) 
-                                    | (player_card[runtime->player_turn].cards[runtime->current_card_id].number > 12))
+    else if ((runtime->top_card[0].color == players_card[runtime->player_turn].cards[runtime->current_card_id].color) 
+                                    | (players_card[runtime->player_turn].cards[runtime->current_card_id].number > 12))
     {
         return true;
     }
@@ -58,11 +58,11 @@ bool isCompatible(struct runtime_t* runtime, struct player_t player_card[])
  * @param player - struct which contains information about player, points to player_t
  * @param swap_id - player which will got the cards from player which asked for swap
 */
-void Swap(struct runtime_t* runtime, struct player_t player[], int swap_id)
+void Swap(Runtime* runtime, Player player[], int swap_id)
 {
-    struct player_t a = player[runtime->player_turn];
-    struct player_t b = player[swap_id];
-    struct player_t temp;
+    Player a = player[runtime->player_turn];
+    Player b = player[swap_id];
+    Player temp;
 
     /* swap cards between players, a array is current player, b array is swap player */
     temp = a;
@@ -76,7 +76,7 @@ void Swap(struct runtime_t* runtime, struct player_t player[], int swap_id)
  * @param players - number of players
  * @param doReturn - do return of next player turn 
 */
-int NextPlayer(struct runtime_t* runtime, int players, bool doReturn)
+int NextPlayer(Runtime* runtime, int players, bool doReturn)
 {
     if (runtime->isPositive == true)
     {
@@ -120,7 +120,7 @@ int NextPlayer(struct runtime_t* runtime, int players, bool doReturn)
  * @param settings - struct which contains information about settings, points to setting_t
  * @param players - number of players
 */
-void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players)
+void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players)
 {
     bool can_do_4 = false;
 
@@ -331,7 +331,7 @@ void Action(struct runtime_t* runtime, struct player_t player[], struct cards_t 
  * @param cards - struct which contains information about cards, points to cards_t
  * @param players - number of players
 */
-void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], int players)
+void TopCardAction(Runtime* runtime, Player player[], Cards cards[], int players)
 {
     int number = runtime->top_card[0].number;
 
@@ -381,7 +381,7 @@ void TopCardAction(struct runtime_t* runtime, struct player_t player[], struct c
  * Determine which player is AI.
  * @param settings - struct which contains information about settings, points to setting_t 
 */
-int SetAISequence(struct setting_t* settings)
+int SetAISequence(Settings* settings)
 {
 	printf("%d", settings->colors);
 	return 0;
@@ -395,7 +395,7 @@ int SetAISequence(struct setting_t* settings)
  * @param settings - struct which contains information about settings, points to setting_t
  * @param players - number of players 
 */
-void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_t cards[], struct setting_t* settings, int players)
+void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players)
 {
     printf((settings->colors == 1) ? ai_action_color : ai_action);
 
@@ -661,7 +661,7 @@ void AIAction(struct runtime_t* runtime, struct player_t player[], struct cards_
  * Determine which player is connected to network.
  * @param settings - struct which contains information about settings, points to setting_t 
 */
-int SetNetworkSequence(struct setting_t* settings)
+int SetNetworkSequence(Settings* settings)
 {
 	printf("%d", settings->colors);
 	return 0;
@@ -675,7 +675,7 @@ int SetNetworkSequence(struct setting_t* settings)
  * @param players - number of players
  * @param point - points, see function code in gameplay.c for naming convention
 */
-int PointsFromFile(struct points_t* points, struct setting_t* settings, bool write, int player, int point)
+int PointsFromFile(Points* points, Settings* settings, bool write, int player, int point)
 {
     points->alReadyCreated = false;
     if (!write)
@@ -791,7 +791,7 @@ int PointsFromFile(struct points_t* points, struct setting_t* settings, bool wri
  * @param points - struct for holding information about points, points to points_t
  * @param players - number of players
 */
-void PointsManager(struct player_t player[], struct setting_t* settings, struct points_t* points, int players)
+void PointsManager(Player player[], Settings* settings, Points* points, int players)
 {
     int temp_points = 0;
 
@@ -843,16 +843,16 @@ void PointsManager(struct player_t player[], struct setting_t* settings, struct 
  * @param points - struct for holding information about points, points to points_t 
  * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_t
 */
-void Gameplay(struct setting_t* settings, struct points_t* points, struct theme_t* theme)
+void Gameplay(Settings* settings, Points* points, Theme* theme)
 {
     char tmp_input[20];
     time_t t;
 
     int players = settings->players;
 
-    struct cards_t cards[109];
-    struct player_t player[players];
-    struct runtime_t* runtime = malloc(sizeof(struct runtime_t));
+    Cards cards[109];
+    Player player[players];
+    Runtime* runtime = malloc(sizeof(Runtime));
 
     int card_id = 1;
 
