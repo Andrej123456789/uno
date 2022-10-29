@@ -87,12 +87,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
 void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players);
 
 /**
- * Determine which player is AI.
- * @param settings - struct which contains information about settings, points to setting_t 
-*/
-int SetAISequence(Settings* settings);
-
-/**
  * Perform an action on the card which AI wants to play.
  * @param runtime - struct for holding information during the game, points to runtime_t
  * @param player - struct which contains information about player, points to player_t
@@ -101,12 +95,6 @@ int SetAISequence(Settings* settings);
  * @param players - number of players 
 */
 void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players);
-
-/**
- * Determine which player is connected to network.
- * @param settings - struct which contains information about settings, points to setting_t 
-*/
-int SetNetworkSequence(Settings* settings);
 
 /**
  * Read or write points to text file.

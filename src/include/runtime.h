@@ -32,8 +32,8 @@ typedef struct settings_T
     int debug_mode;
     int swap_card;
     int colors;
-    char json_ai_sequence[MAX_PLAYERS];
-    char json_network_sequence[MAX_PLAYERS];
+    Vector ai_sequence;
+    Vector network_sequence;
 } Settings;
 
 /**

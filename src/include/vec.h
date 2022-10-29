@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 #define VECTOR_INIT_CAPACITY 6
-#define UNDEFINE  -1
+#define UNDEFINED  -1
 #define SUCCESS 0
 #define VECTOR_INIT(vec) Vector vec;\
 VectorInit(&vec)

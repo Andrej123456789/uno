@@ -375,16 +375,6 @@ void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* s
 }
 
 /**
- * Determine which player is AI.
- * @param settings - struct which contains information about settings, points to setting_t 
-*/
-int SetAISequence(Settings* settings)
-{
-	printf("%d", settings->colors);
-	return 0;
-}
-
-/**
  * Perform an action on the card which AI wants to play.
  * @param runtime - struct for holding information during the game, points to runtime_t
  * @param player - struct which contains information about player, points to player_t
@@ -652,16 +642,6 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
     printf("\t -------------------- \t \n");
 
     NextPlayer(runtime, settings, false);
-}
-
-/**
- * Determine which player is connected to network.
- * @param settings - struct which contains information about settings, points to setting_t 
-*/
-int SetNetworkSequence(Settings* settings)
-{
-	printf("%d", settings->colors);
-	return 0;
 }
 
 /**
@@ -1028,13 +1008,13 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         }
 
         again:
-        if (runtime->player_turn != 0 && settings->json_ai_sequence[runtime->player_turn] == '1')
+        if (runtime->player_turn != 0 && (char)VectorGet(&settings->ai_sequence, runtime->player_turn) == '1')
         {
             AIAction(runtime, player, cards, settings, players);
             goto again;
         }
 
-        else if (runtime->player_turn != 0 && settings->json_network_sequence[runtime->player_turn] == '1')
+        else if (runtime->player_turn != 0 && (char)VectorGet(&settings->network_sequence, runtime->player_turn) == '1')
         {
             printf("Network is WIP (Work in progress)!!\n\n");
             NextPlayer(runtime, settings, false);
@@ -1107,5 +1087,6 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         }
     }
     
+    /* Frees structs */
     free(runtime);
 }

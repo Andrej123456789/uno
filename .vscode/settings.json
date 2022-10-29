@@ -11,6 +11,7 @@
         "time.h": "c",
         "termios.h": "c",
         "graphics.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "cstring": "c"
     }
 }

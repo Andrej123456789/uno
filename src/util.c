@@ -68,8 +68,30 @@ int copy_json(Settings* settings, Points* points, char* path)
     json_object_object_get_ex(parsed_json, "ai_sequence", &j_ai_sequence);
     json_object_object_get_ex(parsed_json, "network_sequence", &j_network_sequence);
 
-    strcpy(settings->json_ai_sequence, json_object_get_string(j_ai_sequence));
-    strcpy(settings->json_network_sequence, json_object_get_string(j_network_sequence));
+    /* Initialize vectors */
+    VectorInit(&settings->ai_sequence);
+    VectorInit(&settings->network_sequence);
+
+    /* Copy AI sequence */
+    char* temp_sequence = malloc(sizeof(char) * json_object_get_string_len(j_ai_sequence));
+    strcpy(temp_sequence, json_object_get_string(j_ai_sequence));
+
+    for (int i = 0; i < strlen(temp_sequence); i++)
+    {
+        VectorPushBack(&settings->ai_sequence, (void*)temp_sequence[i]);
+    }
+
+    /* Clear the string */
+    memset(temp_sequence, 0, sizeof(temp_sequence));
+
+    /* Copy network sequence */
+    temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(j_network_sequence));
+    strcpy(temp_sequence, json_object_get_string(j_network_sequence));
+
+    for (int i = 0; i < strlen(temp_sequence); i++)
+    {
+        VectorPushBack(&settings->network_sequence, (void*)temp_sequence[i]);
+    }
 
     /* Print settings */
     printf("Your current settings are:\n");
@@ -78,8 +100,21 @@ int copy_json(Settings* settings, Points* points, char* path)
     printf("\t Debug Mode: %d\n", settings->debug_mode);
     printf("\t Swap Card: %d\n", settings->swap_card);
     printf("\t Colors: %d\n", settings->colors);
-    printf("\t AI sequence: %s\n", settings->json_ai_sequence);
-    printf("\t Network sequence: %s\n", settings->json_network_sequence);
+
+    /* Print AI sequence */
+    printf("\t AI sequence: ");
+    for (int i = 0; i < VectorTotal(&settings->ai_sequence); i++)
+    {
+        printf("%c", (char)VectorGet(&settings->ai_sequence, i));
+    }
+    printf("\n");
+
+    /* Print network sequence */
+    printf("\t Network sequence: ");
+    for (int i = 0; i < VectorTotal(&settings->ai_sequence); i++)
+    {
+        printf("%c", (char)VectorGet(&settings->ai_sequence, i));
+    }
     printf("\n");
 
     return 0;

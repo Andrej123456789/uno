@@ -8,10 +8,9 @@
 
 #include "include/vec.h"
 
-
 int VectorTotal(Vector *v)
 {
-    int totalCount = UNDEFINE;
+    int totalCount = UNDEFINED;
     if(v)
     {
         totalCount = v->vectorList.total;
@@ -26,7 +25,7 @@ int VectorTotal(Vector *v)
 */
 int VectorResize(Vector *v, int capacity)
 {
-    int  status = UNDEFINE;
+    int  status = UNDEFINED;
     if(v)
     {
         void **items = (void**)realloc(v->vectorList.items, sizeof(void *) * capacity);
@@ -47,13 +46,13 @@ int VectorResize(Vector *v, int capacity)
 */
 int VectorPushBack(Vector *v, void *item)
 {
-    int  status = UNDEFINE;
+    int  status = UNDEFINED;
     if(v)
     {
         if (v->vectorList.capacity == v->vectorList.total)
         {
             status = VectorResize(v, v->vectorList.capacity * 2);
-            if(status != UNDEFINE)
+            if(status != UNDEFINED)
             {
                 v->vectorList.items[v->vectorList.total++] = item;
             }
@@ -75,7 +74,7 @@ int VectorPushBack(Vector *v, void *item)
 */
 int VectorSet(Vector *v, int index, void *item)
 {
-    int  status = UNDEFINE;
+    int  status = UNDEFINED;
     if(v)
     {
         if ((index >= 0) && (index < v->vectorList.total))
@@ -113,7 +112,7 @@ void *VectorGet(Vector *v, int index)
 */
 int VectorDelete(Vector *v, int index)
 {
-    int  status = UNDEFINE;
+    int  status = UNDEFINED;
     int i = 0;
     if(v)
     {
@@ -142,7 +141,7 @@ int VectorDelete(Vector *v, int index)
 */
 int VectorFree(Vector *v)
 {
-    int  status = UNDEFINE;
+    int  status = UNDEFINED;
     if(v)
     {
         free(v->vectorList.items);
