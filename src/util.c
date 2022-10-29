@@ -8,107 +8,12 @@
 #include "include/util.h"
 
 /**
- * Copying settings from the file to the struct.
- * @param settings - the struct to copy the settings to
- * @param points - the struct to copy the points (`match_point` variable) to
- * @param path - the path to the file, length must be 20
-*/
-int copy(struct setting_t* settings, struct points_t* points, char* path)
-{
-    bool aiDone = false;
-
-    char line[256];
-    int temp = 0;
-
-    FILE* file;
-    file = fopen(path, "r");
-
-    if (file == NULL)
-    {
-        printf("File not found!\n");
-        return 1;
-    }
-
-    while (fgets(line, sizeof(line), file)) 
-    {
-        switch (temp)
-        {
-            case 0: /* match_points */
-                points->match_points = atoi(line);
-                points->match_ended = false;
-                temp++;
-                break;
-
-            case 1: /* number of players */
-                if (atoi(line) > MAX_PLAYERS)
-                {
-                    printf("Maximum number of players is 20!\n");
-                    printf("Exiting...\n\n");
-                    return 1;
-                }
-
-                settings->players = atoi(line);
-                temp++;
-                break;
-
-            case 2: /* special_mode */
-                settings->special_mode = atoi(line);
-                temp++;
-                break;
-
-            case 3: /* debug_mode */
-                settings->debug_mode = atoi(line);
-                temp++;
-                break;
-
-            case 4: /* swap_card */
-                settings->swap_card = atoi(line);
-                temp++;
-                break;
-
-            case 5: /* colors */
-                settings->colors = atoi(line);
-                temp++;
-                break;
-            
-            default: /* ai players */
-                if (aiDone == false)
-                {
-                    strcpy(settings->json_ai_sequence, line);
-                    aiDone = true;
-                }
-
-                else
-                {
-                    strcpy(settings->json_network_sequence, line);
-                }
-
-                break;
-        }
-    }
-
-    fclose(file);
-
-    printf("Your current settings are:\n");
-    printf("\t Players: %d\n", settings->players);
-    printf("\t Special Mode: %d\n", settings->special_mode);
-    printf("\t Debug Mode: %d\n", settings->debug_mode);
-    printf("\t Swap Card: %d\n", settings->swap_card);
-    printf("\t Colors: %d\n", settings->colors);
-    printf("\t AI sequence: %s", settings->json_ai_sequence);
-	printf("\t Network sequence: %s\n", settings->json_network_sequence);
-    printf("\n");
-
-    return 0;
-}
-
-/**
  * Copying settings from JSON file to the struct
  * @param settings - struct where to copy most of settings 
  * @param points - struct where is `match_point` variable going
  * @param path - path of the file, length is 40 
 */
-int copy_json(struct setting_t* settings, struct points_t* points, char* path)
+int copy_json(Settings* settings, Points* points, char* path)
 {
     FILE* file;
     file = fopen(path, "r");
@@ -236,21 +141,4 @@ void replace_line(const char* path, int line, int text_size, char new_text[text_
 
     /* Rename temporary file as original file */
     rename("replace.tmp", path);
-}
-
-/**
- * Check does string ends with another string
- * Credits: https://stackoverflow.com/questions/744766/how-to-compare-ends-of-strings-in-c
- * @param str - base string
- * @param suffix - second string
-*/
-bool EndsWith(const char* str, const char* suffix)
-{
-    if (!str || !suffix)
-        return 0;
-    size_t lenstr = strlen(str);
-    size_t lensuffix = strlen(suffix);
-    if (lensuffix >  lenstr)
-        return 0;
-    return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }

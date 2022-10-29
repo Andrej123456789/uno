@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g -ljson-c
+CFLAGS = -Wall -Wextra -pedantic -g -ljson-c
 
 OBJDIR = objects
 OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.c, %.o, $(wildcard *.c)))
@@ -25,7 +25,7 @@ $(OBJDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(BIN) settings/default.txt
+	./$(BIN) settings/default.json
 
 clean:
 	rm -rf $(wildcard *.o) objects

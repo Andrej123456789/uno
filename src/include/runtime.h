@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include "vec.h"
 
 /* Max number of players */
 #define MAX_PLAYERS 20
@@ -53,12 +54,16 @@ typedef struct cards_T
  * @param cards.color - color of card
  * @param number_of_cards - number of cards which player has
  * @param points - points which player has
+ * @param legal_four - can player legally play wild draw four card
 */
 typedef struct player_T
 {
     Cards cards[52];
     int number_of_cards;
     int points;
+    bool legal_four;
+    Vector test;
+    Vector new_cards;
 } Player;
 
 /**

@@ -10,6 +10,7 @@
         "json.h": "c",
         "time.h": "c",
         "termios.h": "c",
-        "graphics.h": "c"
+        "graphics.h": "c",
+        "stdio.h": "c"
     }
 }

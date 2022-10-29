@@ -4,7 +4,7 @@
         "name": "(gdb) Launch",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/src/uno",
+        "program": "${workspaceFolder}/src/executable/uno",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${fileDirname}",

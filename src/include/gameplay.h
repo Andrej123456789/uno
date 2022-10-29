@@ -62,10 +62,10 @@ void Swap(Runtime* runtime, Player player[], int swap_id);
 /**
  * Switch turn to the next player.
  * @param runtime - struct for holding information during the game, points to runtime_t
- * @param players - number of players
+ * @param settings - struct which contains information about settings, points to setting_t
  * @param doReturn - do return of next player turn 
 */
-int NextPlayer(Runtime* runtime, int players, bool doReturn);
+int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn);
 
 /**
  * Perform action on the card which user wants to play.
@@ -84,7 +84,7 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
  * @param cards - struct which contains information about cards, points to cards_t
  * @param players - number of players
 */
-void TopCardAction(Runtime* runtime, Player player[], Cards cards[], int players);
+void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players);
 
 /**
  * Determine which player is AI.
