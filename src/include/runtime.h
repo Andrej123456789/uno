@@ -58,7 +58,7 @@ typedef struct cards_T
 */
 typedef struct player_T
 {
-    Cards cards[52];
+    Cards cards[1024];
     int number_of_cards;
     int points;
     bool legal_four;
@@ -87,6 +87,7 @@ typedef struct runtime_T
 
 /**
  * Everything releated to points in game is here, even if it is should be in another struct.
+ * @param points_path - path of file where are points stored
  * @param temp_points - points in the round
  * @param match_points - points needed to win the match
  * @param round_winner - player id who won the round
@@ -96,6 +97,7 @@ typedef struct runtime_T
 */
 typedef struct points_T
 {
+    char points_path[1024];
     int temp_points;
     int match_points;
     int round_winner;

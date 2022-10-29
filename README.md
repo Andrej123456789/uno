@@ -16,7 +16,6 @@ In short, this game uses official uno rules which you can find on link above wit
 - [x] Gameplay (most of gameplay)
 - [ ] Networking
 - [ ] Nice graphics
-- [ ] Nice graphics (in .png, .jpg or .svg format)
 - [x] Settings (both in .txt and .json files)
 
 ## How to compile/run?

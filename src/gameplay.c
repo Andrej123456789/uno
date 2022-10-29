@@ -11,12 +11,13 @@
 /**
  * Check if some player finished the round.
  * @param players - number of players
- * @param player - struct which contains information about player, points to player_t
- * @param points - struct for holding information about points, points to points_t
+ * @param player - struct which contains information about player, points to player_T
+ * @param points - struct for holding information about points, points to points_T
+ * @param settings - struct which contains information about settings, points to setting_T
 */
-bool isFinished(int players, Player player[], Points* points)
+bool isFinished(Player player[], Points* points, Settings* settings)
 {
-    for (int i = 0; i < players + 1; i++)
+    for (int i = 0; i < settings->players; i++)
     {
         if (player[i].number_of_cards == 0)
         {
@@ -29,8 +30,8 @@ bool isFinished(int players, Player player[], Points* points)
 
 /**
  * Check if cards which player wants to play is compatible with the top card.
- * @param runtime - struct for holding information during the game, points to runtime_t
- * @param player - struct which contains information about player, points to player_t
+ * @param runtime - struct for holding information during the game, points to runtime_T
+ * @param player - struct which contains information about player, points to player_T
 */
 bool isCompatible(Runtime* runtime, Player players_card[])
 {
@@ -53,9 +54,106 @@ bool isCompatible(Runtime* runtime, Player players_card[])
 }
 
 /**
+ * Generates a deck of cards
+ * @param runtime - struct for holding information during the game, points to runtime_T
+ * @param cards - struct which contains information about cards, points to cards_T
+ * @param settings - struct which contains information about settings, points to setting_T
+*/
+void GenerateDeck(Runtime* runtime, Cards cards[], Settings* settings)
+{
+    int card_id = 1;
+
+    if (settings->swap_card == 1)
+    {
+        cards[0].number = 15;
+        cards[0].color = 0;
+         
+        runtime->avabible_cards = 109;
+    }
+
+    else
+    {
+        cards[0].number = 0;
+        cards[0].color = 0;
+
+        runtime->avabible_cards = 108;
+    }
+
+    /* Wild card */
+    for (int i = 0; i < 4; i++)
+    {
+        cards[card_id].number = 14;
+        cards[card_id].color = 0;
+        card_id++;
+    }
+
+    /* Wild draw four card */
+    for (int i = 0; i < 4; i++)
+    {
+        cards[card_id].number = 13;
+        cards[card_id].color = 0;
+        card_id++;
+    }
+
+    /* Zero cards */
+    for (int i = 1; i < 5; i++)
+    {
+        cards[card_id].number = 0;
+        cards[card_id].color = i;
+        card_id++;
+    }
+
+    /* Red color */
+    for (int i = 0; i < 2; i++)
+    {
+        for (int i = 1; i < 13; i++)
+        {
+            cards[card_id].number = i;
+            cards[card_id].color = 1;
+            card_id++;
+        }
+    }
+
+    /* Yellow color */
+    for (int i = 0; i < 2; i++)
+    {
+        for (int i = 1; i < 13; i++)
+        {
+            cards[card_id].number = i;
+            cards[card_id].color = 2;
+            card_id++;
+        }
+    }
+
+    /* Green color */
+    for (int i = 0; i < 2; i++)
+    {
+        for (int i = 1; i < 13; i++)
+        {
+            cards[card_id].number = i;
+            cards[card_id].color = 3;
+            card_id++;
+        }
+    }
+
+    /* Blue color */
+    for (int i = 0; i < 2; i++)
+    {
+        for (int i = 1; i < 13; i++)
+        {
+            cards[card_id].number = i;
+            cards[card_id].color = 4;
+            card_id++;
+        }
+    }
+
+    card_id = 1;
+}
+
+/**
  * Swap cards bettwen two players.
- * @param runtime - struct for holding information during the game, points to runtime_t
- * @param player - struct which contains information about player, points to player_t
+ * @param runtime - struct for holding information during the game, points to runtime_T
+ * @param player - struct which contains information about player, points to player_T
  * @param swap_id - player which will got the cards from player which asked for swap
 */
 void Swap(Runtime* runtime, Player player[], int swap_id)
@@ -72,55 +170,57 @@ void Swap(Runtime* runtime, Player player[], int swap_id)
 
 /**
  * Switch turn to the next player.
- * @param runtime - struct for holding information during the game, points to runtime_t
+ * @param runtime - struct for holding information during the game, points to runtime_T
  * @param players - number of players
  * @param doReturn - do return of next player turn 
 */
 int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn)
 {
+    int temp = runtime->player_turn;
+
     if (runtime->isPositive == true)
     {
         if (runtime->player_turn + 1 >= settings->players)
         {
-            runtime->player_turn = 0;
+            temp = 0;
         }
 
         else
         {
-            runtime->player_turn++;
+            temp++;
         }
     }
 
     else
     {
-        if (runtime->player_turn - 1 < 0)
+        if (runtime->player_turn - 1 <= 0)
         {
-            runtime->player_turn++;
+            temp--;
         }
 
         else
         {
-            runtime->player_turn--;
+            temp++;
         }
     }
 
     if (doReturn)
     {
-        return runtime->player_turn;
+        return temp;
     }
 
-    return 0;
+    runtime->player_turn = temp;
+    return -1;
 }
 
 /**
  * Perform action on the card which user wants to play.
- * @param runtime - struct for holding information during the game, points to runtime_t
- * @param player - struct which contains information about player, points to player_t
- * @param cards - struct which contains information about cards, points to cards_t
- * @param settings - struct which contains information about settings, points to setting_t
- * @param players - number of players
+ * @param runtime - struct for holding information during the game, points to runtime_T
+ * @param player - struct which contains information about player, points to player_T
+ * @param cards - struct which contains information about cards, points to cards_T
+ * @param settings - struct which contains information about settings, points to setting_T
 */
-void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players)
+void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings)
 {
     char input[6];
     int temp_color;
@@ -133,7 +233,7 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
     {
         player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
         player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
-        player->number_of_cards--;
+        player[runtime->player_turn].number_of_cards--;
     }
 
     else
@@ -143,14 +243,16 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
             case 10:
                 player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
                 player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
-                player->number_of_cards--;
+                player[runtime->player_turn].number_of_cards--;
 
-                for (int i = 1; i < 5; i++)
+                for (int i = 1; i < 3; i++)
                 {
-                    player[NextPlayer(runtime, settings, true)].cards[player->number_of_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    int next = NextPlayer(runtime, settings, true);
+                    int num_cards = player[1].number_of_cards;
+                    player[next].cards[num_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
 
                     runtime->avabible_cards--;
-                    player->number_of_cards++;
+                    player[next].number_of_cards++;
 
                     if (settings->debug_mode)
                     {
@@ -169,7 +271,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf("\t -------------------- \t \n");
 
                 runtime->player_turn = current_player_turn;
-                NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -210,7 +311,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf("\t -------------------- \t \n");
 		
                 NextPlayer(runtime, settings, false);
-                NextPlayer(runtime, settings, false);
 
                 return;
                 break;
@@ -242,8 +342,12 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 {
                     if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
                     {
+                        player[runtime->player_turn].legal_four = true;
+                    }
+
+                    else
+                    {
                         player[runtime->player_turn].legal_four = false;
-                        break;
                     }
                 }
 
@@ -267,7 +371,13 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
 
                 runtime->top_card[0].number = 0;
                 runtime->top_card[0].color = 0;
-                runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                
+                printf("%s", (settings->colors == 1) ? enter_color_color : enter_color);
+                scanf("%s", input);
+                temp_color = atoi(input);
+
+                runtime->top_card[0].number = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1].number;
+                runtime->top_card[0].color = temp_color;
                 runtime->avabible_cards--;
 
                 printf("\t -------------------- \t \n");
@@ -323,12 +433,12 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
 
 /**
  * Perform action on the top card.
- * @param runtime - struct for holding information during the game, points to runtime_t
- * @param player - struct which contains information about player, points to player_t
- * @param cards - struct which contains information about cards, points to cards_t
- * @param players - number of players
+ * @param runtime - struct for holding information during the game, points to runtime_T
+ * @param player - struct which contains information about player, points to player_T
+ * @param cards - struct which contains information about cards, points to cards_T
+ * @param startup - does this function runs at startup
 */
-void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players)
+void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings)
 {
     int number = runtime->top_card[0].number;
 
@@ -342,11 +452,11 @@ void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* s
         switch (number) 
         {
             case 10:
-                player[0].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                runtime->avabible_cards--;
-
-                player[0].cards[++player->number_of_cards] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                runtime->avabible_cards--;
+                for (int i = 1; i < 3; i++)
+                {
+                    player[0].cards[player[0].number_of_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    runtime->avabible_cards--;
+                }
 
                 break;
 
@@ -376,13 +486,12 @@ void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* s
 
 /**
  * Perform an action on the card which AI wants to play.
- * @param runtime - struct for holding information during the game, points to runtime_t
- * @param player - struct which contains information about player, points to player_t
- * @param cards - struct which contains information about cards, points to cards_t
- * @param settings - struct which contains information about settings, points to setting_t
- * @param players - number of players 
+ * @param runtime - struct for holding information during the game, points to runtime_T
+ * @param player - struct which contains information about player, points to player_T
+ * @param cards - struct which contains information about cards, points to cards_T
+ * @param settings - struct which contains information about settings, points to setting_T
 */
-void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings, int players)
+void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings)
 {
     printf((settings->colors == 1) ? ai_action_color : ai_action);
 
@@ -422,20 +531,22 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
         switch (number)
         {
             case 10:
-                player[NextPlayer(runtime, settings, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
-                                                                                cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                runtime->avabible_cards--;
-                player->number_of_cards++;
+                player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
+                player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
+                player->number_of_cards--;
 
-                player[NextPlayer(runtime, settings, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
-                                                                                cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                runtime->avabible_cards--;
-                player->number_of_cards++;
-
-                for (int i = 1; i < player[runtime->player_turn].number_of_cards + 1; i++)
+                for (int i = 1; i < 3; i++)
                 {
-                    printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
-                                                                        player[runtime->player_turn].cards[i].color);
+                    player[NextPlayer(runtime, settings, true)].cards[player->number_of_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+
+                    runtime->avabible_cards--;
+                    player->number_of_cards++;
+
+                    if (settings->debug_mode)
+                    {
+                        VectorPushBack(&player[runtime->player_turn].test, (void*)50);
+                        printf("[DEBUG [TEST] ] Element test: %d\n", (int)VectorGet(&player[runtime->player_turn].test, 0));
+                    }
                 }
 
                 runtime->top_card[0].number = 0;
@@ -449,7 +560,6 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
 
                 runtime->player_turn = current_player_turn;
                 NextPlayer(runtime, settings, false);
-                NextPlayer(runtime, settings, false);
 
                 return;
                 break;
@@ -459,12 +569,6 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                     runtime->isPositive = false;
                 else
                     runtime->isPositive = true;
-
-                for (int i = 1; i < player[runtime->player_turn].number_of_cards + 1; i++)
-                {
-                    printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
-                                                                        player[runtime->player_turn].cards[i].color);
-                }
 
                 runtime->top_card[0].number = 0;
                 runtime->top_card[0].color = 0;
@@ -485,12 +589,6 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                 player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                 player->number_of_cards--;
 
-                for (int i = 1; i < player[runtime->player_turn].number_of_cards + 1; i++)
-                {
-                    printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
-                                                                        player[runtime->player_turn].cards[i].color);
-                }
-
                 runtime->top_card[0].number = 0;
                 runtime->top_card[0].color = 0;
                 runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
@@ -500,7 +598,6 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 		
-                NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -519,6 +616,7 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
 
                 runtime->top_card[0].number = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1].number;
                 runtime->top_card[0].color = cards[rand() % (runtime->avabible_cards - 4 + 1) + 1].color;
+                runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
 
                 printf("\t -------------------- \t \n");
@@ -542,29 +640,26 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
 
                 if (can_do_4 == true)
                 {
+                    for (int i = 0; i < player->number_of_cards + 1; i++)
+                    {
+                        if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
+                        {
+                            player[runtime->player_turn].legal_four = false;
+                            break;
+                        }
+                    }
+
                     player[runtime->player_turn].cards[runtime->current_card_id].number = 0;
                     player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                     player->number_of_cards--;
-                    
-                    player[NextPlayer(runtime, settings, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
-                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                    runtime->avabible_cards--;
-                    player->number_of_cards++;
 
-                    player[NextPlayer(runtime, settings, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
-                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                    runtime->avabible_cards--;
-                    player->number_of_cards++;
+                    for (int i = 1; i < 5; i++)
+                    {
+                        player[NextPlayer(runtime, settings, true)].cards[player->number_of_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
 
-                    player[NextPlayer(runtime, settings, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
-                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                    runtime->avabible_cards--;
-                    player->number_of_cards++;
-
-                    player[NextPlayer(runtime, settings, true)].cards[player[runtime->player_turn + 1].number_of_cards + 1] = 
-                                                                                    cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
-                    runtime->avabible_cards--;
-                    player->number_of_cards++;
+                        runtime->avabible_cards--;
+                        player->number_of_cards++;
+                    }
 
                     for (int i = 1; i < player[runtime->player_turn].number_of_cards + 1; i++)
                     {
@@ -582,7 +677,6 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                     printf("\t -------------------- \t \n");
 
                     runtime->player_turn = current_player_turn;
-                    NextPlayer(runtime, settings, false);
                     NextPlayer(runtime, settings, false);
                 }
 
@@ -646,8 +740,8 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
 
 /**
  * Read or write points to text file.
- * @param points - struct for holding information about points, points to points_t
- * @param settings - struct which contains information about settings, points to setting_t
+ * @param points - struct for holding information about points, points to points_T
+ * @param settings - struct which contains information about settings, points to setting_T
  * @param write - perform read of write
  * @param players - number of players
  * @param point - points, see function code in gameplay.c for naming convention
@@ -657,7 +751,7 @@ int PointsFromFile(Points* points, Settings* settings, bool write, int player, i
     points->alReadyCreated = false;
     if (!write)
     {
-        FILE* read = fopen(".points.txt", "r");
+        FILE* read = fopen(points->points_path, "r");
         char buffer[14];
         char points_buffer[4]; /* To remove "Player 0: " text */
         char player_buffer[3]; /* For player id */
@@ -668,7 +762,7 @@ int PointsFromFile(Points* points, Settings* settings, bool write, int player, i
              * If the file doesn't exist, create it and set players' points to 0.
             */
 
-            FILE* temp = fopen(".points.txt", "w");
+            FILE* temp = fopen(points->points_path, "w");
             fclose(temp);
             points->alReadyCreated = true;
             PointsFromFile(points, settings, true, 0, 0);
@@ -730,7 +824,7 @@ int PointsFromFile(Points* points, Settings* settings, bool write, int player, i
 
         if (point == 0)
         {
-            FILE* write = fopen(".points.txt", "w");
+            FILE* write = fopen(points->points_path, "w");
             if (write == NULL)
             {
                 printf("\t Error: Could not open file\n");
@@ -749,7 +843,7 @@ int PointsFromFile(Points* points, Settings* settings, bool write, int player, i
         {
             char new_text[14];
             sprintf(new_text, "Player %d: %d", player, point);
-            replace_line(".points.txt", player + 1, 14, new_text);
+            replace_line(points->points_path, player + 1, 14, new_text);
         }
 
         else
@@ -763,9 +857,9 @@ int PointsFromFile(Points* points, Settings* settings, bool write, int player, i
 
 /**
  * Assigning points and determining winner of the match.
- * @param player - struct which contains information about player, points to player_t
- * @param settings - struct which contains information about settings, points to setting_t
- * @param points - struct for holding information about points, points to points_t
+ * @param player - struct which contains information about player, points to player_T
+ * @param settings - struct which contains information about settings, points to setting_T
+ * @param points - struct for holding information about points, points to points_T
  * @param players - number of players
 */
 void PointsManager(Player player[], Settings* settings, Points* points, int players)
@@ -809,15 +903,15 @@ void PointsManager(Player player[], Settings* settings, Points* points, int play
     {
         points->match_ended = true;
         points->match_winner = points->round_winner;
-        remove(".points.txt");
+        remove(points->points_path);
         return;
     }
 }
 
 /**
  * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.
- * @param settings - struct which contains information about settings, points to setting_t
- * @param points - struct for holding information about points, points to points_t 
+ * @param settings - struct which contains information about settings, points to setting_T
+ * @param points - struct for holding information about points, points to points_T 
  * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_t
 */
 void Gameplay(Settings* settings, Points* points, Theme* theme)
@@ -831,120 +925,14 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     Player player[players];
     Runtime* runtime = malloc(sizeof(Runtime));
 
-    int card_id = 1;
-
-    player->number_of_cards = 0;
     runtime->current_card_id = 0;
     runtime->player_turn = 0;
     runtime->isPositive = true;
 
     srand((unsigned) time(&t));
-
-    if (settings->swap_card == 1)
-    {
-        cards[0].number = 15;
-        cards[0].color = 0;
-         
-        runtime->avabible_cards = 109;
-    }
-
-    else
-    {
-        cards[0].number = 0;
-        cards[0].color = 0;
-
-        runtime->avabible_cards = 108;
-    }
-
-    /* Wild card */
-    for (int i = 0; i < 4; i++)
-    {
-        cards[card_id].number = 14;
-        cards[card_id].color = 0;
-        card_id++;
-    }
-
-    /* Wild draw four card */
-    for (int i = 0; i < 4; i++)
-    {
-        cards[card_id].number = 13;
-        cards[card_id].color = 0;
-        card_id++;
-    }
-
-    /* Zero cards */
-    for (int i = 1; i < 5; i++)
-    {
-        cards[card_id].number = 0;
-        cards[card_id].color = i;
-        card_id++;
-    }
-
-    /* Red color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 1;
-        card_id++;
-    }
-
-    /* Yellow color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 2;
-        card_id++;
-    }
-
-    /* Green color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 3;
-        card_id++;
-    }
-
-    /* Blue color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 4;
-        card_id++;
-    }
-
-    /* Red color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 1;
-        card_id++;
-    }
-
-    /* Yellow color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 2;
-        card_id++;
-    }
-
-    /* Green color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 3;
-        card_id++;
-    }
-
-    /* Blue color */
-    for (int i = 1; i < 13; i++)
-    {
-        cards[card_id].number = i;
-        cards[card_id].color = 4;
-        card_id++;
-    }
+    GenerateDeck(runtime, cards, settings);
     
-    /* All cards */
+    /* Print all cards */
     if (settings->debug_mode == 1)
     {
         printf("Cards: \n");
@@ -958,6 +946,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     /* Deal the cards to players */
     for (int i = 0; i < players; i++)
     {
+        player[i].number_of_cards = 0;
         for (int j = 1; j < 8; j++)
         {   if (settings->swap_card == 1)
                 player[i].cards[j] = cards[rand() % (109 - 0 + 0) + 0];
@@ -968,6 +957,8 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         }
         runtime->avabible_cards -= 7;
         printf("\n");
+
+        player[i].legal_four = false;
         VectorInit(&player[i].test);
     }
 
@@ -978,7 +969,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
 
-    TopCardAction(runtime, player, cards, settings, players);
+    TopCardAction(runtime, player, cards, settings);
 
     if (settings->debug_mode == 1)
     {
@@ -987,7 +978,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 
     while (true)
     {
-        if (isFinished(players, player, points) == true)
+        if (isFinished(player, points, settings) == true)
         {
             PointsManager(player, settings, points, players);
             printf((settings->colors == 1) ? game_finished_color : game_finished);
@@ -1010,7 +1001,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         again:
         if (runtime->player_turn != 0 && (char)VectorGet(&settings->ai_sequence, runtime->player_turn) == '1')
         {
-            AIAction(runtime, player, cards, settings, players);
+            AIAction(runtime, player, cards, settings);
             goto again;
         }
 
@@ -1051,6 +1042,32 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 			goto try_again;
 		}
 
+        else if (strcmp(tmp_input, "doubt") == 0)
+        {
+            int current_turn = runtime->player_turn;
+            runtime->isPositive = false;
+            if (runtime->top_card[0].number == 14 && runtime->top_card[0].color == 0 && player[NextPlayer(runtime, settings, true)].legal_four == false)
+            {
+                printf("Player illegally played wild draw four card!\n");
+            }
+
+            else
+            {
+                printf("Player legally played wild draw four card!\n");
+
+                player[runtime->player_turn].cards[player[runtime->player_turn].number_of_cards].number = 0;
+                player[runtime->player_turn].cards[player[runtime->player_turn].number_of_cards].color = 0;
+
+                for (int i = 1; i < 3; i++)
+                {
+                    player[current_turn].cards[player[current_turn].number_of_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+
+                    runtime->avabible_cards--;
+                    player->number_of_cards++;
+                }
+            }
+        }
+
         else if (strcmp(tmp_input, "theme") == 0 && settings->debug_mode == 1) /* here because of those flags for strict code */
         {
             printf("%d\n", theme->dark);
@@ -1071,7 +1088,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         if (isCompatible(runtime, player))
         {
             /* take new top card and go to other player */
-            Action(runtime, player, cards, settings, players);
+            Action(runtime, player, cards, settings);
 
             if (settings->debug_mode == 1)
             {

@@ -28,6 +28,7 @@ int copy_json(Settings* settings, Points* points, char* path)
 
     struct json_object* parsed_json;
     struct json_object* j_match_points;
+    struct json_object* j_points_path;
     struct json_object* j_players;
     struct json_object* j_special_mode;
     struct json_object* j_debug_mode;
@@ -88,10 +89,14 @@ int copy_json(Settings* settings, Points* points, char* path)
     temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(j_network_sequence));
     strcpy(temp_sequence, json_object_get_string(j_network_sequence));
 
-    for (int i = 0; i < strlen(temp_sequence); i++)
+    for (size_t i = 0; i < strlen(temp_sequence); i++)
     {
         VectorPushBack(&settings->network_sequence, (void*)temp_sequence[i]);
     }
+
+    /* Copy path of file where are points stored */
+    json_object_object_get_ex(parsed_json, "points_path", &j_points_path);
+    strncpy(points->points_path, json_object_get_string(j_points_path), json_object_get_string_len(j_points_path));
 
     /* Print settings */
     printf("Your current settings are:\n");
