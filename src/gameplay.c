@@ -193,14 +193,14 @@ int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn)
 
     else
     {
-        if (runtime->player_turn - 1 <= 0)
+        if (runtime->player_turn - 1 < 0)
         {
-            temp--;
+            temp++;
         }
 
         else
         {
-            temp++;
+            temp--;
         }
     }
 
@@ -225,7 +225,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
     char input[6];
     int temp_color;
     int temp_player;
-    int current_player_turn = runtime->player_turn;
 
     int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
 
@@ -238,6 +237,8 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
 
     else
     {
+        int next = NextPlayer(runtime, settings, true);
+        int num_cards = player[1].number_of_cards;
         switch (number) 
         {
             case 10:
@@ -247,8 +248,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
 
                 for (int i = 1; i < 3; i++)
                 {
-                    int next = NextPlayer(runtime, settings, true);
-                    int num_cards = player[1].number_of_cards;
                     player[next].cards[num_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
 
                     runtime->avabible_cards--;
@@ -261,8 +260,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                     }
                 }
 
-                runtime->top_card[0].number = 0;
-                runtime->top_card[0].color = 0;
                 runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
 
@@ -270,7 +267,7 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
-                runtime->player_turn = current_player_turn;
+                NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -282,8 +279,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 else
                     runtime->isPositive = true;
 
-                runtime->top_card[0].number = 0;
-                runtime->top_card[0].color = 0;
                 runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
 
@@ -301,8 +296,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 player[runtime->player_turn].cards[runtime->current_card_id].color = 0;
                 player->number_of_cards--;
 
-                runtime->top_card[0].number = 0;
-                runtime->top_card[0].color = 0;
                 runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
                 runtime->avabible_cards--;
 
@@ -310,6 +303,7 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 		
+                NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -357,10 +351,10 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
 
                 for (int i = 1; i < 5; i++)
                 {
-                    player[NextPlayer(runtime, settings, true)].cards[player->number_of_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
+                    player[next].cards[num_cards + i] = cards[rand() % (runtime->avabible_cards - 1 + 1) + 1];
 
                     runtime->avabible_cards--;
-                    player->number_of_cards++;
+                    player[next].number_of_cards++;
 
                     if (settings->debug_mode)
                     {
@@ -384,7 +378,6 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
-                runtime->player_turn = current_player_turn;
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
 
@@ -964,6 +957,9 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 
     runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 5 + 5) + 5]; /* we cannot get wild draw four card */
     runtime->avabible_cards--;
+
+    player[0].cards[2].number = 10;
+    player[0].cards[2].color = runtime->top_card[0].color;
 
     printf("\t -------------------- \t \n");
     printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
