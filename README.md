@@ -31,15 +31,19 @@ will load default config file) type in your terminal (emulator) `make run`.
 ## How to change settings?
 - Follow next rules to see what each settings represents.
 0. Points required for players to win match
-1. number of players
-2. special_mode [0 - disabled, 1 - enabled]
-3. debug_mode [0 - disabled, 1 - enabled]
-4. swap_card [0 - disabled, 1 - enabled]
-5. colors [0 - disabled, 1 - enabled]
-6. AI sequence {[0 - disabled, 1 - enabled] per player}]
-7. Network sequence, same as AI sequence
+1. Path of file where points will be stored
+2. number of players
+3. special_mode [0 - disabled, 1 - enabled]
+4. debug_mode [0 - disabled, 1 - enabled]
+5. swap_card [0 - disabled, 1 - enabled]
+6. colors [0 - disabled, 1 - enabled]
+7. AI sequence {[0 - disabled, 1 - enabled] per player}]
+8. Network sequence, same as AI sequence
 
 ## Known issues
 - `points.txt` deleted upon winning match, to fix this problem, restart program
+
+## External dependencies
+- [c-vector](https://github.com/eteran/c-vector)
 
 *One small part was made on my live stream, just search my name for YouTube channel*

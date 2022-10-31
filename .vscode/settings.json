@@ -12,6 +12,9 @@
         "termios.h": "c",
         "graphics.h": "c",
         "stdio.h": "c",
-        "cstring": "c"
+        "cstring": "c",
+        "vec_two.h": "c",
+        "string.h": "c",
+        "assert.h": "c"
     }
 }

@@ -1,7 +1,7 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
- * LICENSE: Apache License 2.0
+ * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: util.c, C file for helper functions
 */
 
@@ -99,7 +99,9 @@ int copy_json(Settings* settings, Points* points, char* path)
     strncpy(points->points_path, json_object_get_string(j_points_path), json_object_get_string_len(j_points_path));
 
     /* Print settings */
-    printf("Your current settings are:\n");
+    printf("Your current settings are (see README.md for details): \n");
+    printf("\t Match points: %d\n", points->match_points);
+    printf("\t Points path: %s\n", points->points_path);
     printf("\t Players: %d\n", settings->players);
     printf("\t Special Mode: %d\n", settings->special_mode);
     printf("\t Debug Mode: %d\n", settings->debug_mode);
@@ -120,8 +122,8 @@ int copy_json(Settings* settings, Points* points, char* path)
     {
         printf("%c", (char)VectorGet(&settings->ai_sequence, i));
     }
-    printf("\n");
 
+    printf("\n\n");
     return 0;
 }
 

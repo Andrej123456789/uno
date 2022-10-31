@@ -1,7 +1,7 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
- * LICENSE: Apache License 2.0
+ * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: gameplay.h, header file for gameplay mechanics
 */
 
@@ -16,6 +16,7 @@
 #include "runtime.h"
 #include "graphics.h"
 #include "strings.h"
+#include "c_vector.h"
 
 /*
  * Naming convention for cards:
@@ -55,10 +56,10 @@ bool isCompatible(Runtime* runtime, Player players_card[]);
 /**
  * Generates a deck of cards
  * @param runtime - struct for holding information during the game, points to runtime_T
- * @param cards - struct which contains information about cards, points to cards_T
  * @param settings - struct which contains information about settings, points to setting_T
+ * @return vector which contains cards
 */
-void GenerateDeck(Runtime* runtime, Cards cards[], Settings* settings);
+cvector_vector_type(Cards) GenerateDeck(Runtime* runtime, Settings* settings);
 
 /**
  * Swap cards bettwen two players.

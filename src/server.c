@@ -1,7 +1,7 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
- * LICENSE: Apache License 2.0
+ * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: server.c, C file for a server for C version
  * CREDITS: https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
  * NOTE: I am going to use colors currently becuse this code is just for POSIX now

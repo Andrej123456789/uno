@@ -1,7 +1,7 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
- * LICENSE: Apache License 2.0
+ * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: graphics.c, C file for graphics
  */
 

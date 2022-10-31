@@ -1,7 +1,7 @@
 /**
  * @author: Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
- * LICENSE: Apache License 2.0
+ * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: runtime.h, header file for all runtime informations
 */
 
@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include "vec.h"
+#include "c_vector.h"
 
 /* Max number of players */
 #define MAX_PLAYERS 20
@@ -49,21 +50,15 @@ typedef struct cards_T
 
 /**
  * Struct which contains informations about player.
- * @param cards - array of cards which player has
- * @param cards.number - number of card
- * @param cards.color - color of card
- * @param number_of_cards - number of cards which player has
+ * @param cards - vector which contains cards
  * @param points - points which player has
  * @param legal_four - can player legally play wild draw four card
 */
 typedef struct player_T
 {
-    Cards cards[1024];
-    int number_of_cards;
+    cvector_vector_type(Cards) cards;
     int points;
     bool legal_four;
-    Vector test;
-    Vector new_cards;
 } Player;
 
 /**
