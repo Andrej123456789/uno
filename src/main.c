@@ -91,10 +91,6 @@ int main(int argc, const char** argv)
     copy_json(settings, points, path);
     Gameplay(settings, points, theme);
 
-    /* Frees vectors */
-    cvector_free(settings->ai_sequence);
-    cvector_free(settings->network_sequence);
-
     /* Frees structs */
     free(settings);
     free(points);

@@ -71,7 +71,7 @@ cvector_vector_type(Cards) GenerateDeck(Runtime* runtime, Settings* settings)
     cvector_vector_type(Cards) cards = NULL;
     Cards temp;
 
-    if (settings->swap_card == 1)
+    if (settings->special[0] == 1)
     {
         temp.number = 15;
         temp.color = 0;
@@ -461,7 +461,7 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
 
     do
     { 
-        number = (rand() % ((settings->swap_card == 1) ? 15 : 14 - 0 + 0) + 0);
+        number = (rand() % ((settings->special[0] == 1) ? 15 : 14 - 0 + 0) + 0);
         color = (rand() % (4 - 1 + 1) + 1);
 
         for (int i = 0; i < length; i++) 

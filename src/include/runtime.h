@@ -16,23 +16,19 @@
 
 /**
  * Struct which contains the settings of the game.
- * @param players - number of players
- * @param special_mode - special mode (0 - off, 1 - on)
  * @param debug_mode - debug mode (0 - off, 1 - on)
- * @param swap_card - swap card (0 - off, 1 - on)
  * @param colors - colors (0 - off, 1 - on)
- * @param ai_sequence - contains which players are AI (needs to be written reversed)
- * @param ai_array_sequence - ai_sequence in array form
- * @param network_sequence - contains which players are network players (needs to be written reversed)
- * @param network_array_sequence - network_sequence in array form
+ * @param players - number of players
+ * @param special - contains settings for "special elements", swap card, stacking, seven_o, jump_in
+ * @param ai_sequence - vector which contains which players are AI
+ * @param network_sequence - vector which contains which players are connected on the network
 */
 typedef struct settings_T
 {
-    int players;
-    int special_mode;
     int debug_mode;
-    int swap_card;
     int colors;
+    int players;
+    int special[4];
     cvector_vector_type(char) ai_sequence;
     cvector_vector_type(char) network_sequence;
 } Settings;

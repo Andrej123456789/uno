@@ -1,11 +1,15 @@
 {
 	"match_points": 250,
 	"points_path": "settings/.points.txt",
-	"players": 2,
-	"special_mode": 0,
 	"debug_mode": 0,
-	"swap_card": 1,
-	"colors": 0,
+	"colors": 1,
+	"players": 2,
+	"special": [{
+		"swap_card": 1,
+		"stacking": 1,
+		"seven_o": 0,
+		"jump_in": 0
+	}],
 	"ai_sequence": "00",
 	"network_sequence": "00"
 }
