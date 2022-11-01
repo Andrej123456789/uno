@@ -95,6 +95,8 @@ int copy_json(Settings* settings, Points* points, char* path)
         cvector_push_back(settings->network_sequence, temp_sequence[i]);
     }
 
+    free(temp_sequence);
+
     /* Copy path of file where are points stored */
     json_object_object_get_ex(parsed_json, "points_path", &j_points_path);
     strncpy(points->points_path, json_object_get_string(j_points_path), json_object_get_string_len(j_points_path));
