@@ -81,27 +81,31 @@ int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn);
  * Perform action on the card which user wants to play.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param stacking - struct which contains information about stacking, points to stacking_T
  * @param cards - struct which contains information about cards, points to cards_T
  * @param settings - struct which contains information about settings, points to setting_T
 */
-void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings);
+void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings);
 
 /**
  * Perform action on the top card.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param stacking - struct which contains information about stacking, points to stacking_T
  * @param cards - struct which contains information about cards, points to cards_T
+ * @param settings - struct which contains information about settings, points to setting_T
 */
-void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings);
+void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings);
 
 /**
  * Perform an action on the card which AI wants to play.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param stacking - struct which contains information about stacking, points to stacking_T
  * @param cards - struct which contains information about cards, points to cards_T
  * @param settings - struct which contains information about settings, points to setting_T
 */
-void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings);
+void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings);
 
 /**
  * Read or write points to text file.

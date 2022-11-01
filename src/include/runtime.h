@@ -76,6 +76,18 @@ typedef struct runtime_T
     Cards top_card[1];
 } Runtime;
 
+/** Struct for holding stacking information
+ * @param happening - is stacking happening right now
+ * @param number - is card +2 or +4
+ * @param number_of_cards - how much we already stacked
+*/
+typedef struct stacking_T
+{
+    bool happening;
+    int number;
+    int number_of_cards;
+} Stacking ;
+
 /**
  * Everything releated to points in game is here, even if it is should be in another struct.
  * @param points_path - path of file where are points stored

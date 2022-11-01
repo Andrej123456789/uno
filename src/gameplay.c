@@ -218,10 +218,11 @@ int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn)
  * Perform action on the card which user wants to play.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param stacking - struct which contains information about stacking, points to stacking_T
  * @param cards - struct which contains information about cards, points to cards_T
  * @param settings - struct which contains information about settings, points to setting_T
 */
-void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings)
+void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings)
 {
     char input[6];
     int temp_color;
@@ -242,7 +243,10 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
             case 10:
                 for (int i = 1; i < 3; i++)
                 {
-                    cvector_push_back(player[next].cards, cards[rand() % (runtime->avabible_cards - 1 + 1) + 1]);
+                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
+
+                    cvector_erase(cards, random);
                     runtime->avabible_cards--;
                 }
 
@@ -252,6 +256,9 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                stacking->number = 10;
+                stacking->happening = true;
 
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
@@ -323,11 +330,12 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                     }
                 }
 
-                cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
-
                 for (int i = 1; i < 5; i++)
                 {
-                    cvector_push_back(player[next].cards, cards[rand() % (runtime->avabible_cards - 1 + 1) + 1]);
+                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
+
+                    cvector_erase(cards, random);
                     runtime->avabible_cards--;
                 }
                 
@@ -342,6 +350,9 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                stacking->number = 14;
+                stacking->happening = true;
 
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
@@ -390,10 +401,11 @@ void Action(Runtime* runtime, Player player[], Cards cards[], Settings* settings
  * Perform action on the top card.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param stacking - struct which contains information about stacking, points to stacking_T
  * @param cards - struct which contains information about cards, points to cards_T
- * @param startup - does this function runs at startup
+ * @param settings - struct which contains information about settings, points to setting_T
 */
-void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings)
+void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings)
 {
     int number = runtime->top_card[0].number;
 
@@ -409,9 +421,15 @@ void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* s
             case 10:
                 for (int i = 1; i < 3; i++)
                 {
-                    cvector_push_back(player[0].cards, cards[rand() % (runtime->avabible_cards - 1 + 1) + 1]);
+                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
+
+                    cvector_erase(cards, random);
                     runtime->avabible_cards--;
                 }
+
+                stacking->number = 10;
+                stacking->happening = true;
 
                 break;
 
@@ -444,10 +462,11 @@ void TopCardAction(Runtime* runtime, Player player[], Cards cards[], Settings* s
  * Perform an action on the card which AI wants to play.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param stacking - struct which contains information about stacking, points to stacking_T
  * @param cards - struct which contains information about cards, points to cards_T
  * @param settings - struct which contains information about settings, points to setting_T
 */
-void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settings)
+void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings)
 {
     printf((settings->colors == 1) ? ai_action_color : ai_action);
 
@@ -460,7 +479,7 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
     bool isPresent;
 
     do
-    { 
+    {
         number = (rand() % ((settings->special[0] == 1) ? 15 : 14 - 0 + 0) + 0);
         color = (rand() % (4 - 1 + 1) + 1);
 
@@ -488,7 +507,10 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
             case 10:
                 for (int i = 1; i < 3; i++)
                 {
-                    cvector_push_back(player[next].cards, cards[rand() % (runtime->avabible_cards - 1 + 1) + 1]);
+                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
+
+                    cvector_erase(cards, random);
                     runtime->avabible_cards--;
                 }
 
@@ -498,6 +520,9 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                stacking->number = 10;
+                stacking->happening = true;
 
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
@@ -565,11 +590,12 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                     }
                 }
 
-                cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
-
                 for (int i = 1; i < 5; i++)
                 {
-                    cvector_push_back(player[next].cards, cards[rand() % (runtime->avabible_cards - 1 + 1) + 1]);
+                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
+
+                    cvector_erase(cards, random);
                     runtime->avabible_cards--;
                 }
 
@@ -580,6 +606,9 @@ void AIAction(Runtime* runtime, Player player[], Cards cards[], Settings* settin
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                stacking->number = 10;
+                stacking->happening = true;
 
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
@@ -804,6 +833,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     int players = settings->players;
 
     Player player[players];
+    Stacking* stacking = malloc(sizeof(Stacking));
     Runtime* runtime = malloc(sizeof(Runtime));
 
     runtime->current_card_id = 0;
@@ -861,7 +891,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
 
-    TopCardAction(runtime, player, cards, settings);
+    TopCardAction(runtime, player, stacking, cards, settings);
 
     if (settings->debug_mode == 1)
     {
@@ -893,7 +923,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         again:
         if (runtime->player_turn != 0 && settings->ai_sequence[runtime->player_turn] == '1')
         {
-            AIAction(runtime, player, cards, settings);
+            AIAction(runtime, player, stacking, cards, settings);
             goto again;
         }
 
@@ -957,7 +987,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
                 int previous = NextPlayer(runtime, settings, true);
                 int previous_num_cards = cvector_size(player[previous].cards);
 
-                for (int i = 0; i < 4; i--)
+                for (int i = 0; i < -4; i--)
                 {
                     cvector_push_back(player[runtime->player_turn].cards, player[previous].cards[previous_num_cards - i]);
                     cvector_pop_back(player[previous].cards);
@@ -994,8 +1024,41 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 
         if (isCompatible(runtime, player))
         {
+            if (settings->special[1] == 1 && stacking->happening && runtime->top_card[0].number == 10 || runtime->top_card[0].number == 14)
+            {
+                if (1 == 1)
+                {
+                    if (stacking->number == 10)
+                    {
+                        stacking->number_of_cards += 2;
+                    }
+
+                    else /* +4 card, or number is 14; probably */
+                    {
+                        stacking->number_of_cards += 4;
+                    }
+
+                    cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
+                    runtime->avabible_cards--;
+                }
+
+                else
+                {
+                    for (int i = 1; i < stacking->number_of_cards; i++)
+                    {
+                        int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                        cvector_push_back(player[runtime->player_turn].cards, cards[random]);
+
+                        cvector_erase(cards, random);
+                        runtime->avabible_cards--;
+                    }
+
+                    stacking->happening = false;
+                }
+            }
+
             /* take new top card and go to other player */
-            Action(runtime, player, cards, settings);
+            Action(runtime, player, stacking, cards, settings);
 
             if (settings->debug_mode == 1)
             {
@@ -1018,5 +1081,6 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     }
     
     /* Frees structs */
+    free(stacking);
     free(runtime);
 }
