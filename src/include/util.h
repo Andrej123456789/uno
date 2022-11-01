@@ -13,6 +13,7 @@
 #include <json-c/json.h>
 
 #include "runtime.h"
+#include "c_vector.h"
 
 /**
  * Copying settings from JSON file to the struct

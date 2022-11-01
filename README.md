@@ -3,6 +3,8 @@ Simple game inspired by Uno in terminal with some extra features and networking 
 
 Written using C programming language mainly
 
+Uses around 230 kilobytes of RAM (it depends how long you play)
+
 *Repo is called `uno` because `++` couldn't fit in repo name*
 
 ## Rules
@@ -16,7 +18,7 @@ In short, this game uses official uno rules which you can find on link above wit
 - [x] Gameplay (most of gameplay)
 - [ ] Networking
 - [ ] Nice graphics
-- [x] Settings (both in .txt and .json files)
+- [x] Settings (in .json files)
 
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.

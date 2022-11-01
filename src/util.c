@@ -6,6 +6,7 @@
 */
 
 #include "include/util.h"
+#include <stdio.h>
 
 /**
  * Copying settings from JSON file to the struct
@@ -70,8 +71,8 @@ int copy_json(Settings* settings, Points* points, char* path)
     json_object_object_get_ex(parsed_json, "network_sequence", &j_network_sequence);
 
     /* Initialize vectors */
-    VectorInit(&settings->ai_sequence);
-    VectorInit(&settings->network_sequence);
+    settings->ai_sequence = NULL;
+    settings->network_sequence = NULL;
 
     /* Copy AI sequence */
     char* temp_sequence = malloc(sizeof(char) * json_object_get_string_len(j_ai_sequence));
@@ -79,11 +80,11 @@ int copy_json(Settings* settings, Points* points, char* path)
 
     for (int i = 0; i < strlen(temp_sequence); i++)
     {
-        VectorPushBack(&settings->ai_sequence, (void*)temp_sequence[i]);
+        cvector_push_back(settings->ai_sequence, temp_sequence[i]);
     }
 
     /* Clear the string */
-    memset(temp_sequence, 0, sizeof(temp_sequence));
+    memset(temp_sequence, 0, strlen(temp_sequence));
 
     /* Copy network sequence */
     temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(j_network_sequence));
@@ -91,7 +92,7 @@ int copy_json(Settings* settings, Points* points, char* path)
 
     for (size_t i = 0; i < strlen(temp_sequence); i++)
     {
-        VectorPushBack(&settings->network_sequence, (void*)temp_sequence[i]);
+        cvector_push_back(settings->network_sequence, temp_sequence[i]);
     }
 
     /* Copy path of file where are points stored */
@@ -110,17 +111,17 @@ int copy_json(Settings* settings, Points* points, char* path)
 
     /* Print AI sequence */
     printf("\t AI sequence: ");
-    for (int i = 0; i < VectorTotal(&settings->ai_sequence); i++)
+    for (int i = 0; i < cvector_size(settings->ai_sequence); ++i)
     {
-        printf("%c", (char)VectorGet(&settings->ai_sequence, i));
+        printf("%c", settings->ai_sequence[i]);
     }
     printf("\n");
 
     /* Print network sequence */
     printf("\t Network sequence: ");
-    for (int i = 0; i < VectorTotal(&settings->ai_sequence); i++)
+    for (int i = 0; i < cvector_size(settings->ai_sequence); i++)
     {
-        printf("%c", (char)VectorGet(&settings->ai_sequence, i));
+        printf("%c", settings->network_sequence[i]);
     }
 
     printf("\n\n");

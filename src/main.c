@@ -92,8 +92,8 @@ int main(int argc, const char** argv)
     Gameplay(settings, points, theme);
 
     /* Frees vectors */
-    VectorFree(&settings->ai_sequence);
-    VectorFree(&settings->network_sequence);
+    cvector_free(settings->ai_sequence);
+    cvector_free(settings->network_sequence);
 
     /* Frees structs */
     free(settings);

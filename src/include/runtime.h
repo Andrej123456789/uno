@@ -33,8 +33,8 @@ typedef struct settings_T
     int debug_mode;
     int swap_card;
     int colors;
-    Vector ai_sequence;
-    Vector network_sequence;
+    cvector_vector_type(char) ai_sequence;
+    cvector_vector_type(char) network_sequence;
 } Settings;
 
 /**

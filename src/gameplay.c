@@ -6,6 +6,7 @@
 */
 
 #include "include/gameplay.h"
+#include "include/c_vector.h"
 #include "include/util.h"
 
 /**
@@ -828,6 +829,11 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     {
         player[i].cards = NULL;
 
+        Cards temp;
+        temp.number = 0;
+        temp.color = 0;
+        cvector_push_back(player[i].cards, temp);
+
         int random = 0;
         for (int j = 1; j < 8; j++)
         {
@@ -840,7 +846,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         if (player[i].cards) 
         {
             int z;
-            for (z = 0; z < cvector_size(player[i].cards); ++z) 
+            for (z = 1; z < cvector_size(player[i].cards); ++z) 
             {
                 printf((settings->colors == 1) ? player_card_info_color : player_card_info, i, z, player[i].cards[z].number, player[i].cards[z].color);
             }
@@ -885,13 +891,13 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         }
 
         again:
-        if (runtime->player_turn != 0 && (char)VectorGet(&settings->ai_sequence, runtime->player_turn) == '1')
+        if (runtime->player_turn != 0 && settings->ai_sequence[runtime->player_turn] == '1')
         {
             AIAction(runtime, player, cards, settings);
             goto again;
         }
 
-        else if (runtime->player_turn != 0 && (char)VectorGet(&settings->network_sequence, runtime->player_turn) == '1')
+        else if (runtime->player_turn != 0 && settings->network_sequence[runtime->player_turn] == '1')
         {
             printf("Network is WIP (Work in progress)!!\n\n");
             NextPlayer(runtime, settings, false);
@@ -921,12 +927,12 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             goto try_again;
         }
 
-		else if (strcmp(tmp_input, "all") == 0)
+        else if (strcmp(tmp_input, "all") == 0)
 		{
             if (player[runtime->player_turn].cards) 
             {
                 int i;
-                for (i = 0; i < cvector_size(player[runtime->player_turn].cards); ++i) 
+                for (i = 1; i < cvector_size(player[runtime->player_turn].cards); ++i) 
                 {
                     printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
                                                                                     player[runtime->player_turn].cards[i].color);
@@ -1003,6 +1009,12 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             printf((settings->colors == 1) ? card_not_compatible_color : card_not_compatible);
             goto try_again;
         }
+    }
+
+    /* Frees vectors */
+    for (int i = 0; i < settings->players; i++)
+    {
+        cvector_free(player[i].cards);
     }
     
     /* Frees structs */
