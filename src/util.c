@@ -6,7 +6,6 @@
 */
 
 #include "include/util.h"
-#include <stdio.h>
 
 /**
  * Copying settings from JSON file to the struct
