@@ -65,9 +65,10 @@ cvector_vector_type(Cards) GenerateDeck(Runtime* runtime, Settings* settings);
  * Swap cards bettwen two players.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
+ * @param settings - struct which contains information about settings, points to setting_T
  * @param swap_id - player which will got the cards from player which asked for swap
 */
-void Swap(Runtime* runtime, Player player[], int swap_id);
+void Swap(Runtime* runtime, Player player[], Settings* settings, int swap_id);
 
 /**
  * Switch turn to the next player.

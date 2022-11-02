@@ -10,7 +10,12 @@ Uses around 230 kilobytes of RAM (it depends how long you play)
 ## Rules
 [Credits](https://en.wikipedia.org/wiki/Uno_(card_game))
 
-In short, this game uses official uno rules which you can find on link above with swap card and special mode from Crazy Games.
+In short, this game mostly uses official Uno rules which you can find on link above with swap card and special mode from Crazy Games.
+
+### Rules which are different from Uno
+1. New deck will not be generated from played cards
+2. If 0 is played and `Seven-O` rule is enabled, all players except player which receives other players' cards get one card because there is only one winner in the both round and match
+3. There can be players how much the computer allows (segmentation fault is an issue mostly)
 
 ## TODO
 - [x] Basic AI (TODO: get rid of cards guesses)
@@ -25,6 +30,7 @@ In short, this game uses official uno rules which you can find on link above wit
 2. Install `json-c` library
     - Debian based distos: `apt-get install libjson-c-dev`
     - Arch based distos: `pacman -S json-c`
+    - Distors which use `yum` package manager: `yum install json-c-devel`
 2. Go to `src` folder/directory and type in your terminal (emulator) `make` and then if you want run from `Makefile` (be aware that by default 
 will load default config file) type in your terminal (emulator) `make run`.
 3. To clean `*.o`, simply type in your terminal (emulator) `make clean`.
@@ -34,18 +40,31 @@ will load default config file) type in your terminal (emulator) `make run`.
 - Follow next rules to see what each settings represents.
 0. Points required for players to win match
 1. Path of file where points will be stored
-2. number of players
-3. special_mode [0 - disabled, 1 - enabled]
-4. debug_mode [0 - disabled, 1 - enabled]
-5. swap_card [0 - disabled, 1 - enabled]
-6. colors [0 - disabled, 1 - enabled]
-7. AI sequence {[0 - disabled, 1 - enabled] per player}]
-8. Network sequence, same as AI sequence
+2. debug_mode [0 - disabled, 1 - enabled]
+3. colors [0 - disabled, 1 - enabled]
+4. number of players
+5. special
+```
+[
+    {
+        "swap_card": [0 - disabled, 1 - enabled],
+		"stacking": [0 - disabled, 1 - enabled],
+		"seven_o": [0 - disabled, 1 - enabled],
+		"jump_in": [0 - disabled, 1 - enabled]
+    }
+]
+```
+6. AI sequence {[0 - disabled, 1 - enabled] per player}]
+7. Network sequence, same as AI sequence
 
 ## Known issues
 - `points.txt` deleted upon winning match, to fix this problem, restart program
+- If you get weird letters before string, try to disable colors
 
-## External dependencies
+If you find new issue or can't fix issues above, report issue on GitHub with needed informations.
+
+## External dependencies/stuff
 - [c-vector](https://github.com/eteran/c-vector)
+- [implement-vector-in-c](https://aticleworld.com/implement-vector-in-c/)
 
 *One small part was made on my live stream, just search my name for YouTube channel*

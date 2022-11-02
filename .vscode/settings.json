@@ -15,6 +15,7 @@
         "cstring": "c",
         "vec_two.h": "c",
         "string.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "c_vector.h": "c"
     }
 }
