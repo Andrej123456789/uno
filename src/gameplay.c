@@ -98,7 +98,7 @@ cvector_vector_type(Cards) GenerateDeck(Runtime* runtime, Settings* settings)
     /* Zero cards */
     for (int i = 1; i < 5; i++)
     {
-        temp.number = 14;
+        temp.number = 0;
         temp.color = i;
         cvector_push_back(cards, temp);
     }
@@ -167,6 +167,9 @@ void Swap(Runtime* runtime, Player player[], int swap_id)
     temp = a;
     a = b;
     b = temp;
+
+    runtime->top_card[0].number = 0;
+    runtime->top_card[0].color = rand() % (4 - 1 + 1) + 1;
 }
 
 /**
@@ -431,6 +434,8 @@ void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards 
                 stacking->number = 10;
                 stacking->happening = true;
 
+                NextPlayer(runtime, settings, false);
+
                 break;
 
             case 11:
@@ -443,7 +448,6 @@ void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards 
                 break;
 
             case 12:
-                NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
                 break;
 
@@ -859,6 +863,11 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     {
         player[i].cards = NULL;
 
+        if (runtime->avabible_cards < 7)
+        {
+            cards = GenerateDeck(runtime, settings);
+        }
+
         Cards temp;
         temp.number = 0;
         temp.color = 0;
@@ -921,6 +930,11 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         }
 
         again:
+        if (runtime->avabible_cards == 0)
+        {
+            cards = GenerateDeck(runtime, settings);
+        }
+
         if (runtime->player_turn != 0 && settings->ai_sequence[runtime->player_turn] == '1')
         {
             AIAction(runtime, player, stacking, cards, settings);
@@ -939,6 +953,11 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             printf((settings->colors == 1) ? player_turn_color : player_turn, runtime->player_turn);
         }
         try_again:
+        if (runtime->avabible_cards == 0)
+        {
+            cards = GenerateDeck(runtime, settings);
+        }
+
         printf((settings->colors == 1) ? option_color : option_text);
         scanf("%s", tmp_input);
 
@@ -976,6 +995,16 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             if (runtime->top_card[0].number == 14 && runtime->top_card[0].color == 0 && player[NextPlayer(runtime, settings, true)].legal_four == false)
             {
                 printf("Player illegally played wild draw four card!\n");
+
+                int next = NextPlayer(runtime, settings, true);
+                int num_cards = cvector_size(player[runtime->player_turn].cards);
+
+                for (int i = 0; i < -4; i--)
+                {
+                    cvector_push_back(player[next].cards, player[runtime->player_turn].cards[num_cards - i]);
+                    cvector_pop_back(player[runtime->player_turn].cards);
+                }
+
                 goto try_again;
             }
 
@@ -984,7 +1013,19 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
                 printf("Player legally played wild draw four card!\n");
 
                 runtime->isPositive = false;
-                int previous = NextPlayer(runtime, settings, true);
+                int previous = 0;
+                
+                if (players == 2)
+                {
+                    previous = NextPlayer(runtime, settings, true);
+                }
+
+                else
+                {
+                    previous = NextPlayer(runtime, settings, true);
+                    previous += NextPlayer(runtime, settings, true);
+                }
+
                 int previous_num_cards = cvector_size(player[previous].cards);
 
                 for (int i = 0; i < -4; i--)
@@ -1079,7 +1120,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
     {
         cvector_free(player[i].cards);
     }
-    
+
     /* Frees structs */
     free(stacking);
     free(runtime);
