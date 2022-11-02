@@ -57,6 +57,9 @@ static const char ai_action_color[] = "\n\x1b[32mAI action\n\n\x1b[0m";
 static const char from_to_client[] = "From client: %sTo client: ";
 static const char from_to_client_color[] = "\x1b[33mFrom client: \x1b[0m%s\x1b[31mTo client: \x1b[0m";
 
+static const char discard_or_play[] = "You have already drawn a card from the deck, you can play a card or discard a turn!\n";
+static const char discard_or_play_color[] = "\x1b[33mYou have already drawn a card from the deck, you can play a card or discard a turn!\n\x1b[0m";
+
 static const char server_exiting[] = "Server exiting...\n";
 static const char server_exiting_color[] = "\x1b[35mServer exiting...\n\x1b[0m";
 

@@ -930,6 +930,8 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         }
 
         again:
+        bool alReadyNew = false;
+
         if (runtime->avabible_cards == 0)
         {
             cards = GenerateDeck(runtime, settings);
@@ -963,6 +965,12 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 
         if (strcmp(tmp_input, "new") == 0)
         {
+            if (alReadyNew == true)
+            {
+                printf((settings->colors == 1) ? discard_or_play_color : discard_or_play);
+                goto try_again;
+            }
+
             int random = 0;
 
             random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
@@ -973,6 +981,8 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             int num_cards = cvector_size(player[runtime->player_turn].cards);
             printf((settings->colors == 1) ? new_card_color : new_card, player[runtime->player_turn].cards[num_cards - 1].number, 
                                                                 player[runtime->player_turn].cards[num_cards - 1].color);
+
+            alReadyNew = true;
             goto try_again;
         }
 
@@ -989,6 +999,12 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             }
 			goto try_again;
 		}
+
+        else if (strcmp(tmp_input, "discard") == 0)
+        {
+            NextPlayer(runtime, settings, false);
+            goto again;
+        }
 
         else if (strcmp(tmp_input, "doubt") == 0)
         {
