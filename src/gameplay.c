@@ -169,6 +169,9 @@ void Swap(Runtime* runtime, Player player[], Settings* settings, int swap_id)
     a = b;
     b = temp;
 
+    player[runtime->player_turn] = a;
+    player[swap_id] = b;
+
     runtime->top_card[0].number = 0;
     runtime->top_card[0].color = rand() % (4 - 1 + 1) + 1;
 
@@ -429,8 +432,6 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 temp_player = atoi(input);
                 Swap(runtime, player, settings, temp_player);
 
-                runtime->top_card[0].number = 0;
-                runtime->top_card[0].color = temp_color;
                 cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
 
                 printf("\t -------------------- \t \n");
@@ -784,8 +785,6 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
                 Swap(runtime, player, settings, rand() % (settings->players - 1 + 1) + 1);
 
-                runtime->top_card[0].number = 15;
-                runtime->top_card[0].color = 0;
                 cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
 
                 printf("\t -------------------- \t \n");
