@@ -111,7 +111,7 @@ typedef void (*cvector_elem_destructor_t)(void *elem);
     do {                                                                                     \
         if ((vec)) {                                                                         \
             const size_t cv_sz__ = cvector_size(vec);                                        \
-            if ((i) < cv_sz__) {                                                             \
+            if (((size_t)i) < cv_sz__) {                                                             \
                 cvector_set_size((vec), cv_sz__ - 1);                                        \
                 memmove((vec) + (i), (vec) + (i) + 1, sizeof(*(vec)) * (cv_sz__ - 1 - (i))); \
             }                                                                                \

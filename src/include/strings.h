@@ -15,11 +15,11 @@ static const char enter_color_color[] = "Enter color [\x1b[31m1 - red; \x1b[33m2
 static const char top_card[] = "Top card: Number: %d, Color: %d\n";
 static const char top_card_color[] = "Top card: Number: \x1b[36m%d\x1b[0m, Color: \x1b[31m%d\n\x1b[0m";
 
-static const char card_info[] = "Card id: %d, Number: %d, Color: %d\n";
-static const char card_info_color[] = "Card id: \x1b[32m%d\x1b[0m, Number: \x1b[36m%d,\x1b[0m Color: \x1b[31m%d\n\x1b[0m";
+static const char card_info[] = "Card id: %zd, Number: %d, Color: %d\n";
+static const char card_info_color[] = "Card id: \x1b[32m%zd\x1b[0m, Number: \x1b[36m%d,\x1b[0m Color: \x1b[31m%d\n\x1b[0m";
 
-static const char player_card_info[] = "Player %d card id: %d, Number: %d, Color: %d\n";
-static const char player_card_info_color[] = "Player \x1b[35m%d\x1b[0m card id: \x1b[32m%d\x1b[0m, Number: \x1b[36m%d\x1b[0m, Color: \x1b[31m%d\n\x1b[0m";
+static const char player_card_info[] = "Player %d card id: %zd, Number: %d, Color: %d\n";
+static const char player_card_info_color[] = "Player \x1b[35m%d\x1b[0m card id: \x1b[32m%zd\x1b[0m, Number: \x1b[36m%d\x1b[0m, Color: \x1b[31m%d\n\x1b[0m";
 
 static const char all_cards[] = "\tNumber: %d, Color: %d\n";
 static const char all_cards_color[] = "\tNumber: \x1b[32m%d\x1b[0m, Color: \x1b[31m%d\n\x1b[0m";

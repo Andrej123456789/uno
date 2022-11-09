@@ -18,7 +18,7 @@ int copy_json(Settings* settings, Points* points, char* path)
     struct json_object_iterator it;
     struct json_object_iterator itEnd;
 
-    json_object *root = json_object_from_file("settings/default.json");
+    json_object *root = json_object_from_file(path);
     it = json_object_iter_init_default();
     it = json_object_iter_begin(root);
     itEnd = json_object_iter_end(root);
@@ -100,10 +100,10 @@ int copy_json(Settings* settings, Points* points, char* path)
 
         else if (strcmp(key, "ai_sequence") == 0)
         {
-            temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(json_object_get_string(val)) + 1);
+            temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(val) + 1);
             strcpy(temp_sequence, json_object_get_string(val));
 
-            for (int i = 0; i < strlen(temp_sequence); i++)
+            for (size_t i = 0; i < strlen(temp_sequence); i++)
             {
                 cvector_push_back(settings->ai_sequence, temp_sequence[i]);
             }
@@ -114,10 +114,10 @@ int copy_json(Settings* settings, Points* points, char* path)
 
         else if (strcmp(key, "network_sequence") == 0)
         {
-            temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(json_object_get_string(val)) + 1);
+            temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(val) + 1);
             strcpy(temp_sequence, json_object_get_string(val));
 
-            for (int i = 0; i < strlen(temp_sequence); i++)
+            for (size_t i = 0; i < strlen(temp_sequence); i++)
             {
                 cvector_push_back(settings->network_sequence, temp_sequence[i]);
             }
@@ -159,7 +159,7 @@ int copy_json(Settings* settings, Points* points, char* path)
     printf("\t Sequences: \n");
     /* Print AI sequence */
     printf("\t\t AI sequence: ");
-    for (int i = 0; i < cvector_size(settings->ai_sequence); ++i)
+    for (size_t i = 0; i < cvector_size(settings->ai_sequence); ++i)
     {
         printf("%c", settings->ai_sequence[i]);
     }
@@ -167,7 +167,7 @@ int copy_json(Settings* settings, Points* points, char* path)
 
     /* Print network sequence */
     printf("\t\t Network sequence: ");
-    for (int i = 0; i < cvector_size(settings->ai_sequence); i++)
+    for (size_t i = 0; i < cvector_size(settings->ai_sequence); i++)
     {
         printf("%c", settings->network_sequence[i]);
     }

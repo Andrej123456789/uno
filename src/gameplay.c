@@ -233,8 +233,7 @@ int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn)
 void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings)
 {
     char input[6];
-    int temp_color;
-    int temp_player;
+    int temp_player, temp_color = 0;
 
     int number = player[runtime->player_turn].cards[runtime->current_card_id].number;
 
@@ -300,7 +299,6 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
 
     else
     {
-        int next = NextPlayer(runtime, settings, true);
         switch (number) 
         {
             case 10:
@@ -380,7 +378,7 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 break;
 
             case 14:
-                for (int i = 0; i < cvector_size(player[i].cards) + 1; i++)
+                for (size_t i = 0; i < cvector_size(player[i].cards) + 1; i++)
                 {
                     if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
                     {
@@ -471,7 +469,7 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
 void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings)
 {
     int number = runtime->top_card[0].number;
-    const char* input = malloc(sizeof(char) * 1024);
+    char* input = malloc(sizeof(char) * 1024);
 
     if ((number == 0) | (number < 10))
     {
@@ -590,14 +588,10 @@ void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards 
 void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings)
 {
     printf((settings->colors == 1) ? ai_action_color : ai_action);
+    int number, color;
 
-    bool can_do_4 = false;
-    int temp_player;
-    int id, number, color;
-    int current_player_turn = runtime->player_turn;
-
-    int length = sizeof(player[runtime->player_turn].cards) / sizeof(player[runtime->player_turn].cards[0]);
-    bool isPresent;
+    int length = cvector_size(player[runtime->player_turn].cards) / sizeof(player[runtime->player_turn].cards[0]);
+    bool isPresent = false;
 
     do
     {
@@ -609,7 +603,6 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
             if ((player[runtime->player_turn].cards[i].number == number) | (player[runtime->player_turn].cards[i].color == color)) 
             {
                 isPresent = true;
-                id = i;
                 break;
             }
         }
@@ -673,7 +666,6 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
 
     else
     {
-        int next = NextPlayer(runtime, settings, true);
         switch (number) 
         {
             case 10:
@@ -749,7 +741,7 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 break;
 
             case 14:
-                for (int i = 0; i < cvector_size(player[i].cards) + 1; i++)
+                for (size_t i = 0; i < cvector_size(player[i].cards) + 1; i++)
                 {
                     if (player[runtime->player_turn].cards[i].color != runtime->top_card[0].color)
                     {
@@ -951,7 +943,7 @@ void PointsManager(Player player[], Settings* settings, Points* points, int play
 
     for (int i = 0; i < players - 1; i++)
     {
-        for (int j = 1; j < cvector_size(player[i].cards) + 1; j++)
+        for (size_t j = 1; j < cvector_size(player[i].cards) + 1; j++)
         {
             if (player[i].cards[j].number < 10 || player[i].cards[j].number == 15)
             {
@@ -1052,7 +1044,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 
         if (player[i].cards) 
         {
-            int z;
+            size_t z;
             for (z = 1; z < cvector_size(player[i].cards); ++z) 
             {
                 printf((settings->colors == 1) ? player_card_info_color : player_card_info, i, z, player[i].cards[z].number, player[i].cards[z].color);
@@ -1158,7 +1150,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 		{
             if (player[runtime->player_turn].cards) 
             {
-                int i;
+                size_t i;
                 for (i = 1; i < cvector_size(player[runtime->player_turn].cards); ++i) 
                 {
                     printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
@@ -1249,7 +1241,7 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
 
         if (isCompatible(runtime, player))
         {
-            if (settings->special[1] == 1 && stacking->happening && runtime->top_card[0].number == 10 || runtime->top_card[0].number == 14)
+            if ((settings->special[1] == 1) && (stacking->happening) && (runtime->top_card[0].number == 10 || runtime->top_card[0].number == 14))
             {
                 if (1 == 1)
                 {
