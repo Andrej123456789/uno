@@ -44,7 +44,7 @@ will load default config file) type in your terminal (emulator) `make run`.
 3. colors [0 - disabled, 1 - enabled]
 4. number of players
 5. special
-```json
+```
 [
     {
         "swap_card": [0 - disabled, 1 - enabled],
