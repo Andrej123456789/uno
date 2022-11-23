@@ -1,91 +1,171 @@
 /**
- * @author Andrej123456789 (Andrej Bartulin)
+ * @author Andrej123456789 (Andrej Bartulin), nikhilroxtomar (Nikhil Tomar)
  * PROJECT: uno++, simple game inspired by Uno in terminal
  * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: client.c, client for C version
- * CREDITS: https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
-*/
+ * CREDITS: https://github.com/nikhilroxtomar/Chatroom-in-C
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <netdb.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <pthread.h>
 
-#define MAX 80
-#define PORT 8080
-#define SA struct sockaddr
+#define LENGTH 2048
 
-void func(int sockfd)
+// Global variables
+volatile sig_atomic_t flag = 0;
+int sockfd = 0;
+char name[32];
+
+void str_overwrite_stdout()
 {
-    char buff[MAX];
-    int n;
-    for (;;) 
-    {
-        bzero(buff, sizeof(buff));
-        printf("Enter a message: ");
+    printf("%s", "> ");
+    fflush(stdout);
+}
 
-        n = 0;
-        while ((buff[n++] = getchar()) != '\n')
-            ;
-
-        write(sockfd, buff, sizeof(buff));
-        bzero(buff, sizeof(buff));
-        read(sockfd, buff, sizeof(buff));
-
-        buff[strlen(buff) - 1] = '\0';
-
-        if (strcmp(buff, "") != 0)
+void str_trim_lf(char *arr, int length)
+{
+    int i;
+    for (i = 0; i < length; i++)
+    { // trim \n
+        if (arr[i] == '\n')
         {
-            printf("From server: '%s'\n", buff);
-        }
-
-        if ((strncmp(buff, "exit", 4)) == 0) 
-        {
-            printf("Received 'exit' from server! Exiting...\n");
+            arr[i] = '\0';
             break;
         }
     }
 }
 
-int main()
+void catch_ctrl_c_and_exit(int sig)
 {
-    int sockfd, connfd;
-    struct sockaddr_in servaddr, cli;
-   
-    // socket create and verification
+    flag = 1;
+}
+
+void send_msg_handler()
+{
+    char message[LENGTH] = {};
+    char buffer[LENGTH + 32] = {};
+
+    while (1)
+    {
+        str_overwrite_stdout();
+        fgets(message, LENGTH, stdin);
+        str_trim_lf(message, LENGTH);
+
+        if (strcmp(message, "exit") == 0)
+        {
+            break;
+        }
+        else
+        {
+            sprintf(buffer, "%s: %s\n", name, message);
+            send(sockfd, buffer, strlen(buffer), 0);
+        }
+
+        bzero(message, LENGTH);
+        bzero(buffer, LENGTH + 32);
+    }
+    catch_ctrl_c_and_exit(2);
+}
+
+void recv_msg_handler()
+{
+    char message[LENGTH] = {};
+    while (1)
+    {
+        int receive = recv(sockfd, message, LENGTH, 0);
+        if (receive > 0)
+        {
+            printf("%s", message);
+            str_overwrite_stdout();
+        }
+        else if (receive == 0)
+        {
+            break;
+        }
+        else
+        {
+            // -1
+        }
+        memset(message, 0, sizeof(message));
+    }
+}
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        printf("Usage: %s <port>\n", argv[0]);
+        return EXIT_SUCCESS;
+    }
+
+    char *ip = "127.0.0.1";
+    int port = atoi(argv[1]);
+
+    signal(SIGINT, catch_ctrl_c_and_exit);
+
+    printf("Please enter your name: ");
+    fgets(name, 32, stdin);
+    str_trim_lf(name, strlen(name));
+
+    if (strlen(name) > 32 || strlen(name) < 2)
+    {
+        printf("Name must be less than 30 and more than 2 characters.\n");
+        return EXIT_FAILURE;
+    }
+
+    struct sockaddr_in server_addr;
+
+    /* Socket settings */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) 
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = inet_addr(ip);
+    server_addr.sin_port = htons(port);
+
+    // Connect to Server
+    int err = connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    if (err == -1)
     {
-        printf("Socket creation failed! Exiting...\n");
-        exit(0);
+        printf("ERROR: connect\n");
+        return EXIT_FAILURE;
     }
 
-    else
+    // Send name
+    send(sockfd, name, 32, 0);
+
+    printf("=== WELCOME TO THE CHATROOM ===\n");
+
+    pthread_t send_msg_thread;
+    if (pthread_create(&send_msg_thread, NULL, (void *)send_msg_handler, NULL) != 0)
     {
-        printf("Socket successfully created...\n");
+        printf("ERROR: pthread\n");
+        return EXIT_FAILURE;
     }
 
-    bzero(&servaddr, sizeof(servaddr));
-   
-    // assign IP, PORT
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    servaddr.sin_port = htons(PORT);
-   
-    // connect the client socket to server socket
-    if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) 
+    pthread_t recv_msg_thread;
+    if (pthread_create(&recv_msg_thread, NULL, (void *)recv_msg_handler, NULL) != 0)
     {
-        printf("Connection with the server failed! Exiting...\n");
-        exit(0);
+        printf("ERROR: pthread\n");
+        return EXIT_FAILURE;
     }
 
-    else
+    while (1)
     {
-        printf("Connected to the server...\n");
+        if (flag)
+        {
+            printf("\nBye\n");
+            break;
+        }
     }
-   
-    func(sockfd);
+
     close(sockfd);
+
+    return EXIT_SUCCESS;
 }

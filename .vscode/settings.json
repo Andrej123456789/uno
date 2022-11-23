@@ -16,6 +16,7 @@
         "vec_two.h": "c",
         "string.h": "c",
         "assert.h": "c",
-        "c_vector.h": "c"
+        "c_vector.h": "c",
+        "pthread.h": "c"
     }
 }

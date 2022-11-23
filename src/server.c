@@ -1,127 +1,247 @@
 /**
- * @author Andrej123456789 (Andrej Bartulin)
+ * @author Andrej123456789 (Andrej Bartulin),nikhilroxtomar (Nikhil Tomar)
  * PROJECT: uno++, simple game inspired by Uno in terminal
  * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: server.c, C file for a server for C version
- * CREDITS: https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
- * NOTE: I am going to use colors currently becuse this code is just for POSIX now
-*/
+ * CREDITS: https://github.com/nikhilroxtomar/Chatroom-in-C
+ */
 
-#include "include/server.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <pthread.h>
+#include <sys/types.h>
+#include <signal.h>
 
-/**
- * Sending/receiving text to/from client
- * @param connfd - something important but currently idk what is that
-*/
-void SendReceive(int connfd, Vector clients)
+#include "include/c_vector.h"
+
+#define BUFFER_SZ 2048
+
+static _Atomic unsigned int cli_count = 0;
+static int uid = 10;
+
+/* Client structure */
+typedef struct
 {
-    char buff[MAX];
-    int n;
+    struct sockaddr_in address;
+    int sockfd;
+    int uid;
+    char name[32];
+} client_t;
 
-    for (;;)
-    {
-        bzero(buff, MAX);
-   
-        /* read the message from client and copy it in buffer */
-        read(connfd, buff, sizeof(buff));
-        printf(from_to_client_color, buff);
+cvector_vector_type(client_t *) clients;
+pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-        bzero(buff, MAX);
-        n = 0;
-        /* copy server message in the buffer */
-        while ((buff[n++] = getchar()) != '\n')
-            ;
-   
-        /* and send that buffer to client */
-        write(connfd, buff, sizeof(buff));
-   
-        if (strncmp("exit", buff, 4) == 0) 
+void str_overwrite_stdout()
+{
+    printf("\r%s", "> ");
+    fflush(stdout);
+}
+
+void str_trim_lf(char *arr, int length)
+{
+    int i;
+    for (i = 0; i < length; i++)
+    { // trim \n
+        if (arr[i] == '\n')
         {
-            printf(server_exiting_color);
+            arr[i] = '\0';
             break;
-        }
-
-        else if (strncmp("all", buff, 3) == 0)
-        {
-            printf(special_function_all_color, clients.pfVectorTotal(&clients));
-            write(connfd, "\n", sizeof(buff));
         }
     }
 }
 
-/**
- * Start a server
-*/
-void StartServer()
+void print_client_addr(struct sockaddr_in addr)
 {
-    int client = 0;
+    printf("%d.%d.%d.%d",
+           addr.sin_addr.s_addr & 0xff,
+           (addr.sin_addr.s_addr & 0xff00) >> 8,
+           (addr.sin_addr.s_addr & 0xff0000) >> 16,
+           (addr.sin_addr.s_addr & 0xff000000) >> 24);
+}
 
-    int sockfd, connfd, len;
-    struct sockaddr_in servaddr, cli;
+/* Add clients to queue */
+void queue_add(client_t *cl)
+{
+    pthread_mutex_lock(&clients_mutex);
 
-    VECTOR_INIT(clients);
-   
-    /* Socket create and verification */
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) 
+    cvector_push_back(clients, cl);
+    pthread_mutex_unlock(&clients_mutex);
+}
+
+/* Remove clients to queue */
+void queue_remove(int uid)
+{
+    pthread_mutex_lock(&clients_mutex);
+
+    cvector_erase(clients, uid);
+    pthread_mutex_unlock(&clients_mutex);
+}
+
+/* Send message to all clients except sender */
+void send_message(char *s, int uid)
+{
+    pthread_mutex_lock(&clients_mutex);
+
+    for (int i = 0; i < cvector_size(clients); ++i)
     {
-        printf(socket_creation_failed_color);
-        exit(0);
+        if (clients[i]->uid != uid)
+        {
+            if (write(clients[i]->sockfd, s, strlen(s)) < 0)
+            {
+                perror("ERROR: write to descriptor failed");
+                break;
+            }
+        }
     }
 
+    pthread_mutex_unlock(&clients_mutex);
+}
+
+/* Handle all communication with the client */
+void *handle_client(void *arg)
+{
+    char buff_out[BUFFER_SZ];
+    char name[32];
+    int leave_flag = 0;
+
+    cli_count++;
+    client_t *cli = (client_t *)arg;
+
+    // Name
+    if (recv(cli->sockfd, name, 32, 0) <= 0 || strlen(name) < 2 || strlen(name) >= 32 - 1)
+    {
+        printf("Didn't enter the name.\n");
+        leave_flag = 1;
+    }
     else
     {
-        printf(socket_creation_color);
+        strcpy(cli->name, name);
+        sprintf(buff_out, "%s has joined\n", cli->name);
+        printf("%s", buff_out);
+        send_message(buff_out, cli->uid);
     }
 
-    bzero(&servaddr, sizeof(servaddr));
-   
-    /* Assign IP, PORT */
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(PORT);
-   
-    /* Binding newly created socket to given IP and verification */
-    if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) 
+    bzero(buff_out, BUFFER_SZ);
+
+    while (1)
     {
-        printf(socket_bind_failed_color);
-        exit(0);
+        if (leave_flag)
+        {
+            break;
+        }
+
+        int receive = recv(cli->sockfd, buff_out, BUFFER_SZ, 0);
+        if (receive > 0)
+        {
+            if (strlen(buff_out) > 0)
+            {
+                send_message(buff_out, cli->uid);
+
+                str_trim_lf(buff_out, strlen(buff_out));
+                printf("%s -> %s\n", buff_out, cli->name);
+            }
+        }
+        else if (receive == 0 || strcmp(buff_out, "exit") == 0)
+        {
+            sprintf(buff_out, "%s has left\n", cli->name);
+            printf("%s", buff_out);
+            send_message(buff_out, cli->uid);
+            leave_flag = 1;
+        }
+        else
+        {
+            printf("ERROR: -1\n");
+            leave_flag = 1;
+        }
+
+        bzero(buff_out, BUFFER_SZ);
     }
 
-    else
+    /* Delete client from queue and yield thread */
+    close(cli->sockfd);
+    queue_remove(cli->uid);
+    free(cli);
+    cli_count--;
+    pthread_detach(pthread_self());
+
+    return NULL;
+}
+
+int StartServer()
+{
+    char *ip = "127.0.0.1";
+    int port = 5956;
+    int option = 1;
+    int listenfd = 0, connfd = 0;
+    struct sockaddr_in serv_addr;
+    struct sockaddr_in cli_addr;
+    pthread_t tid;
+
+    /* Socket settings */
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = inet_addr(ip);
+    serv_addr.sin_port = htons(port);
+
+    /* Ignore pipe signals */
+    signal(SIGPIPE, SIG_IGN);
+
+    if (setsockopt(listenfd, SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR), (char *)&option, sizeof(option)) < 0)
     {
-        printf(socket_bind_color);
-    }
-   
-    // Now server is ready to listen and verification
-    if ((listen(sockfd, 5)) != 0) 
-    {
-        printf(listen_failed_color);
-        exit(0);
+        perror("ERROR: setsockopt failed");
+        return EXIT_FAILURE;
     }
 
-    else
+    /* Bind */
+    if (bind(listenfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        printf(server_listen_color);
+        perror("ERROR: Socket binding failed");
+        return EXIT_FAILURE;
     }
 
-    len = sizeof(cli);
-   
-    /* Accept the data packet from client and verification */
-    connfd = accept(sockfd, (SA*)&cli, &len);
-    if (connfd < 0) 
+    /* Listen */
+    if (listen(listenfd, 10) < 0)
     {
-        printf(failed_to_accept_client_color);
-        exit(0);
+        perror("ERROR: Socket listening failed");
+        return EXIT_FAILURE;
     }
 
-    else
+    printf("=== WELCOME TO THE CHATROOM ===\n");
+
+    while (1)
     {
-        printf(accept_client_color, client);
-        clients.pfVectorAdd(&clients, client);
-        client++;
+        socklen_t clilen = sizeof(cli_addr);
+        connfd = accept(listenfd, (struct sockaddr *)&cli_addr, &clilen);
+
+        /* Check if max clients is reached */
+        if ((cli_count + 1) == 5000) /* 5000 is safe border, it can go further but i won't push it here, you can do it for yourself */
+        {
+            printf("Max clients reached. Rejected: ");
+            print_client_addr(cli_addr);
+            printf(":%d\n", cli_addr.sin_port);
+            close(connfd);
+            continue;
+        }
+
+        /* Client settings */
+        client_t *cli = (client_t *)malloc(sizeof(client_t));
+        cli->address = cli_addr;
+        cli->sockfd = connfd;
+        cli->uid = uid++;
+
+        /* Add client to the queue and fork thread */
+        queue_add(cli);
+        pthread_create(&tid, NULL, &handle_client, (void *)cli);
+
+        /* Reduce CPU usage */
+        sleep(1);
     }
-   
-    SendReceive(connfd, clients);
-    close(sockfd);
+
+    return EXIT_SUCCESS;
 }

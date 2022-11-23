@@ -44,7 +44,7 @@ will load default config file) type in your terminal (emulator) `make run`.
 3. colors [0 - disabled, 1 - enabled]
 4. number of players
 5. special
-```
+```json
 [
     {
         "swap_card": [0 - disabled, 1 - enabled],
@@ -65,6 +65,6 @@ If you find new issue or can't fix issues above, report issue on GitHub with nee
 
 ## External dependencies/stuff
 - [c-vector](https://github.com/eteran/c-vector)
-- [implement-vector-in-c](https://aticleworld.com/implement-vector-in-c/)
+- [Chatroom-in-C](https://github.com/nikhilroxtomar/Chatroom-in-C)
 
 *One small part was made on my live stream, just search my name for YouTube channel*

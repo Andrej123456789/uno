@@ -12,7 +12,7 @@ $(BIN) : $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(BIN)
+	./$(BIN) 5956
 
 clean:
 	rm -rf *.o
