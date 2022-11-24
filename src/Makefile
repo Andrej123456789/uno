@@ -25,7 +25,7 @@ $(OBJDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(BIN) --s
+	./$(BIN) --s 5956
 
 clean:
 	rm -rf $(wildcard *.o) objects

@@ -28,9 +28,16 @@
 #include "strings.h"
 #include "c_vector.h"
 
-#define MAX 80
-#define PORT 8080
-#define SA struct sockaddr
+#define BUFFER_SZ 2048
+
+/* Client structure */
+typedef struct
+{
+    struct sockaddr_in address;
+    int sockfd;
+    int uid;
+    char name[32];
+} client_t;
 
 /* Overwrites stdout */
 void str_overwrite_stdout();
@@ -79,7 +86,5 @@ void send_message_all(char *s);
 */
 void *handle_client(void *arg);
 
-/**
- * Starts a server
-*/
+/* Starts a server */
 int StartServer();

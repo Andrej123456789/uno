@@ -8,22 +8,11 @@
 
 #include "include/server.h"
 
-#define BUFFER_SZ 2048
-
 static _Atomic unsigned int cli_count = 0;
 static int uid = 10;
 
-/* Client structure */
-typedef struct
-{
-    struct sockaddr_in address;
-    int sockfd;
-    int uid;
-    char name[32];
-} client_t;
-
-cvector_vector_type(client_t *) clients;
-pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
+static cvector_vector_type(client_t *) clients;
+static pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /* Overwrites stdout */
 void str_overwrite_stdout()
@@ -204,9 +193,7 @@ void *handle_client(void *arg)
     return NULL;
 }
 
-/**
- * Starts a server
-*/
+/* Starts a server */
 int StartServer()
 {
     char *ip = "127.0.0.1";

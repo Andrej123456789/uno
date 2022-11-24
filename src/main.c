@@ -52,11 +52,11 @@ int main(int argc, const char** argv)
     /* Initial size is 20 including \0 character */
     char* path = malloc(sizeof(char) * 20);
 
-    if (argc == 2)
+    if (argc >= 2)
     {
         if (strcmp(argv[1], "--s") == 0)
         {
-            StartServer();
+            StartServer(argv[1], atoi(argv[2]));
             return 0;
         }
 
