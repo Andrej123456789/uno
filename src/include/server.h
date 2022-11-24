@@ -82,9 +82,12 @@ void send_message_all(char *s);
 
 /**
  * Handles all communication with the client
- * @param arg - argument 
+ * @param arg - argument(s)
 */
 void *handle_client(void *arg);
 
-/* Starts a server */
-int StartServer();
+/**
+ * Starts a server 
+ * @param arg - argument(s)
+*/
+void* StartServer(void* arg);

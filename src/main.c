@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <pthread.h>
+
 #include "include/runtime.h"
 #include "include/util.h"
 #include "include/gameplay.h"
@@ -26,6 +28,23 @@ const char* logo_row8 = "| |    `.__.'    | || ||_____|\\____| | || |   `.____.'
 const char* logo_row9 = "| |              | || |              | || |              | || |              | || |              | |\n";
 const char* logo_row10 = "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------'|\n";
 const char* logo_row11 = " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n";
+
+void RunServer()
+{
+    pthread_t tid[1];
+
+    int err = 1;
+    err = pthread_create(&(tid[0]), NULL, &StartServer, NULL);
+    if (err != 0)
+    {
+        printf("Can't create thread :[%s]\n", strerror(err));
+    }
+
+    else
+    {
+        printf("Thread created successfully\n");
+    }
+}
 
 int main(int argc, const char** argv)
 {
@@ -52,19 +71,10 @@ int main(int argc, const char** argv)
     /* Initial size is 20 including \0 character */
     char* path = malloc(sizeof(char) * 20);
 
-    if (argc >= 2)
+    if (argc == 2)
     {
-        if (strcmp(argv[1], "--s") == 0)
-        {
-            StartServer(argv[1], atoi(argv[2]));
-            return 0;
-        }
-
-        else
-        {
-            path = (char *)realloc(path, strlen(argv[1]));
-            strcpy(path, argv[1]);
-        }
+        path = (char *)realloc(path, strlen(argv[1]));
+        strcpy(path, argv[1]);
     }
 
     else
@@ -83,6 +93,8 @@ int main(int argc, const char** argv)
 
         free(temp);
     }
+
+    //RunServer();
 
     Settings *settings = malloc(sizeof(Settings));
     Points *points = malloc(sizeof(Points));

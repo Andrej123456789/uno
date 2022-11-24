@@ -122,7 +122,7 @@ void send_message_all(char *s)
 
 /**
  * Handles all communication with the client
- * @param arg - argument 
+ * @param arg - argument(s)
 */
 void *handle_client(void *arg)
 {
@@ -193,8 +193,11 @@ void *handle_client(void *arg)
     return NULL;
 }
 
-/* Starts a server */
-int StartServer()
+/**
+ * Starts a server 
+ * @param arg - argument(s)
+*/
+void* StartServer(void* arg)
 {
     char *ip = "127.0.0.1";
     int port = 5956;
