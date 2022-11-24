@@ -18,7 +18,7 @@
  * @param debug_mode - debug mode (0 - off, 1 - on)
  * @param colors - colors (0 - off, 1 - on)
  * @param players - number of players
- * @param special - contains settings for "special elements", swap card, stacking, seven_o, jump_in
+ * @param special - contains settings for "special elements", swap card, stacking, seven_o
  * @param ai_sequence - vector which contains which players are AI
  * @param network_sequence - vector which contains which players are connected on the network
 */

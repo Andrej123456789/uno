@@ -86,7 +86,7 @@ int copy_json(Settings* settings, Points* points, char* path)
             stacking = json_object_get_int(j_stacking);
             seven_o = json_object_get_int(j_seven_o);
 
-            /* size of "special elements", swap card, stacking, seven_o, jump_in */
+            /* size of "special elements", swap card, stacking, seven_o */
             settings->special[0] = swap_card;
             settings->special[1] = stacking;
             settings->special[2] = seven_o;
