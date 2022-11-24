@@ -25,12 +25,18 @@ typedef struct
 cvector_vector_type(client_t *) clients;
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+/* Overwrites stdout */
 void str_overwrite_stdout()
 {
     printf("\r%s", "> ");
     fflush(stdout);
 }
 
+/** 
+ * Removes last element from array if it is \n 
+ * @param arr - array
+ * @param length - length
+*/
 void str_trim_lf(char *arr, int length)
 {
     int i;
@@ -44,6 +50,10 @@ void str_trim_lf(char *arr, int length)
     }
 }
 
+/** 
+ * Prints address of client
+ * @param addr - address of client
+*/
 void print_client_addr(struct sockaddr_in addr)
 {
     printf("%d.%d.%d.%d",
@@ -53,7 +63,10 @@ void print_client_addr(struct sockaddr_in addr)
            (addr.sin_addr.s_addr & 0xff000000) >> 24);
 }
 
-/* Add clients to queue */
+/** 
+ * Adds clients to queue 
+ * @param cl - client
+*/
 void queue_add(client_t *cl)
 {
     pthread_mutex_lock(&clients_mutex);
@@ -62,7 +75,10 @@ void queue_add(client_t *cl)
     pthread_mutex_unlock(&clients_mutex);
 }
 
-/* Remove clients to queue */
+/** 
+ * Removes clients to queue
+ * @param uid - id (position in vector) of client
+*/
 void queue_remove(int uid)
 {
     pthread_mutex_lock(&clients_mutex);
@@ -71,7 +87,11 @@ void queue_remove(int uid)
     pthread_mutex_unlock(&clients_mutex);
 }
 
-/* Send message to all clients except sender */
+/**
+ * Send message to all clients except sender
+ * @param s - string
+ * @param uid - id (position in vector) of client
+*/
 void send_message(char *s, int uid)
 {
     pthread_mutex_lock(&clients_mutex);
@@ -91,7 +111,30 @@ void send_message(char *s, int uid)
     pthread_mutex_unlock(&clients_mutex);
 }
 
-/* Handle all communication with the client */
+/**
+ * Sends message to all clients 
+ * @param s - string
+*/
+void send_message_all(char *s)
+{
+    pthread_mutex_lock(&clients_mutex);
+
+    for (int i = 0; i < cvector_size(clients); ++i)
+    {
+        if (write(clients[i]->sockfd, s, strlen(s)) < 0)
+        {
+            perror("ERROR: write to descriptor failed");
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&clients_mutex);
+}
+
+/**
+ * Handles all communication with the client
+ * @param arg - argument 
+*/
 void *handle_client(void *arg)
 {
     char buff_out[BUFFER_SZ];
@@ -161,6 +204,9 @@ void *handle_client(void *arg)
     return NULL;
 }
 
+/**
+ * Starts a server
+*/
 int StartServer()
 {
     char *ip = "127.0.0.1";
