@@ -27,7 +27,7 @@ typedef struct settings_T
     int debug_mode;
     int colors;
     int players;
-    int special[4];
+    int special[3];
     cvector_vector_type(char) ai_sequence;
     cvector_vector_type(char) network_sequence;
 } Settings;

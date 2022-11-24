@@ -74,7 +74,6 @@ int copy_json(Settings* settings, Points* points, char* path)
             struct json_object* j_swap_card;
             struct json_object* j_stacking; 
             struct json_object* j_seven_o;
-            struct json_object* j_jump_in;
 
             int swap_card, stacking, seven_o, jump_in;
             parsed_special = json_tokener_parse(buffer);
@@ -82,18 +81,15 @@ int copy_json(Settings* settings, Points* points, char* path)
             json_object_object_get_ex(parsed_special, "swap_card", &j_swap_card);
             json_object_object_get_ex(parsed_special, "stacking", &j_stacking);
             json_object_object_get_ex(parsed_special, "seven_o", &j_seven_o);
-            json_object_object_get_ex(parsed_special, "jump_in", &j_jump_in);
 
             swap_card = json_object_get_int(j_swap_card);
             stacking = json_object_get_int(j_stacking);
             seven_o = json_object_get_int(j_seven_o);
-            jump_in = json_object_get_int(j_jump_in);
 
             /* size of "special elements", swap card, stacking, seven_o, jump_in */
             settings->special[0] = swap_card;
             settings->special[1] = stacking;
             settings->special[2] = seven_o;
-            settings->special[3] = jump_in;
 
             free(buffer);
         }
@@ -154,7 +150,6 @@ int copy_json(Settings* settings, Points* points, char* path)
     printf("\t\t\t Swap card: %d\n", settings->special[0]);
     printf("\t\t\t Stacking: %d\n", settings->special[1]);
     printf("\t\t\t Seven-O: %d\n", settings->special[2]);
-    printf("\t\t\t Jump-In: %d\n", settings->special[3]);
 
     printf("\t Sequences: \n");
     /* Print AI sequence */

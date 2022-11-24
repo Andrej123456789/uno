@@ -7,8 +7,7 @@
 	"special": [{
 		"swap_card": 1,
 		"stacking": 1,
-		"seven_o": 0,
-		"jump_in": 0
+		"seven_o": 0
 	}],
 	"ai_sequence": "00",
 	"network_sequence": "00"

@@ -16,6 +16,7 @@ In short, this game mostly uses official Uno rules which you can find on link ab
 1. New deck will not be generated from played cards
 2. If 0 is played and `Seven-O` rule is enabled, all players except player which receives other players' cards get one card because there is only one winner in the both round and match
 3. There can be players how much the computer allows (segmentation fault is an issue mostly)
+4. There is no `Jump-In` rule which you can find on some implementations
 
 ## TODO
 - [x] Basic AI (TODO: get rid of cards guesses)
@@ -50,8 +51,7 @@ will load default config file) type in your terminal (emulator) `make run`.
     {
         "swap_card": [0 - disabled, 1 - enabled],
 		"stacking": [0 - disabled, 1 - enabled],
-		"seven_o": [0 - disabled, 1 - enabled],
-		"jump_in": [0 - disabled, 1 - enabled]
+		"seven_o": [0 - disabled, 1 - enabled]
     }
 ]
 ```
