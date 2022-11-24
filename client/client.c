@@ -2,7 +2,7 @@
  * @author Andrej123456789 (Andrej Bartulin), nikhilroxtomar (Nikhil Tomar)
  * PROJECT: uno++, simple game inspired by Uno in terminal
  * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
- * DESCRargv[1]TION: client.c, client for C version
+ * DESCRIPTION: client.c, C file for client
  * CREDITS: https://github.com/nikhilroxtomar/Chatroom-in-C
 */
 
