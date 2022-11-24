@@ -4,7 +4,7 @@
  * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: client.c, client for C version
  * CREDITS: https://github.com/nikhilroxtomar/Chatroom-in-C
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>

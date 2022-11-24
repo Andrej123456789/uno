@@ -17,6 +17,8 @@
         "string.h": "c",
         "assert.h": "c",
         "c_vector.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "signal.h": "c",
+        "types.h": "c"
     }
 }

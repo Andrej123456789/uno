@@ -8,7 +8,6 @@
 #pragma once
 
 #include <stdbool.h>
-#include "vec.h"
 #include "c_vector.h"
 
 /* Max number of players */

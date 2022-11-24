@@ -12,27 +12,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <netdb.h>
-#include <netinet/in.h>
 #include <sys/socket.h>
-#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <pthread.h>
+#include <sys/types.h>
+#include <signal.h>
 
 #include "util.h"
-#include "vec.h"
 #include "strings.h"
+#include "c_vector.h"
 
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
 
 /**
- * Sending/receiving text to/from client
- * @param connfd - something important but currently idk what is that
-*/
-void SendReceive(int connfd, Vector clients);
-
-/**
  * Start a server
 */
-void StartServer();
+int StartServer();

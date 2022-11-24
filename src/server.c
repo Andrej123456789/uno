@@ -4,21 +4,9 @@
  * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
  * DESCRIPTION: server.c, C file for a server for C version
  * CREDITS: https://github.com/nikhilroxtomar/Chatroom-in-C
- */
+*/
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <pthread.h>
-#include <sys/types.h>
-#include <signal.h>
-
-#include "include/c_vector.h"
+#include "include/server.h"
 
 #define BUFFER_SZ 2048
 

@@ -24,6 +24,7 @@ In short, this game mostly uses official Uno rules which you can find on link ab
 - [ ] Networking
 - [ ] Nice graphics
 - [x] Settings (in .json files)
+- [ ] Windows port
 
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.
