@@ -75,7 +75,7 @@ int copy_json(Settings* settings, Points* points, char* path)
             struct json_object* j_stacking; 
             struct json_object* j_seven_o;
 
-            int swap_card, stacking, seven_o, jump_in;
+            int swap_card, stacking, seven_o;
             parsed_special = json_tokener_parse(buffer);
 
             json_object_object_get_ex(parsed_special, "swap_card", &j_swap_card);
