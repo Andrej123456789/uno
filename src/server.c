@@ -229,8 +229,12 @@ void *handle_client(void *arg)
                 strcat(sub, cli->name);
                 strcat(sub, ": ");
 
-                printf("%s\n", strremove(buff_out, sub));
+                const char* buffer = malloc(sizeof(char) * 1024);
+                strcpy(buffer, strremove(buff_out, sub));
+
+                printf("%s\n", buffer);
                 free(sub);
+                free(buffer);
             }
         }
         else if (receive == 0 || strcmp(buff_out, "exit") == 0)
