@@ -7,6 +7,8 @@ Uses around 230 kilobytes of RAM (it depends how long you play)
 
 *Repo is called `uno` because `++` couldn't fit in repo name*
 
+[v1.0.0](https://github.com/Andrej123456789/uno/releases/tag/v1.0.0)
+
 ## Rules
 [Credits](https://en.wikipedia.org/wiki/Uno_(card_game))
 
