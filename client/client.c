@@ -17,6 +17,18 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
+const char* logo_row1 = ".----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
+const char* logo_row2 = "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n";
+const char* logo_row3 = "| | _____  _____ | || | ____  _____  | || |     ____     | || |      _       | || |      _       | |\n";
+const char* logo_row4 = "| ||_   _||_   _|| || ||_   \\|_   _| | || |   .'    `.   | || |     | |      | || |     | |      | |\n";
+const char* logo_row5 = "| |  | |    | |  | || |  |   \\ | |   | || |  /  .--.  \\  | || |  ___| |___   | || |  ___| |___   | |\n";
+const char* logo_row6 = "| |  | '    ' |  | || |  | |\\ \\| |   | || |  | |    | |  | || | |___   ___|  | || | |___   ___|  | |\n";
+const char* logo_row7 = "| |   \\ `--' /   | || | _| |_\\   |_  | || |  \\  `--'  /  | || |     | |      | || |     | |      | |\n";
+const char* logo_row8 = "| |    `.__.'    | || ||_____|\\____| | || |   `.____.'   | || |     |_|      | || |     |_|      | |\n";
+const char* logo_row9 = "| |              | || |              | || |              | || |              | || |              | |\n";
+const char* logo_row10 = "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------'|\n";
+const char* logo_row11 = " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n";
+
 #define LENGTH 2048
 
 // Global variables
@@ -26,7 +38,7 @@ char name[32];
 
 void str_overwrite_stdout()
 {
-    printf("%s", "> ");
+    printf("%s", "Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]:  ");
     fflush(stdout);
 }
 
@@ -63,6 +75,7 @@ void send_msg_handler()
         {
             break;
         }
+        
         else
         {
             sprintf(buffer, "%s: %s\n", name, message);
@@ -83,6 +96,7 @@ void recv_msg_handler()
         int receive = recv(sockfd, message, LENGTH, 0);
         if (receive > 0)
         {
+            printf("\n"); /* WARNING: be aware of this; this is here to save up some code in server */
             printf("%s", message);
             str_overwrite_stdout();
         }
@@ -140,7 +154,25 @@ int main(int argc, char **argv)
     // Send name
     send(sockfd, name, 32, 0);
 
-    printf("=== WELCOME TO THE CHATROOM ===\n");
+    char *logo = malloc(sizeof(char) * strlen(logo_row1) + strlen(logo_row2) + strlen(logo_row3) +
+                        strlen(logo_row4) + strlen(logo_row5) + strlen(logo_row6) +
+                        strlen(logo_row7) + strlen(logo_row8) + strlen(logo_row9) +
+                        strlen(logo_row10) + strlen(logo_row11));
+
+    strcat(logo, logo_row1);
+    strcat(logo, logo_row2);
+    strcat(logo, logo_row3);
+    strcat(logo, logo_row4);
+    strcat(logo, logo_row5);
+    strcat(logo, logo_row6);
+    strcat(logo, logo_row7);
+    strcat(logo, logo_row8);
+    strcat(logo, logo_row9);
+    strcat(logo, logo_row10);
+    strcat(logo, logo_row11);
+
+    printf("%s\n", logo);
+    free(logo);
 
     pthread_t send_msg_thread;
     if (pthread_create(&send_msg_thread, NULL, (void *)send_msg_handler, NULL) != 0)

@@ -10,6 +10,26 @@
 #include "include/util.h"
 
 /**
+ * Checks is there any network player
+ * @param settings - struct which contains information about settings, points to setting_T
+*/
+bool isNetworkPresent(Settings* settings)
+{
+    bool network_on = false;
+
+    for (size_t i = 0; i < cvector_size(settings->network_sequence); i++)
+    {
+        if (settings->network_sequence[i] == '1')
+        {
+            network_on = true;
+            break;
+        }
+    }
+
+    return network_on;
+}
+
+/**
  * Check if some player finished the round.
  * @param players - number of players
  * @param player - struct which contains information about player, points to player_T
@@ -274,6 +294,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
             printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
             printf("\t -------------------- \t \n");
 
+            if (isNetworkPresent(settings))
+            {
+                send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+            }
+
             NextPlayer(runtime, settings, false);
 
             return;
@@ -321,6 +346,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 stacking->number = 10;
                 stacking->happening = true;
 
@@ -343,6 +373,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -355,6 +390,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
 		
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
@@ -374,6 +414,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
 
                 NextPlayer(runtime, settings, false);
 
@@ -415,6 +460,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 stacking->number = 14;
                 stacking->happening = true;
 
@@ -438,6 +488,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -455,6 +510,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
     printf("\t -------------------- \t \n");
     printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
+
+    if (isNetworkPresent(settings))
+    {
+        send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+    }
 
     NextPlayer(runtime, settings, false);
 }
@@ -505,6 +565,11 @@ void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards 
             printf("\t -------------------- \t \n");
             printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
             printf("\t -------------------- \t \n");
+
+            if (isNetworkPresent(settings))
+            {
+                send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+            }
 
             NextPlayer(runtime, settings, false);
 
@@ -643,6 +708,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
             printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
             printf("\t -------------------- \t \n");
 
+            if (isNetworkPresent(settings))
+            {
+                send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+            }
+
             NextPlayer(runtime, settings, false);
 
             return;
@@ -686,6 +756,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 stacking->number = 10;
                 stacking->happening = true;
 
@@ -708,6 +783,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -720,6 +800,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
 		
                 NextPlayer(runtime, settings, false);
                 NextPlayer(runtime, settings, false);
@@ -735,6 +820,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 printf("\t -------------------- \t \n");
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
 
                 NextPlayer(runtime, settings, false);
 
@@ -772,6 +862,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 stacking->number = 10;
                 stacking->happening = true;
 
@@ -791,6 +886,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
                 printf("\t -------------------- \t \n");
 
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
+
                 NextPlayer(runtime, settings, false);
 
                 return;
@@ -808,6 +908,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
     printf("\t -------------------- \t \n");
     printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
     printf("\t -------------------- \t \n");
+
+    if (isNetworkPresent(settings))
+    {
+        send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+    }
 
     NextPlayer(runtime, settings, false);
 }
@@ -1047,6 +1152,11 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             for (z = 1; z < cvector_size(player[i].cards); ++z) 
             {
                 printf((settings->colors == 1) ? player_card_info_color : player_card_info, i, z, player[i].cards[z].number, player[i].cards[z].color);
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
+                }
             }
         }
         printf("\n");
@@ -1072,11 +1182,23 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
         {
             PointsManager(player, settings, points, players);
             printf((settings->colors == 1) ? game_finished_color : game_finished);
+            
+            if(isNetworkPresent(settings))
+            {
+                send_message_all((settings->colors == 1) ? game_finished_color : game_finished);
+            }
 
             if (points->match_ended)
             {
                 printf((settings->colors == 1) ? won_match_color : won_match, points->match_winner);
                 printf((settings->colors == 1) ? points_color : points_text, points->match_points);
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? won_match_color : won_match, points->match_winner);
+                    send_message_all((settings->colors == 1) ? points_color : points_text, points->match_points);
+                }
+
                 break;
             }
 
@@ -1084,7 +1206,19 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             {
                 printf((settings->colors == 1) ? won_round_color : won_round, points->round_winner);
                 printf((settings->colors == 1) ? points_color : points_text, points->temp_points);
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all((settings->colors == 1) ? won_round_color : won_round, points->round_winner);
+                    send_message_all((settings->colors == 1) ? points_color : points_text, points->temp_points);
+                }
+
                 printf("------------------\n");
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all("------------------\n");
+                }
             }
         }
 
@@ -1186,6 +1320,11 @@ void Gameplay(Settings* settings, Points* points, Theme* theme)
             else
             {
                 printf("Player legally played wild draw four card!\n");
+
+                if (isNetworkPresent(settings))
+                {
+                    send_message_all("\nPlayer legally played wild draw four card!\n");
+                }
 
                 runtime->isPositive = false;
                 int previous = 0;

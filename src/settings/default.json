@@ -10,5 +10,9 @@
 		"seven_o": 0
 	}],
 	"ai_sequence": "00",
-	"network_sequence": "00"
+	"network": [{
+		"network_sequence": "01",
+		"ip": "127.0.0.1",
+		"port": 5956
+	}]
 }

@@ -19,6 +19,10 @@
         "c_vector.h": "c",
         "pthread.h": "c",
         "signal.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "string_view": "c",
+        "cstdlib": "c",
+        "memory": "c",
+        "new": "c"
     }
 }

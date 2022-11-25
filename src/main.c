@@ -29,12 +29,12 @@ const char* logo_row9 = "| |              | || |              | || |            
 const char* logo_row10 = "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------'|\n";
 const char* logo_row11 = " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n";
 
-void RunServer()
+void RunServer(void* arg)
 {
     pthread_t tid[1];
 
     int err = 1;
-    err = pthread_create(&(tid[0]), NULL, &StartServer, NULL);
+    err = pthread_create(&(tid[0]), NULL, &StartServer, (void*)arg);
     if (err != 0)
     {
         printf("Can't create thread :[%s]\n", strerror(err));
@@ -94,13 +94,21 @@ int main(int argc, const char** argv)
         free(temp);
     }
 
-    //RunServer();
-
     Settings *settings = malloc(sizeof(Settings));
     Points *points = malloc(sizeof(Points));
     Theme *theme = malloc(sizeof(Theme));
+    Network* network = malloc(sizeof(Network));
 
-    copy_json(settings, points, path);
+    copy_json(settings, points, network, path);
+    
+    if (isNetworkPresent(settings))
+    {
+        Arg *arg = malloc(sizeof(Arg));
+
+        arg->network = network;
+        RunServer(arg);
+    }
+
     Gameplay(settings, points, theme);
 
     /* Frees structs */

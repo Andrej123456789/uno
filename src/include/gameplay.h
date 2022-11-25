@@ -17,6 +17,7 @@
 #include "graphics.h"
 #include "strings.h"
 #include "c_vector.h"
+#include "server.h"
 
 /*
  * Naming convention for cards:
@@ -36,6 +37,12 @@
  * 3 - green
  * 4 - blue
 */
+
+/**
+ * Checks is there any network player
+ * @param settings - struct which contains information about settings, points to setting_T
+*/
+bool isNetworkPresent(Settings* settings);
 
 /**
  * Check if some player finished the round.

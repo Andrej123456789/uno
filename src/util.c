@@ -11,9 +11,10 @@
  * Copying settings from JSON file to the struct
  * @param settings - struct where to copy most of settings 
  * @param points - struct where is `match_point` variable going
- * @param path - path of the file, length is 40 
+ * @param network - struct which holds all informations about network
+ * @param path - path of the file, length is 40
 */
-int copy_json(Settings* settings, Points* points, char* path)
+int copy_json(Settings* settings, Points* points, Network* network, char* path)
 {
     struct json_object_iterator it;
     struct json_object_iterator itEnd;
@@ -120,6 +121,50 @@ int copy_json(Settings* settings, Points* points, char* path)
 
             /* Free the string */
             free(temp_sequence);
+        }
+
+        else if (strcmp(key, "network") == 0)
+        {
+            char* buffer = malloc(sizeof(char) * 1024);
+            strcpy(buffer, json_object_get_string(val));
+
+            if (buffer[0] == '[')
+            {
+                memmove(buffer, buffer + 1, strlen(buffer));
+            }
+            buffer[strlen(buffer)-1] = '\0';
+
+            struct json_object* parsed_special;
+            struct json_object* j_network_sequence;
+            struct json_object* j_ip;
+            struct json_object* j_port;
+
+            char ip[1024];
+            int port;
+            parsed_special = json_tokener_parse(buffer);
+
+            json_object_object_get_ex(parsed_special, "network_sequence", &j_network_sequence);
+            json_object_object_get_ex(parsed_special, "ip", &j_ip);
+            json_object_object_get_ex(parsed_special, "port", &j_port);
+
+            strcpy(ip, json_object_get_string(j_ip));
+            port = json_object_get_int(j_port);
+
+            temp_sequence = realloc(temp_sequence, sizeof(char) * json_object_get_string_len(j_network_sequence) + 1);
+            strcpy(temp_sequence, json_object_get_string(j_network_sequence));
+
+            for (size_t i = 0; i < strlen(temp_sequence); i++)
+            {
+                cvector_push_back(settings->network_sequence, temp_sequence[i]);
+            }
+
+            /* Free the string */
+            free(temp_sequence);
+
+            strcpy(network->ip, ip);
+            network->port = port;
+
+            free(buffer);
         }
 
         else

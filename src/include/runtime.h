@@ -115,3 +115,14 @@ typedef struct theme_T
 {
     bool dark;
 } Theme;
+
+typedef struct network_T
+{
+    char player_input[1024];
+    char ip[1024];
+    int port;
+} Network;
+
+typedef struct {
+    Network* network;
+} Arg;

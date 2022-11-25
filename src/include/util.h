@@ -19,9 +19,10 @@
  * Copying settings from JSON file to the struct
  * @param settings - struct where to copy most of settings 
  * @param points - struct where is `match_point` variable going
+ * @param network - struct which holds all informations about network
  * @param path - path of the file, length is 40
 */
-int copy_json(Settings* settings, Points* points, char* path);
+int copy_json(Settings* settings, Points* points, Network* network, char* path);
 
 /**
  * Replacing line in the file.

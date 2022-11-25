@@ -78,7 +78,14 @@ void send_message(char *s, int uid);
  * Sends message to all clients 
  * @param s - string
 */
-void send_message_all(char *s);
+void send_message_all(const char *s, ...);
+
+/**
+ * Sends message to specified client
+ * @param id - client id, aka position in vector
+ * @param s - string
+*/
+void send_message_to(int id, const char* s, ...);
 
 /**
  * Handles all communication with the client

@@ -8,6 +8,8 @@
 
 #include "include/server.h"
 
+#include <stdarg.h>
+
 static _Atomic unsigned int cli_count = 0;
 static int uid = 10;
 
@@ -104,17 +106,48 @@ void send_message(char *s, int uid)
  * Sends message to all clients 
  * @param s - string
 */
-void send_message_all(char *s)
+void send_message_all(const char *s, ...)
 {
+    char buf[1024];
+    va_list args;
+    va_start(args, s);
+    vsnprintf(buf, sizeof(buf), s, args);
+    buf[sizeof(buf) - 1] = 0;
+    va_end(args);
+
     pthread_mutex_lock(&clients_mutex);
 
     for (int i = 0; i < cvector_size(clients); ++i)
     {
-        if (write(clients[i]->sockfd, s, strlen(s)) < 0)
+        if (write(clients[i]->sockfd, buf, strlen(buf)) < 0)
         {
             perror("ERROR: write to descriptor failed");
             break;
         }
+    }
+
+    pthread_mutex_unlock(&clients_mutex);
+}
+
+/**
+ * Sends message to specified client
+ * @param id - client id, aka position in vector
+ * @param s - string
+*/
+void send_message_to(int id, const char* s, ...)
+{
+    char buf[1024];
+    va_list args;
+    va_start(args, s);
+    vsnprintf(buf, sizeof(buf), s, args);
+    buf[sizeof(buf) - 1] = 0;
+    va_end(args);
+
+    pthread_mutex_lock(&clients_mutex);
+
+    if (write(clients[id]->sockfd, buf, strlen(buf)) < 0)
+    {
+        perror("ERROR: write to descriptor failed");
     }
 
     pthread_mutex_unlock(&clients_mutex);
@@ -199,8 +232,10 @@ void *handle_client(void *arg)
 */
 void* StartServer(void* arg)
 {
-    char *ip = "127.0.0.1";
-    int port = 5956;
+    Arg* actual_arg = arg;
+
+    char *ip = actual_arg->network->ip;
+    int port = actual_arg->network->port;
     int option = 1;
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
@@ -236,7 +271,7 @@ void* StartServer(void* arg)
         return EXIT_FAILURE;
     }
 
-    printf("=== WELCOME TO THE CHATROOM ===\n");
+    printf("Server created!\n");
 
     while (1)
     {
