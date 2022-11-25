@@ -25,7 +25,7 @@ In short, this game mostly uses official Uno rules which you can find on link ab
 - [ ] Networking
 - [ ] Nice graphics
 - [x] Settings (in .json files)
-- [ ] Windows port
+- [ ] Windows port (Win32 API)
 
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.
@@ -45,18 +45,27 @@ will load default config file) type in your terminal (emulator) `make run`.
 2. debug_mode [0 - disabled, 1 - enabled]
 3. colors [0 - disabled, 1 - enabled]
 4. number of players
-5. special
+5. `special`
 ```
 [
     {
         "swap_card": [0 - disabled, 1 - enabled],
-		"stacking": [0 - disabled, 1 - enabled],
-		"seven_o": [0 - disabled, 1 - enabled]
+        "stacking": [0 - disabled, 1 - enabled],
+        "seven_o": [0 - disabled, 1 - enabled]
     }
 ]
 ```
-6. AI sequence {[0 - disabled, 1 - enabled] per player}]
-7. Network sequence, same as AI sequence
+6. AI sequence {[0 - disabled, 1 - enabled] per player}
+7. `network`
+```
+[
+    {
+        "network_sequence": {[0 - disabled, 1 - enabled] per player},
+        "ip": "127.0.0.1", // example
+        "port": 5956 // example
+    }
+]
+```
 
 ## Known issues
 - `points.txt` deleted upon winning match, to fix this problem, restart program
