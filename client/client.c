@@ -31,22 +31,24 @@ const char* logo_row11 = " '----------------'  '----------------'  '------------
 
 #define LENGTH 2048
 
-// Global variables
+/* Global variables */
 volatile sig_atomic_t flag = 0;
 int sockfd = 0;
 char name[32];
 
+/* Writes input text for player */
 void str_overwrite_stdout()
 {
     printf("%s", "Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]:  ");
     fflush(stdout);
 }
 
+/* Removes new line char if it is placed on end of the string */
 void str_trim_lf(char *arr, int length)
 {
     int i;
     for (i = 0; i < length; i++)
-    { // trim \n
+    { /* trim \n */
         if (arr[i] == '\n')
         {
             arr[i] = '\0';
@@ -55,11 +57,13 @@ void str_trim_lf(char *arr, int length)
     }
 }
 
+/* Catches Ctrl-C and exits; actually setting global variable named flag to 1 */
 void catch_ctrl_c_and_exit(int sig)
 {
     flag = 1;
 }
 
+/* Sends message to server */
 void send_msg_handler()
 {
     char message[LENGTH] = {};
@@ -75,7 +79,7 @@ void send_msg_handler()
         {
             break;
         }
-        
+
         else
         {
             sprintf(buffer, "%s: %s\n", name, message);
@@ -88,6 +92,7 @@ void send_msg_handler()
     catch_ctrl_c_and_exit(2);
 }
 
+/* Receives message from server or other player/players */
 void recv_msg_handler()
 {
     char message[LENGTH] = {};
