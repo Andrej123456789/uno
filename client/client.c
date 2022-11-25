@@ -16,6 +16,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 const char* logo_row1 = ".----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
 const char* logo_row2 = "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n";
@@ -56,6 +58,14 @@ void str_trim_lf(char *arr, int length)
         }
     }
 }
+
+/* Checks does one string starts with another string */
+bool StartsWith(const char *a, const char *b)
+{
+   if(strncmp(a, b, strlen(b)) == 0) return 1;
+   return 0;
+}
+
 
 /* Catches Ctrl-C and exits; actually setting global variable named flag to 1 */
 void catch_ctrl_c_and_exit(int sig)
@@ -125,14 +135,24 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    char *ip = "127.0.0.1";
+    char ip[64];
     int port = atoi(argv[1]);
 
     signal(SIGINT, catch_ctrl_c_and_exit);
 
-    printf("Please enter your name: ");
+    printf("Please IP address: ");
+    fgets(ip, 64, stdin);
+    str_trim_lf(ip, strlen(ip));
+
+    printf("Please enter your name (Player + space + position in network sequence): ");
     fgets(name, 32, stdin);
     str_trim_lf(name, strlen(name));
+
+    if (!StartsWith(name, "Player "))
+    {
+        printf("Your name cannot be accepted!\n");
+        return EXIT_SUCCESS;
+    }
 
     if (strlen(name) > 32 || strlen(name) < 2)
     {

@@ -136,9 +136,10 @@ void PointsManager(Player player[], Settings* settings, Points* points, int play
 
 /**
  * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.
+ * @param runtime - struct for holding information during the game, points to runtime_T
  * @param settings - struct which contains information about settings, points to setting_T
  * @param points - struct for holding information about points, points to points_T
  * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_T
  * @param network - struct which holds all informations on network, points to network_T
 */
-void Gameplay(Settings* settings, Points* points, Theme* theme);
+void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme);

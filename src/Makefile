@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g -ljson-c
+CFLAGS = -Wall -Wextra -Werror -pedantic -g -lm -ljson-c
 
 OBJDIR = objects
 OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.c, %.o, $(wildcard *.c)))

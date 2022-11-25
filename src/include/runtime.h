@@ -132,8 +132,10 @@ typedef struct network_T
 
 /** 
  * Struct which holds all information which will be passed to server when server is created
+ * @param runtime - struct for holding information during the game, points to runtime_T
  * @param network - struct which holds all informations on network, points to network_T
 */
 typedef struct {
+    Runtime* runtime;
     Network* network;
 } Arg;

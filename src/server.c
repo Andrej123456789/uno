@@ -8,6 +8,7 @@
 
 #include "include/server.h"
 
+#include <math.h>
 #include <stdarg.h>
 
 static _Atomic unsigned int cli_count = 0;
@@ -19,6 +20,7 @@ static pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 typedef struct
 {
     client_t* cli;
+    Runtime* runtime;
     Network* network;
 } Arg2;
 
@@ -225,15 +227,29 @@ void *handle_client(void *arg)
                 str_trim_lf(buff_out, strlen(buff_out));
                 printf("%s\n", buff_out);
 
-                const char* sub = malloc(sizeof(char) * 1024);
+                const char* sub = malloc(sizeof(char) + strlen(cli->name) + 3);
                 strcat(sub, cli->name);
                 strcat(sub, ": ");
 
-                const char* buffer = malloc(sizeof(char) * 1024);
+                const char* buffer = malloc(strlen(strremove(buff_out, sub)));
                 strcpy(buffer, strremove(buff_out, sub));
 
                 printf("%s\n", buffer);
                 free(sub);
+
+                int digits = (actual_arg_2->runtime->player_turn == 0) ? 1 : (log10(actual_arg_2->runtime->player_turn) + 1);
+                printf("Digits: %d\n", digits);
+
+                if (strrchr(cli->name, '\0') - digits == actual_arg_2->runtime->player_turn)
+                {
+                    printf("Your turn!\n");
+                }
+
+                else
+                {
+                    printf("Not your turn!\n%d | %d\n", actual_arg_2->runtime->player_turn, strrchr(cli->name, '\0') - digits);
+                }
+
                 free(buffer);
             }
         }
@@ -333,7 +349,9 @@ void* StartServer(void* arg)
 
         Arg2* arg2 = malloc(sizeof(Arg2));
         arg2->cli = cli;
-        arg2->network;
+        arg2->network = actual_arg->network;
+
+        arg2->runtime = actual_arg->runtime;
 
         /* Add client to the queue and fork thread */
         queue_add(cli);

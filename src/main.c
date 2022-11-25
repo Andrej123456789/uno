@@ -94,6 +94,12 @@ int main(int argc, const char** argv)
         free(temp);
     }
 
+    Runtime* runtime = malloc(sizeof(Runtime));
+
+    runtime->current_card_id = 0;
+    runtime->player_turn = 0;
+    runtime->isPositive = true;
+
     Settings *settings = malloc(sizeof(Settings));
     Points *points = malloc(sizeof(Points));
     Theme *theme = malloc(sizeof(Theme));
@@ -105,11 +111,12 @@ int main(int argc, const char** argv)
     {
         Arg *arg = malloc(sizeof(Arg));
 
+        arg->runtime = runtime;
         arg->network = network;
         RunServer(arg);
     }
 
-    Gameplay(settings, points, theme);
+    Gameplay(runtime, settings, points, theme);
 
     /* Frees structs */
     free(settings);

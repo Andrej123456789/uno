@@ -22,7 +22,7 @@ In short, this game mostly uses official Uno rules which you can find on link ab
 - [x] Basic AI (TODO: get rid of cards guesses)
 - [x] Colors
 - [x] Gameplay (most of gameplay)
-- [ ] Networking
+- [x] Networking (TODO: implement it fully)
 - [ ] Nice graphics
 - [x] Settings (in .json files)
 - [ ] Windows port (Win32 API)
@@ -60,7 +60,7 @@ will load default config file) type in your terminal (emulator) `make run`.
 ```
 [
     {
-        "network_sequence": {[0 - disabled, 1 - enabled] per player},
+        "network_sequence": {[0 - disabled, 1 - enabled] per player} // also see client.c on how to properly connect client to server,
         "ip": "127.0.0.1", // example
         "port": 5956 // example
     }
