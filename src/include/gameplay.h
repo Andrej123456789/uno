@@ -141,4 +141,4 @@ void PointsManager(Player player[], Settings* settings, Points* points, int play
  * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_T
  * @param network - struct which holds all informations on network, points to network_T
 */
-void Gameplay(Settings* settings, Points* points, Theme* theme, Network* network);
+void Gameplay(Settings* settings, Points* points, Theme* theme);

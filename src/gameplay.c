@@ -1094,7 +1094,7 @@ void PointsManager(Player player[], Settings* settings, Points* points, int play
  * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_t
  * @param network - struct which holds all informations on network, points to network_T
 */
-void Gameplay(Settings* settings, Points* points, Theme* theme, Network* network)
+void Gameplay(Settings* settings, Points* points, Theme* theme)
 {
     char tmp_input[20];
     time_t t;
@@ -1240,7 +1240,6 @@ void Gameplay(Settings* settings, Points* points, Theme* theme, Network* network
         else if (runtime->player_turn != 0 && settings->network_sequence[runtime->player_turn] == '1')
         {
             printf("Network is WIP (Work in progress)!!\n\n");
-            printf("%s\n\n", network->player_input);
             NextPlayer(runtime, settings, false);
             goto again;
         }

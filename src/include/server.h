@@ -49,6 +49,13 @@ void str_overwrite_stdout();
 */ 
 void str_trim_lf(char *arr, int length);
 
+/**
+ * Removes substring in passed string
+ * @param str - string
+ * @param sub - substring to be removed
+*/
+char *strremove(char *str, const char *sub);
+
 /** 
  * Prints address of client
  * @param addr - address of client

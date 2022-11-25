@@ -16,6 +16,12 @@ static int uid = 10;
 static cvector_vector_type(client_t *) clients;
 static pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+typedef struct
+{
+    client_t* cli;
+    Network* network;
+} Arg2;
+
 /* Overwrites stdout */
 void str_overwrite_stdout()
 {
@@ -40,6 +46,24 @@ void str_trim_lf(char *arr, int length)
         }
     }
 }
+
+/**
+ * Removes substring in passed string
+ * @param str - string
+ * @param sub - substring to be removed
+*/
+char *strremove(char *str, const char *sub) 
+{
+    size_t len = strlen(sub);
+    if (len > 0) {
+        char *p = str;
+        while ((p = strstr(p, sub)) != NULL) {
+            memmove(p, p + len, strlen(p + len) + 1);
+        }
+    }
+    return str;
+}
+
 
 /** 
  * Prints address of client
@@ -163,8 +187,10 @@ void *handle_client(void *arg)
     char name[32];
     int leave_flag = 0;
 
+    Arg2* actual_arg_2 = arg;
+
     cli_count++;
-    client_t *cli = (client_t *)arg;
+    client_t *cli = actual_arg_2->cli;
 
     // Name
     if (recv(cli->sockfd, name, 32, 0) <= 0 || strlen(name) < 2 || strlen(name) >= 32 - 1)
@@ -197,7 +223,14 @@ void *handle_client(void *arg)
                 send_message(buff_out, cli->uid);
 
                 str_trim_lf(buff_out, strlen(buff_out));
-                printf("%s -> %s\n", buff_out, cli->name);
+                printf("%s\n", buff_out);
+
+                const char* sub = malloc(sizeof(char) * 1024);
+                strcat(sub, cli->name);
+                strcat(sub, ": ");
+
+                printf("%s\n", strremove(buff_out, sub));
+                free(sub);
             }
         }
         else if (receive == 0 || strcmp(buff_out, "exit") == 0)
@@ -294,9 +327,13 @@ void* StartServer(void* arg)
         cli->sockfd = connfd;
         cli->uid = uid++;
 
+        Arg2* arg2 = malloc(sizeof(Arg2));
+        arg2->cli = cli;
+        arg2->network;
+
         /* Add client to the queue and fork thread */
         queue_add(cli);
-        pthread_create(&tid, NULL, &handle_client, (void *)cli);
+        pthread_create(&tid, NULL, &handle_client, (void *)arg2);
 
         /* Reduce CPU usage */
         sleep(1);

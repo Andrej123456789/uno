@@ -127,6 +127,7 @@ typedef struct network_T
     char player_input[1024];
     char ip[1024];
     int port;
+    bool ready;
 } Network;
 
 /** 
