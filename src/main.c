@@ -109,12 +109,13 @@ int main(int argc, const char** argv)
         RunServer(arg);
     }
 
-    Gameplay(settings, points, theme);
+    Gameplay(settings, points, theme, network);
 
     /* Frees structs */
     free(settings);
     free(points);
     free(theme);
+    free(network);
 
     free(path);
     return 0;

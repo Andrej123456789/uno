@@ -108,7 +108,8 @@ typedef struct points_T
     bool alReadyCreated;
 } Points;
 
-/** Struct which holds graphics (theme releated stuff mostly) informations during runtime
+/** 
+ * Struct which holds graphics (theme releated stuff mostly) informations during runtime
  * @param dark - light or dark theme
 */
 typedef struct theme_T
@@ -116,6 +117,11 @@ typedef struct theme_T
     bool dark;
 } Theme;
 
+/** Struct which holds all informations on network
+ * @param player_input - input from client accessible from other C files other than server.c
+ * @param ip - IP address
+ * @param port - port
+*/
 typedef struct network_T
 {
     char player_input[1024];
@@ -123,6 +129,10 @@ typedef struct network_T
     int port;
 } Network;
 
+/** 
+ * Struct which holds all information which will be passed to server when server is created
+ * @param network - struct which holds all informations on network, points to network_T
+*/
 typedef struct {
     Network* network;
 } Arg;

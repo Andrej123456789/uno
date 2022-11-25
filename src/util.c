@@ -197,6 +197,7 @@ int copy_json(Settings* settings, Points* points, Network* network, char* path)
     printf("\t\t\t Seven-O: %d\n", settings->special[2]);
 
     printf("\t Sequences: \n");
+    
     /* Print AI sequence */
     printf("\t\t AI sequence: ");
     for (size_t i = 0; i < cvector_size(settings->ai_sequence); ++i)
@@ -205,12 +206,18 @@ int copy_json(Settings* settings, Points* points, Network* network, char* path)
     }
     printf("\n");
 
+    printf("\t\t \"Network\" settings for gameplay: \n");
+
     /* Print network sequence */
-    printf("\t\t Network sequence: ");
+    printf("\t\t\t Network sequence: ");
     for (size_t i = 0; i < cvector_size(settings->ai_sequence); i++)
     {
         printf("%c", settings->network_sequence[i]);
     }
+    printf("\n");
+
+    printf("\t\t\t IP address: %s\n", network->ip);
+    printf("\t\t\t Port: %d\n", network->port);
 
     printf("\n\n");
     return 0;

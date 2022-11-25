@@ -3,7 +3,7 @@
 	"points_path": "settings/.points.txt",
 	"debug_mode": 0,
 	"colors": 1,
-	"players": 2,
+	"players": 3,
 	"special": [{
 		"swap_card": 1,
 		"stacking": 1,
