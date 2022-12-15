@@ -1,3 +1,5 @@
+**PROJECT IS DONE**
+
 # uno++
 Simple game inspired by Uno in terminal with some extra features and networking in mind
 
