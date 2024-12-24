@@ -307,21 +307,21 @@ void* StartServer(void* arg)
     if (setsockopt(listenfd, SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR), (char *)&option, sizeof(option)) < 0)
     {
         perror("ERROR: setsockopt failed");
-        return EXIT_FAILURE;
+        return NULL;
     }
 
     /* Bind */
     if (bind(listenfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
         perror("ERROR: Socket binding failed");
-        return EXIT_FAILURE;
+        return NULL;
     }
 
     /* Listen */
     if (listen(listenfd, 10) < 0)
     {
         perror("ERROR: Socket listening failed");
-        return EXIT_FAILURE;
+        return NULL;
     }
 
     printf("Server created!\n");
@@ -361,5 +361,5 @@ void* StartServer(void* arg)
         sleep(1);
     }
 
-    return EXIT_SUCCESS;
+    return NULL;
 }

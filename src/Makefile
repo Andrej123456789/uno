@@ -25,7 +25,7 @@ $(OBJDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run:
-	./$(BIN) settings/default.json
+	@./$(BIN) settings/default.json
 
 clean:
 	rm -rf $(wildcard *.o) objects

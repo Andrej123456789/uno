@@ -69,29 +69,21 @@ int main(int argc, const char** argv)
     free(logo);
 
     /* Initial size is 20 including \0 character */
-    char* path = malloc(sizeof(char) * 20);
+    char settings_path[256];
 
     if (argc == 2)
     {
-        path = (char *)realloc(path, strlen(argv[1]));
-        strcpy(path, argv[1]);
+        strncpy(settings_path, argv[1], 255);
     }
 
     else
     {
-        char* temp = (char*)malloc(sizeof(char) * 1024);
-
-        printf("Usage: ./main <path to file>\n");
+        printf("Usage: ./main <path to the settings file>\n");
         printf("Example: ./main settings/default.json\n");
         printf("\n");
 
         printf("Enter the path to the file: ");
-        scanf("%s", temp);
-
-        path = (char*)realloc(path, strlen(temp));
-        strcpy(path, temp);
-
-        free(temp);
+        scanf("%255s", settings_path);
     }
 
     Runtime* runtime = malloc(sizeof(Runtime));
@@ -105,7 +97,7 @@ int main(int argc, const char** argv)
     Theme *theme = malloc(sizeof(Theme));
     Network* network = malloc(sizeof(Network));
 
-    copy_json(settings, points, network, path);
+    copy_json(settings, points, network, settings_path);
     
     if (isNetworkPresent(settings))
     {
@@ -124,6 +116,5 @@ int main(int argc, const char** argv)
     free(theme);
     free(network);
 
-    free(path);
     return 0;
 }

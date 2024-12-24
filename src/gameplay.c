@@ -167,12 +167,12 @@ cvector_vector_type(Cards) GenerateDeck(Runtime* runtime, Settings* settings)
         }
     }
 
-    runtime->avabible_cards = cvector_size(cards);
+    runtime->available_cards = cvector_size(cards);
     return cards;
 }
 
 /**
- * Swap cards bettwen two players.
+ * Swap cards between two players.
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param player - struct which contains information about player, points to player_T
  * @param settings - struct which contains information about settings, points to setting_T
@@ -284,10 +284,10 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
                 }
                 
 
-                random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                random = rand() % (runtime->available_cards - 0 + 0) + 0;
                 cvector_push_back(player[i].cards, cards[random]);
                 cvector_erase(cards, random);
-                runtime->avabible_cards--;
+                runtime->available_cards--;
             }
             
             printf("\t -------------------- \t \n");
@@ -332,11 +332,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
             case 10:
                 for (int i = 1; i < 3; i++)
                 {
-                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    int random = rand() % (runtime->available_cards - 0 + 0) + 0;
                     cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
 
                     cvector_erase(cards, random);
-                    runtime->avabible_cards--;
+                    runtime->available_cards--;
                 }
 
                 runtime->top_card[0] = player[runtime->player_turn].cards[runtime->current_card_id];
@@ -441,11 +441,11 @@ void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[]
 
                 for (int i = 1; i < 5; i++)
                 {
-                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    int random = rand() % (runtime->available_cards - 0 + 0) + 0;
                     cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
 
                     cvector_erase(cards, random);
-                    runtime->avabible_cards--;
+                    runtime->available_cards--;
                 }
                 
                 printf("%s", (settings->colors == 1) ? enter_color_color : enter_color);
@@ -556,10 +556,10 @@ void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards 
                 }
                 
 
-                random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                random = rand() % (runtime->available_cards - 0 + 0) + 0;
                 cvector_push_back(player[i].cards, cards[random]);
                 cvector_erase(cards, random);
-                runtime->avabible_cards--;
+                runtime->available_cards--;
             }
             
             printf("\t -------------------- \t \n");
@@ -605,11 +605,11 @@ void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards 
             case 10:
                 for (int i = 1; i < 3; i++)
                 {
-                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    int random = rand() % (runtime->available_cards - 0 + 0) + 0;
                     cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
 
                     cvector_erase(cards, random);
-                    runtime->avabible_cards--;
+                    runtime->available_cards--;
                 }
 
                 stacking->number = 10;
@@ -698,10 +698,10 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
                 }
                 
 
-                random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                random = rand() % (runtime->available_cards - 0 + 0) + 0;
                 cvector_push_back(player[i].cards, cards[random]);
                 cvector_erase(cards, random);
-                runtime->avabible_cards--;
+                runtime->available_cards--;
             }
             
             printf("\t -------------------- \t \n");
@@ -742,11 +742,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
             case 10:
                 for (int i = 1; i < 3; i++)
                 {
-                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    int random = rand() % (runtime->available_cards - 0 + 0) + 0;
                     cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
 
                     cvector_erase(cards, random);
-                    runtime->avabible_cards--;
+                    runtime->available_cards--;
                 }
 
                 runtime->top_card[0] = player[runtime->player_turn].cards[runtime->current_card_id];
@@ -847,11 +847,11 @@ void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards
 
                 for (int i = 1; i < 5; i++)
                 {
-                    int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+                    int random = rand() % (runtime->available_cards - 0 + 0) + 0;
                     cvector_push_back(player[NextPlayer(runtime, settings, true)].cards, cards[random]);
 
                     cvector_erase(cards, random);
-                    runtime->avabible_cards--;
+                    runtime->available_cards--;
                 }
 
                 runtime->top_card[0].number = 0;
@@ -995,7 +995,7 @@ int PointsFromFile(Points* points, Settings* settings, bool write, int player, i
     else
     {
         /*
-        * Naming convention for `point` variabel:
+        * Naming convention for `point` variable:
         * 0 = write defaults
         * 1 = ignore
         * other = write a point
@@ -1092,7 +1092,7 @@ void PointsManager(Player player[], Settings* settings, Points* points, int play
  * @param runtime - struct for holding information during the game, points to runtime_T
  * @param settings - struct which contains information about settings, points to setting_T
  * @param points - struct for holding information about points, points to points_T 
- * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_t
+ * @param theme - struct for holding graphics (theme related stuff mostly) informations during runtime, points to theme_t
 */
 void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme)
 {
@@ -1112,7 +1112,7 @@ void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme
     {
         printf("Cards: \n");
 
-        for (int i = 0; i < runtime->avabible_cards; i++)
+        for (int i = 0; i < runtime->available_cards; i++)
         {
             printf((settings->colors == 1) ? all_cards_color : all_cards, cards[i].number, cards[i].color);
         }
@@ -1123,7 +1123,7 @@ void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme
     {
         player[i].cards = NULL;
 
-        if (runtime->avabible_cards < 7)
+        if (runtime->available_cards < 7)
         {
             cards = GenerateDeck(runtime, settings);
         }
@@ -1136,10 +1136,10 @@ void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme
         int random = 0;
         for (int j = 1; j < 8; j++)
         {
-            random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
+            random = rand() % (runtime->available_cards - 0 + 0) + 0;
             cvector_push_back(player[i].cards, cards[random]);
             cvector_erase(cards, random);
-            runtime->avabible_cards--;
+            runtime->available_cards--;
         }
 
         if (player[i].cards) 
@@ -1158,8 +1158,8 @@ void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme
         printf("\n");
     }
 
-    runtime->top_card[0] = cards[rand() % (runtime->avabible_cards - 5 + 5) + 5]; /* we cannot get wild draw four card */
-    runtime->avabible_cards--;
+    runtime->top_card[0] = cards[rand() % (runtime->available_cards - 5 + 5) + 5]; /* we cannot get wild draw four card */
+    runtime->available_cards--;
 
     printf("\t -------------------- \t \n");
     printf((settings->colors == 1) ? top_card_color : top_card, runtime->top_card[0].number, runtime->top_card[0].color);
@@ -1169,11 +1169,13 @@ void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme
 
     if (settings->debug_mode == 1)
     {
-        printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
+        printf("[DEBUG] Avabible cards: %d\n", runtime->available_cards);
     }
 
-    while (true)
+    bool game_loop = true;
+    while (game_loop)
     {
+        /* Check if game has ended */
         if (isFinished(player, points, settings) == true)
         {
             PointsManager(player, settings, points, players);
@@ -1218,211 +1220,226 @@ void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme
             }
         }
 
-        again:
-        bool alReadyNew = false;
-
-        if (runtime->avabible_cards == 0)
+        /* Check if deck is empty */
+        if (runtime->available_cards == 0)
         {
             cards = GenerateDeck(runtime, settings);
         }
 
-        if (runtime->player_turn != 0 && settings->ai_sequence[runtime->player_turn] == '1')
+        /**
+         * Loop for AI and networking player.
+         * If player is a human, leave the loop and continue the execution below.
+         */
+        do
         {
-            AIAction(runtime, player, stacking, cards, settings);
-            goto again;
-        }
-
-        else if (runtime->player_turn != 0 && settings->network_sequence[runtime->player_turn] == '1')
-        {
-            printf("Network is not yet implemented fully!!\n\n");
-            NextPlayer(runtime, settings, false);
-            goto again;
-        }
-
-        else
-        {
-            printf((settings->colors == 1) ? player_turn_color : player_turn, runtime->player_turn);
-        }
-        try_again:
-        if (runtime->avabible_cards == 0)
-        {
-            cards = GenerateDeck(runtime, settings);
-        }
-
-        printf((settings->colors == 1) ? option_color : option_text);
-        scanf("%s", tmp_input);
-
-        if (strcmp(tmp_input, "new") == 0)
-        {
-            if (alReadyNew == true)
+            if (runtime->player_turn != 0 && settings->ai_sequence[runtime->player_turn] == '1')
             {
-                printf((settings->colors == 1) ? discard_or_play_color : discard_or_play);
-                goto try_again;
+                AIAction(runtime, player, stacking, cards, settings);
             }
 
-            int random = 0;
-
-            random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
-            cvector_push_back(player[runtime->player_turn].cards, cards[random]);
-            cvector_erase(cards, random);
-            runtime->avabible_cards--;
-
-            int num_cards = cvector_size(player[runtime->player_turn].cards);
-            printf((settings->colors == 1) ? new_card_color : new_card, player[runtime->player_turn].cards[num_cards - 1].number, 
-                                                                player[runtime->player_turn].cards[num_cards - 1].color);
-
-            alReadyNew = true;
-            goto try_again;
-        }
-
-        else if (strcmp(tmp_input, "all") == 0)
-		{
-            if (player[runtime->player_turn].cards) 
+            else if (runtime->player_turn != 0 && settings->network_sequence[runtime->player_turn] == '1')
             {
-                size_t i;
-                for (i = 1; i < cvector_size(player[runtime->player_turn].cards); ++i) 
-                {
-                    printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
-                                                                                    player[runtime->player_turn].cards[i].color);
-                }
-            }
-			goto try_again;
-		}
-
-        else if (strcmp(tmp_input, "discard") == 0)
-        {
-            NextPlayer(runtime, settings, false);
-            goto again;
-        }
-
-        else if (strcmp(tmp_input, "doubt") == 0)
-        {
-            if (runtime->top_card[0].number == 14 && runtime->top_card[0].color == 0 && player[NextPlayer(runtime, settings, true)].legal_four == false)
-            {
-                printf("Player illegally played wild draw four card!\n");
-
-                int next = NextPlayer(runtime, settings, true);
-                int num_cards = cvector_size(player[runtime->player_turn].cards);
-
-                for (int i = 0; i < -4; i--)
-                {
-                    cvector_push_back(player[next].cards, player[runtime->player_turn].cards[num_cards - i]);
-                    cvector_pop_back(player[runtime->player_turn].cards);
-                }
-
-                goto try_again;
+                printf("Network is not yet implemented fully!!\n\n");
+                NextPlayer(runtime, settings, false);
             }
 
             else
             {
-                printf("Player legally played wild draw four card!\n");
+                printf((settings->colors == 1) ? player_turn_color : player_turn, runtime->player_turn);
+                break;
+            }
+        } while (true);
+        
+        /* Following code will only run if player is a human. */
+        while (true)
+        {
+            bool alReadyNew = false;
 
-                if (isNetworkPresent(settings))
+            if (runtime->available_cards == 0)
+            {
+                cards = GenerateDeck(runtime, settings);
+            }
+
+            printf((settings->colors == 1) ? option_color : option_text);
+            scanf("%s", tmp_input);
+
+            if (strcmp(tmp_input, "new") == 0)
+            {
+                if (alReadyNew == true)
                 {
-                    send_message_all("\nPlayer legally played wild draw four card!\n");
+                    printf((settings->colors == 1) ? discard_or_play_color : discard_or_play);
+                    continue;
                 }
 
-                runtime->isPositive = false;
-                int previous = 0;
-                
-                if (players == 2)
+                int random = 0;
+
+                random = rand() % (runtime->available_cards - 0 + 0) + 0;
+                cvector_push_back(player[runtime->player_turn].cards, cards[random]);
+                cvector_erase(cards, random);
+                runtime->available_cards--;
+
+                int num_cards = cvector_size(player[runtime->player_turn].cards);
+                printf((settings->colors == 1) ? new_card_color : new_card, player[runtime->player_turn].cards[num_cards - 1].number, 
+                                                                    player[runtime->player_turn].cards[num_cards - 1].color);
+
+                alReadyNew = true;
+                continue;
+            }
+
+            else if (strcmp(tmp_input, "all") == 0)
+            {
+                if (player[runtime->player_turn].cards) 
                 {
-                    previous = NextPlayer(runtime, settings, true);
+                    size_t i;
+                    for (i = 1; i < cvector_size(player[runtime->player_turn].cards); ++i) 
+                    {
+                        printf((settings->colors == 1) ? card_info_color : card_info, i, player[runtime->player_turn].cards[i].number, 
+                                                                                        player[runtime->player_turn].cards[i].color);
+                    }
                 }
+                continue;
+            }
 
-                else
-                {
-                    previous = NextPlayer(runtime, settings, true);
-                    previous += NextPlayer(runtime, settings, true);
-                }
-
-                int previous_num_cards = cvector_size(player[previous].cards);
-
-                for (int i = 0; i < -4; i--)
-                {
-                    cvector_push_back(player[runtime->player_turn].cards, player[previous].cards[previous_num_cards - i]);
-                    cvector_pop_back(player[previous].cards);
-                }
-
-                for (int i = 1; i < 3; i++)
-                {
-                    cvector_push_back(player[runtime->player_turn].cards, cards[rand() % (runtime->avabible_cards - 1 + 1) + 1]);
-                    runtime->avabible_cards--;
-                }
-
-                runtime->isPositive = true;
+            else if (strcmp(tmp_input, "discard") == 0)
+            {
                 NextPlayer(runtime, settings, false);
-                goto again;
+                break;
             }
-        }
 
-        else if (strcmp(tmp_input, "theme") == 0 && settings->debug_mode == 1) /* here because of those flags for strict code */
-        {
-            printf("%d\n", theme->dark);
-            goto try_again;
-        }
-
-        else if (strcmp(tmp_input, "exit") == 0)
-        {
-            printf((settings->colors == 1) ? exiting_color : exiting);
-            break;
-        }
-
-        else
-        {
-            runtime->current_card_id = atoi(tmp_input);
-        }
-
-        if (isCompatible(runtime, player))
-        {
-            if ((settings->special[1] == 1) && (stacking->happening) && (runtime->top_card[0].number == 10 || runtime->top_card[0].number == 14))
+            else if (strcmp(tmp_input, "doubt") == 0)
             {
-                if (1 == 1)
+                if (runtime->top_card[0].number == 14 && runtime->top_card[0].color == 0 && player[NextPlayer(runtime, settings, true)].legal_four == false)
                 {
-                    if (stacking->number == 10)
+                    printf("Player illegally played wild draw four card!\n");
+
+                    int next = NextPlayer(runtime, settings, true);
+                    int num_cards = cvector_size(player[runtime->player_turn].cards);
+
+                    for (int i = 0; i < -4; i--)
                     {
-                        stacking->number_of_cards += 2;
+                        cvector_push_back(player[next].cards, player[runtime->player_turn].cards[num_cards - i]);
+                        cvector_pop_back(player[runtime->player_turn].cards);
                     }
 
-                    else /* +4 card, or number is 14; probably */
-                    {
-                        stacking->number_of_cards += 4;
-                    }
-
-                    cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
-                    runtime->avabible_cards--;
+                    continue;
                 }
 
                 else
                 {
-                    for (int i = 1; i < stacking->number_of_cards; i++)
-                    {
-                        int random = rand() % (runtime->avabible_cards - 0 + 0) + 0;
-                        cvector_push_back(player[runtime->player_turn].cards, cards[random]);
+                    printf("Player legally played wild draw four card!\n");
 
-                        cvector_erase(cards, random);
-                        runtime->avabible_cards--;
+                    if (isNetworkPresent(settings))
+                    {
+                        send_message_all("\nPlayer legally played wild draw four card!\n");
                     }
 
-                    stacking->happening = false;
+                    runtime->isPositive = false;
+                    int previous = 0;
+                    
+                    if (players == 2)
+                    {
+                        previous = NextPlayer(runtime, settings, true);
+                    }
+
+                    else
+                    {
+                        previous = NextPlayer(runtime, settings, true);
+                        previous += NextPlayer(runtime, settings, true);
+                    }
+
+                    int previous_num_cards = cvector_size(player[previous].cards);
+
+                    for (int i = 0; i < -4; i--)
+                    {
+                        cvector_push_back(player[runtime->player_turn].cards, player[previous].cards[previous_num_cards - i]);
+                        cvector_pop_back(player[previous].cards);
+                    }
+
+                    for (int i = 1; i < 3; i++)
+                    {
+                        cvector_push_back(player[runtime->player_turn].cards, cards[rand() % (runtime->available_cards - 1 + 1) + 1]);
+                        runtime->available_cards--;
+                    }
+
+                    runtime->isPositive = true;
+                    NextPlayer(runtime, settings, false);
+
+                    break;
                 }
             }
 
-            /* take new top card and go to other player */
-            Action(runtime, player, stacking, cards, settings);
-
-            if (settings->debug_mode == 1)
+            else if (strcmp(tmp_input, "theme") == 0 && settings->debug_mode == 1) /* here because of those flags for strict code */
             {
-                printf("[DEBUG] Avabible cards: %d\n", runtime->avabible_cards);
+                printf("%d\n", theme->dark);
+                break;
             }
-            goto again;
+
+            else if (strcmp(tmp_input, "exit") == 0)
+            {
+                printf((settings->colors == 1) ? exiting_color : exiting);
+
+                game_loop = false;
+                break;
+            }
+
+            else
+            {
+                runtime->current_card_id = atoi(tmp_input);
+            }
+
+            if (isCompatible(runtime, player))
+            {
+                if ((settings->special[1] == 1) && (stacking->happening) && (runtime->top_card[0].number == 10 || runtime->top_card[0].number == 14))
+                {
+                    if (1 == 1)
+                    {
+                        if (stacking->number == 10)
+                        {
+                            stacking->number_of_cards += 2;
+                        }
+
+                        else /* +4 card, or number is 14; probably */
+                        {
+                            stacking->number_of_cards += 4;
+                        }
+
+                        cvector_erase(player[runtime->player_turn].cards, runtime->current_card_id);
+                        runtime->available_cards--;
+                    }
+
+                    else
+                    {
+                        for (int i = 1; i < stacking->number_of_cards; i++)
+                        {
+                            int random = rand() % (runtime->available_cards - 0 + 0) + 0;
+                            cvector_push_back(player[runtime->player_turn].cards, cards[random]);
+
+                            cvector_erase(cards, random);
+                            runtime->available_cards--;
+                        }
+
+                        stacking->happening = false;
+                    }
+                }
+
+                /* take new top card and go to other player */
+                Action(runtime, player, stacking, cards, settings);
+
+                if (settings->debug_mode == 1)
+                {
+                    printf("[DEBUG] Available cards: %d\n", runtime->available_cards);
+                }
+
+                break;
+            }
+
+            else
+            {
+                printf((settings->colors == 1) ? card_not_compatible_color : card_not_compatible);
+                continue;
+            }
         }
 
-        else
-        {
-            printf((settings->colors == 1) ? card_not_compatible_color : card_not_compatible);
-            goto try_again;
-        }
     }
 
     /* Frees vectors */

@@ -1,5 +1,3 @@
-**PROJECT IS DONE**
-
 # uno++
 Simple game inspired by Uno in terminal with some extra features and networking in mind
 
@@ -34,9 +32,9 @@ In short, this game mostly uses official Uno rules which you can find on link ab
 ## How to compile/run?
 1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.
 2. Install `json-c` library
-    - Debian based distos: `apt-get install libjson-c-dev`
-    - Arch based distos: `pacman -S json-c`
-    - Distors which use `yum` package manager: `yum install json-c-devel`
+    - Debian based distros: `apt-get install libjson-c-dev`
+    - Arch based distros: `pacman -S json-c`
+    - Distros which use `yum` package manager: `yum install json-c-devel`
 2. Go to `src` folder/directory and type in your terminal (emulator) `make` and then if you want run from `Makefile` (be aware that by default 
 will load default config file) type in your terminal (emulator) `make run`.
 3. To clean `*.o`, simply type in your terminal (emulator) `make clean`.

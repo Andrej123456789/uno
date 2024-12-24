@@ -68,7 +68,7 @@ typedef struct player_T
 */
 typedef struct runtime_T
 {
-    int avabible_cards;
+    int available_cards;
     int current_card_id;
     int player_turn;
     bool isPositive;

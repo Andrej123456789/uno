@@ -23,6 +23,9 @@
         "string_view": "c",
         "cstdlib": "c",
         "memory": "c",
-        "new": "c"
+        "new": "c",
+        "limits.h": "c",
+        "ulimit.h": "c",
+        "runtime.h": "c"
     }
 }
