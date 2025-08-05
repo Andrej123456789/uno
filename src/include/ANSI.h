@@ -1,7 +1,7 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++, simple game inspired by Uno in terminal
- * LICENSE: ringwormGO General License 1.0 | (RGL) 2022
+ * LICENSE: MIT License
  * DESCRIPTION: ANSI.h, ansi color escape codes for terminal
 */
 

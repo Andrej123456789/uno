@@ -26,6 +26,9 @@
         "new": "c",
         "limits.h": "c",
         "ulimit.h": "c",
-        "runtime.h": "c"
+        "runtime.h": "c",
+        "inet.h": "c",
+        "in.h": "c",
+        "math.h": "c"
     }
 }
