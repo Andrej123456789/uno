@@ -1,11 +1,11 @@
 # uno++
-Simple game inspired by Uno in terminal with some extra features and networking in mind
+Simple game inspired by Uno in terminal with some extra features and networking in mind.
 
-Written using C programming language mainly
+Written using C programming language and uses around 230 kilobytes of RAM.
 
-Uses around 230 kilobytes of RAM (it depends how long you play)
+*Repo is called `uno` because `++` couldn't fit in repo name.*
 
-*Repo is called `uno` because `++` couldn't fit in repo name*
+**The name UNO is a registered trademark of its respective owner. All rights to the name, logo, and related branding are fully reserved and protected under applicable trademark laws.**
 
 [v1.0.0](https://github.com/Andrej123456789/uno/releases/tag/v1.0.0)
 
