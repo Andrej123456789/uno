@@ -3,11 +3,11 @@ Simple game inspired by Uno in terminal with some extra features and networking 
 
 Written using C programming language and uses around 230 kilobytes of RAM.
 
-*Repo is called `uno` because `++` couldn't fit in repo name.*
-
 **The name UNO is a registered trademark of its respective owner. All rights to the name, logo, and related branding are fully reserved and protected under applicable trademark laws.**
 
 [v1.0.0](https://github.com/Andrej123456789/uno/releases/tag/v1.0.0)
+
+[v1.1.0](https://github.com/Andrej123456789/uno_pp/releases/tag/v1.1.0)
 
 ## Rules
 [Credits](https://en.wikipedia.org/wiki/Uno_(card_game))
@@ -78,5 +78,3 @@ If you find new issue or can't fix issues above, report issue on GitHub with nee
 ## External dependencies/stuff
 - [c-vector](https://github.com/eteran/c-vector)
 - [Chatroom-in-C](https://github.com/nikhilroxtomar/Chatroom-in-C)
-
-*One small part was made on my live stream, just search my name for YouTube channel*
