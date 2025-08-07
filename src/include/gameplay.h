@@ -142,24 +142,26 @@ cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks);
  * @param dest destination
  * @return void
 */
-void Swap(Player src, Player dest);
+void Swap(Player* src, Player* dest);
 
 /**
  * Switch turn to the next player.
  * @param runtime struct containing runtime information
- * @return void
+ * @param execute set id (array index) to the next player
+ * @return int
 */
-void NextPlayer(Runtime* runtime);
+int NextPlayer(Runtime* runtime, bool execute);
 
 /**
  * Perform an action of the given card.
  * @param runtime struct containing runtime information
  * @param tweaks struct containing tweaks settings
+ * @param players an array of players
  * @param cards cards in the deck
  * @param card card which will perform an action
  * @return void
 */
-void Action(Runtime* runtime, Tweaks* tweaks, cvector_vector_type(Cards) cards, Cards card);
+void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards) cards, Cards card);
 
 /**
  * Manage points.

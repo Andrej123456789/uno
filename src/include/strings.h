@@ -12,6 +12,9 @@
 static const char enter_color[] = "Enter color [1 - red; 2 -  yellow; 3 - green; 4 - blue]: ";
 static const char enter_color_color[] = "Enter color [\x1b[31m1 - red; \x1b[33m2 -  yellow; \x1b[32m3 - green; \x1b[34m4 - blue]: \x1b[0m";
 
+static const char invalid_color[] = "Invalid color! Defaulting to red.\n";
+static const char invalid_color_color[] = "\x1b[31mInvalid color! Defaulting to red.\x1b[0m\n";
+
 static const char top_card[] = "Top card: Number: %d, Color: %d\n";
 static const char top_card_color[] = "Top card: Number: \x1b[36m%d\x1b[0m, Color: \x1b[31m%d\n\x1b[0m";
 

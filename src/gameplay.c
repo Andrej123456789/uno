@@ -16,12 +16,12 @@
 
 bool isCompatible(Cards top_card, Cards players_card)
 {
-    if ((top_card.number == players_card.number) || (players_card.number >= WILD_CARD))
+    if (players_card.number >= WILD_CARD)
     {
         return true;
     }
 
-    else if ((top_card.color == players_card.color) || (players_card.color == 0))
+    if ((top_card.number == players_card.number) || (top_card.color == players_card.color))
     {
         return true;
     }
@@ -88,25 +88,27 @@ cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks)
     return cards;
 }
 
-void Swap(Player src, Player dest)
+void Swap(Player* src, Player* dest)
 {
-    cvector_vector_type(Cards) temp = src.cards;
-    src.cards = dest.cards;
-    dest.cards = temp;
+    cvector_vector_type(Cards) temp = src->cards;
+    src->cards = dest->cards;
+    dest->cards = temp;
 }
 
-void NextPlayer(Runtime* runtime)
+int NextPlayer(Runtime* runtime, bool execute)
 {
+    int player = runtime->current_player;
+
     if (runtime->isPositive == true)
     {
         if (runtime->current_player + 1 >= runtime->number_of_players)
         {
-            runtime->current_player = 0;
+           player = 0;
         }
 
         else
         {
-            runtime->current_player++;
+            player++;
         }
     }
 
@@ -114,22 +116,178 @@ void NextPlayer(Runtime* runtime)
     {
         if (runtime->current_player - 1 < 0)
         {
-            runtime->current_player = runtime->number_of_players - 1;
+            player = runtime->number_of_players - 1;
         }
 
         else
         {
-            runtime->current_player--;
+            player--;
         }
     }
+
+    if (execute == true)
+    {
+        runtime->current_player = player;
+    }
+
+    return player;
 }
 
-void Action(Runtime* runtime, Tweaks* tweaks, cvector_vector_type(Cards) cards, Cards card)
+void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards) cards, Cards card)
 {
-    (void)(runtime);
-    (void)(tweaks);
-    (void)(cards);
-    (void)(card);
+    int color = 0;
+    int next_player = -1;
+    int player = -1;
+
+    switch (card.number)
+    {
+        case ZERO:
+            if (tweaks->seven_o == true)
+            {
+                if (runtime->isPositive == true)
+                {
+                    cvector_vector_type(Cards) temp = players[runtime->number_of_players - 1].cards;
+                    for (int i = runtime->number_of_players - 1; i > 0; i--)
+                    {
+                        players[i].cards = players[i - 1].cards;
+                    }
+
+                    players[0].cards = temp;
+                }
+
+                else
+                {
+                    cvector_vector_type(Cards) temp = players[0].cards;
+                    for (int i = 0; i < runtime->number_of_players - 1; i++)
+                    {
+                        players[i].cards = players[i + 1].cards;
+                    }
+
+                    players[runtime->number_of_players - 1].cards = temp;
+                }   
+            }
+
+            break;
+
+        case SEVEN:
+            if (tweaks->seven_o == true)
+            {
+                while (true)
+                {
+                    printf("\nEnter player's number with whom you want to swap cards: ");
+                    scanf("%d", &player);
+    
+                    if (player < 0 || player >= runtime->number_of_players)
+                    {
+                        printf("Invalid player! Try again\n");
+                    }
+
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                Swap(&players[runtime->current_player], &players[player]);
+            }
+
+            break;
+
+        case PLUS_TWO:
+            next_player = NextPlayer(runtime, false);
+
+            for (int i = 0; i < 2; i++)
+            {
+                size_t random = rand() % cvector_size(cards);
+
+                cvector_push_back(players[next_player].cards, cards[random]);
+                cvector_erase(cards, random);
+            }
+            NextPlayer(runtime, true);
+
+            /* add stacking */
+            
+            break;
+
+        case REVERSE_CARD:
+            runtime->isPositive = !runtime->isPositive;
+            break;
+
+        case SKIP_CARD:
+            NextPlayer(runtime, true);
+            break;
+
+        case WILD_CARD:
+            printf((tweaks->colors == true) ? enter_color_color : enter_color);
+            scanf("%d", &color);
+
+            if (color < 1 || color > 4)
+            {
+                printf((tweaks->colors == true) ? invalid_color_color : invalid_color);
+                color = 1;
+            }
+
+            runtime->top_card.color = color;
+            break;
+
+        case WILD_DRAW:
+            printf((tweaks->colors == true) ? enter_color_color : enter_color);
+            scanf("%d", &color);
+
+            if (color < 1 || color > 4)
+            {
+                printf((tweaks->colors == true) ? invalid_color_color : invalid_color);
+                color = 1;
+            }
+            runtime->top_card.color = color;
+
+            next_player = NextPlayer(runtime, false);
+            for (int i = 0; i < 4; i++)
+            {
+                size_t random = rand() % cvector_size(cards);
+
+                cvector_push_back(players[next_player].cards, cards[random]);
+                cvector_erase(cards, random);
+            }
+            NextPlayer(runtime, true);
+
+            /* add stacking */
+
+            break;
+
+        case SWAP_CARD:
+            printf((tweaks->colors == true) ? enter_color_color : enter_color);
+            scanf("%d", &color);
+
+            if (color < 1 || color > 4)
+            {
+                printf("Invalid color! Defaulting to red.\n");
+                color = 1;
+            }
+            runtime->top_card.color = color;
+
+            while (true)
+            {
+                printf("\nEnter player's number with whom you want to swap cards: ");
+                scanf("%d", &player);
+
+                if (player < 0 || player >= runtime->number_of_players)
+                {
+                    printf((tweaks->colors == true) ? invalid_color_color : invalid_color);
+                }
+
+                else
+                {
+                    break;
+                }
+            }
+
+            Swap(&players[runtime->current_player], &players[player]);
+            break;
+        
+        default:
+            break;
+    }
 }
 
 void PointsManager(Runtime* runtime, Points* points, Player* players)
@@ -160,7 +318,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
 
         for (int j = 0; j < 7; j++)
         {
-            size_t random = (rand() % ((available_cards) - 0 - 1)) + 0 + 1;
+            size_t random = (rand() % ((available_cards) - 3 - 1)) + 3 + 1; // <0, 3>
             cvector_push_back(players[i].cards, cards[random]);
 
             cvector_erase(cards, random);
@@ -180,13 +338,13 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
     }
 
     /* Top card */
-    size_t random = (rand() % ((available_cards - 1) - 3 - 1)) + 3 + 1; // <0, 3>
+    size_t random = rand() % cvector_size(cards);
     runtime->top_card = cards[random];
 
     cvector_erase(cards, random);
     available_cards--;
 
-    Action(runtime, tweaks, cards, runtime->top_card);
+    Action(runtime, tweaks, players, cards, runtime->top_card);
 
     bool game_loop = true;
     while (game_loop)
@@ -219,7 +377,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                     continue;
                 }
 
-                size_t random = (rand() % ((available_cards - 1) - 3 - 1)) + 3 + 1; // <0, 3>
+                size_t random = rand() % cvector_size(cards);
                 cvector_push_back(players[runtime->current_player].cards, cards[random]);
 
                 printf((tweaks->colors == true) ? new_card_color : new_card,
@@ -246,7 +404,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
 
             else if (strcmp(user_input, "discard") == 0)
             {
-                NextPlayer(runtime);
+                NextPlayer(runtime, true);
                 break;
             }
 
@@ -273,7 +431,10 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                     continue;
                 }
 
-                Action(runtime, tweaks, cards, players[runtime->current_player].cards[card_id]);
+                runtime->top_card = players[runtime->current_player].cards[card_id];
+                cvector_erase(players[runtime->current_player].cards, card_id);
+
+                Action(runtime, tweaks, players, cards, runtime->top_card);
 
                 /* Check if player won */
                 if (cvector_size(players[runtime->current_player].cards) == 0)
@@ -281,10 +442,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                     game_loop = false;
                 }
 
-                runtime->top_card = players[runtime->current_player].cards[card_id];
-                cvector_erase(players[runtime->current_player].cards, card_id);
-
-                NextPlayer(runtime);
+                NextPlayer(runtime, true);
                 break;
             }
         } while (true);
@@ -293,7 +451,12 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
     /* Write points */
     PointsManager(runtime, points, players);
 
-    /* FREE */
+    /* Free everything up */
+    for (int i = 0; i < runtime->number_of_players; i++)
+    {
+        cvector_free(players[i].cards);
+    }
+
     free(players);
     cvector_free(cards);
 }
