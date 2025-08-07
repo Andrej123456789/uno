@@ -29,6 +29,7 @@
         "runtime.h": "c",
         "inet.h": "c",
         "in.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "stdbool.h": "c"
     }
 }

@@ -1,8 +1,8 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
- * PROJECT: uno++, simple game inspired by Uno in terminal
+ * PROJECT: uno++
  * LICENSE: MIT License
- * DESCRIPTION: strings.h, strings in the game
+ * DESCRIPTION: Strings in the game
  */
 
 #pragma once
@@ -51,41 +51,5 @@ static const char exiting_color[] = "\x1b[31mExiting...\n\x1b[0m";
 static const char card_not_compatible[] = "Card is not compatible!\n";
 static const char card_not_compatible_color[] = "\x1b[31mCard is not compatible!\n\x1b[0m";
 
-static const char ai_action[] = "\nAI action\n\n";
-static const char ai_action_color[] = "\n\x1b[32mAI action\n\n\x1b[0m";
-
-static const char from_to_client[] = "From client: %sTo client: ";
-static const char from_to_client_color[] = "\x1b[33mFrom client: \x1b[0m%s\x1b[31mTo client: \x1b[0m";
-
 static const char discard_or_play[] = "You have already drawn a card from the deck, you can play a card or discard a turn!\n";
 static const char discard_or_play_color[] = "\x1b[33mYou have already drawn a card from the deck, you can play a card or discard a turn!\n\x1b[0m";
-
-static const char server_exiting[] = "Server exiting...\n";
-static const char server_exiting_color[] = "\x1b[35mServer exiting...\n\x1b[0m";
-
-static const char special_function_all[] = "[SPECIAL FUNCTION] Number of client connected to server is: %d\n";
-static const char special_function_all_color[] = "\x1b[34m[SPECIAL FUNCTION] Number of client connected to server is: %d\x1b[0m\n";
-
-static const char socket_creation_failed[] = "Socket creation failed!\nExiting...\n";
-static const char socket_creation_failed_color[] = "\x1b[31mSocket creation failed!\nExiting...\n\x1b[0m";
-
-static const char socket_bind_failed[] = "Socket bind failed!\nExiting...\n";
-static const char socket_bind_failed_color[] = "\x1b[31mSocket bind failed!\nExiting...\n\x1b[0m";
-
-static const char listen_failed[] = "Listen failed!\nExiting...\n";
-static const char listen_failed_color[] = "\x1b[31m[Listen failed!\nExiting...\n\x1b[0m";
-
-static const char failed_to_accept_client[] = "Socket failed to accept client!\nExiting...\n";
-static const char failed_to_accept_client_color[] = "\x1b[31mSocket failed to accept server!\nExiting...\n\x1b[0m";
-
-static const char socket_creation[] = "Socket successfully created...\n";
-static const char socket_creation_color[] = "\x1b[32mSocket successfully created...\n\x1b[0m";
-
-static const char socket_bind[] = "Socket successfully binded...\n";
-static const char socket_bind_color[] = "\x1b[32mSocket successfully binded...\n\x1b[0m";
-
-static const char server_listen[] = "Server listening...\n";
-static const char server_listen_color[] = "\x1b[32mServer listening...\n\x1b[0m";
-
-static const char accept_client[] = "Server has accepted client %d...\n"; 
-static const char accept_client_color[] = "\x1b[32mServer has accepted client %d...\n\x1b[0m";

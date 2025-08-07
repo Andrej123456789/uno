@@ -1,8 +1,2 @@
-.vscode/configurationCache.log
-.vscode/dryrun.log
-.vscode/extensions.log
-.vscode/targets.log
-
-*.o
-
-client/*.py
+**/src/executable/
+**/src/objects/

@@ -1,79 +1,162 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
- * PROJECT: uno++, simple game inspired by Uno in terminal
+ * PROJECT: uno++
  * LICENSE: MIT License
- * DESCRIPTION: main.c, entry point for the game
+ * DESCRIPTION: Entry point of the program
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <pthread.h>
+#include <json-c/json.h>
 
-#include "include/runtime.h"
-#include "include/util.h"
 #include "include/gameplay.h"
-#include "include/graphics.h"
-#include "include/server.h"
 
-const char* logo_row1 = ".----------------.  .-----------------. .----------------.  .----------------.  .----------------.  \n";
-const char* logo_row2 = "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |\n";
-const char* logo_row3 = "| | _____  _____ | || | ____  _____  | || |     ____     | || |      _       | || |      _       | |\n";
-const char* logo_row4 = "| ||_   _||_   _|| || ||_   \\|_   _| | || |   .'    `.   | || |     | |      | || |     | |      | |\n";
-const char* logo_row5 = "| |  | |    | |  | || |  |   \\ | |   | || |  /  .--.  \\  | || |  ___| |___   | || |  ___| |___   | |\n";
-const char* logo_row6 = "| |  | '    ' |  | || |  | |\\ \\| |   | || |  | |    | |  | || | |___   ___|  | || | |___   ___|  | |\n";
-const char* logo_row7 = "| |   \\ `--' /   | || | _| |_\\   |_  | || |  \\  `--'  /  | || |     | |      | || |     | |      | |\n";
-const char* logo_row8 = "| |    `.__.'    | || ||_____|\\____| | || |   `.____.'   | || |     |_|      | || |     |_|      | |\n";
-const char* logo_row9 = "| |              | || |              | || |              | || |              | || |              | |\n";
-const char* logo_row10 = "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------'|\n";
-const char* logo_row11 = " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\n";
-
-void RunServer(void* arg)
+char logo[11][106] =
 {
-    pthread_t tid[1];
+    ".----------------.  .-----------------. .----------------.  .----------------.  .----------------.  ",
+    "| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |",
+    "| | _____  _____ | || | ____  _____  | || |     ____     | || |      _       | || |      _       | |",
+    "| ||_   _||_   _|| || ||_   \\|_   _| | || |   .'    `.   | || |     | |      | || |     | |      | |",
+    "| |  | |    | |  | || |  |   \\ | |   | || |  /  .--.  \\  | || |  ___| |___   | || |  ___| |___   | |",
+    "| |  | '    ' |  | || |  | |\\ \\| |   | || |  | |    | |  | || | |___   ___|  | || | |___   ___|  | |",
+    "| |   \\ `--' /   | || | _| |_\\   |_  | || |  \\  `--'  /  | || |     | |      | || |     | |      | |",
+    "| |    `.__.'    | || ||_____|\\____| | || |   `.____.'   | || |     |_|      | || |     |_|      | |",
+    "| |              | || |              | || |              | || |              | || |              | |",
+    "| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |",
+    " '----------------'  '----------------'  '----------------'  '----------------'  '----------------'"
+};
 
-    int err = 1;
-    err = pthread_create(&(tid[0]), NULL, &StartServer, (void*)arg);
-    if (err != 0)
+/**
+ * Copy settings from JSON to the structs.
+ * @param runtime struct containing runtime information 
+ * @param tweaks struct containing tweaks settings
+ * @param points struct containing information related to points storing
+ * @param path path of the JSON file
+*/
+int copy_json(Runtime* runtime, Tweaks* tweaks, Points* points, char* path)
+{
+    struct json_object_iterator it;
+    struct json_object_iterator itEnd;
+
+    json_object* root = json_object_from_file(path);
+    if (root == NULL)
     {
-        printf("Can't create thread :[%s]\n", strerror(err));
+        return 1;
     }
 
-    else
+    it = json_object_iter_init_default();
+    it = json_object_iter_begin(root);
+    itEnd = json_object_iter_end(root);
+
+    while (!json_object_iter_equal(&it, &itEnd))
     {
-        printf("Thread created successfully\n");
+        const char* key = json_object_iter_peek_name(&it);
+        json_object* val = json_object_iter_peek_value(&it);
+
+        if (strcmp(key, "match_points") == 0)
+        {
+            points->match_points = json_object_get_int(val);
+
+            if (points->match_points == INT32_MIN || points->match_points == INT32_MAX)
+            {
+                printf("Invalid number of match points!\n");
+                printf("Allowed range: <INT32_MIN, INT32_MAX>\n");
+
+                return 1;
+            }
+        }
+
+        else if (strcmp(key, "points_path") == 0)
+        {
+            strncpy(points->path, json_object_get_string(val), 255);
+            points->path[256] = '\0';
+        }
+
+        else if (strcmp(key, "players") == 0)
+        {
+            runtime->number_of_players = json_object_get_int(val);
+
+            if (runtime->number_of_players == INT32_MIN || runtime->number_of_players == INT32_MAX)
+            {
+                printf("Invalid number of players!\n");
+                printf("Allowed range <INT32_MIN, INT32_MAX>\n");
+
+                return 1;
+            }
+        }
+
+        else if (strcmp(key, "tweaks") == 0)
+        {
+            struct json_object* tweaks_json;
+            
+            struct json_object_iterator it2;
+            struct json_object_iterator itEnd2;
+
+            for (size_t i = 0; i < json_object_array_length(val); i++)
+            {
+                struct json_object* element = json_object_array_get_idx(val, i);
+                tweaks_json = json_tokener_parse(json_object_get_string(element));
+            }
+
+            it2 = json_object_iter_init_default();
+            it2 = json_object_iter_begin(tweaks_json);
+            itEnd2 = json_object_iter_end(tweaks_json);
+
+            while (!json_object_iter_equal(&it2, &itEnd2))
+            {
+                const char* key2 = json_object_iter_peek_name(&it2);
+                json_object* val2 = json_object_iter_peek_value(&it2);
+
+                if (strcmp(key2, "colors") == 0)
+                {
+                    tweaks->colors = json_object_get_boolean(val2);
+                }
+
+                else if (strcmp(key2, "stacking") == 0)
+                {
+                    tweaks->stacking = json_object_get_boolean(val2);
+                }
+
+                else if (strcmp(key2, "swap_card") == 0)
+                {
+                    tweaks->swap_card = json_object_get_boolean(val2);
+                }
+
+                else if (strcmp(key2, "seven_o") == 0)
+                {
+                    tweaks->seven_o = json_object_get_boolean(val2);
+                }
+
+                json_object_iter_next(&it2);
+            }
+
+            json_object_put(tweaks_json);
+        }
+
+        json_object_iter_next(&it);
     }
+
+    json_object_put(root);
+    return 0;
 }
 
+/**
+ * Entry point.
+ */
 int main(int argc, const char** argv)
 {
-    char *logo = malloc(sizeof(char) * strlen(logo_row1) + strlen(logo_row2) + strlen(logo_row3) +
-                        strlen(logo_row4) + strlen(logo_row5) + strlen(logo_row6) +
-                        strlen(logo_row7) + strlen(logo_row8) + strlen(logo_row9) +
-                        strlen(logo_row10) + strlen(logo_row11));
+    for (int i = 0; i < 11; i++)
+    {
+        printf("%s\n", logo[i]);
+    }
 
-    strcat(logo, logo_row1);
-    strcat(logo, logo_row2);
-    strcat(logo, logo_row3);
-    strcat(logo, logo_row4);
-    strcat(logo, logo_row5);
-    strcat(logo, logo_row6);
-    strcat(logo, logo_row7);
-    strcat(logo, logo_row8);
-    strcat(logo, logo_row9);
-    strcat(logo, logo_row10);
-    strcat(logo, logo_row11);
-
-    printf("%s\n", logo);
-    free(logo);
-
-    /* Initial size is 20 including \0 character */
-    char settings_path[256];
-
+    char settings_path[257];
     if (argc == 2)
     {
         strncpy(settings_path, argv[1], 255);
+        settings_path[256] = '\0';
     }
 
     else
@@ -86,35 +169,40 @@ int main(int argc, const char** argv)
         scanf("%255s", settings_path);
     }
 
-    Runtime* runtime = malloc(sizeof(Runtime));
-
-    runtime->current_card_id = 0;
-    runtime->player_turn = 0;
-    runtime->isPositive = true;
-
-    Settings *settings = malloc(sizeof(Settings));
-    Points *points = malloc(sizeof(Points));
-    Theme *theme = malloc(sizeof(Theme));
-    Network* network = malloc(sizeof(Network));
-
-    copy_json(settings, points, network, settings_path);
-    
-    if (isNetworkPresent(settings))
+    Points points =
     {
-        Arg *arg = malloc(sizeof(Arg));
+        .path = {'\0'},
+        .match_points = 0,
+    };
 
-        arg->runtime = runtime;
-        arg->network = network;
-        RunServer(arg);
+    Runtime* runtime = malloc(sizeof(Runtime));
+    if (runtime == NULL)
+    {
+        printf("Error during memory allocation!\nExiting...\n");
+        return 0;
     }
 
-    Gameplay(runtime, settings, points, theme);
+    Tweaks* tweaks = malloc(sizeof(Tweaks));
+    if (tweaks == NULL)
+    {
+        printf("Error during memory allocation!\nExiting...\n");
+
+        free(runtime);
+        return 0;
+    }
+
+    runtime->current_player = 0;
+    runtime->isPositive = true;
+
+    int result = copy_json(runtime, tweaks, &points, settings_path);
+    if (result == 0)
+    {
+        Gameplay(runtime, tweaks, &points);
+    }
 
     /* Frees structs */
-    free(settings);
-    free(points);
-    free(theme);
-    free(network);
+    free(runtime);
+    free(tweaks);
 
     return 0;
 }

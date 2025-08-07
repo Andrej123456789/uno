@@ -1,145 +1,180 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
- * PROJECT: uno++, simple game inspired by Uno in terminal
+ * PROJECT: uno++
  * LICENSE: MIT License
- * DESCRIPTION: gameplay.h, header file for gameplay mechanics
+ * DESCRIPTION: Header file for gameplay mechanics
 */
 
 #pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
-#include <time.h>
-
-#include "runtime.h"
-#include "graphics.h"
-#include "strings.h"
 #include "c_vector.h"
-#include "server.h"
-
-/*
- * Naming convention for cards:
- *
- * Numbers:
- * 0 - 9 - number cards
- * 10 - +2 card
- * 11 - reverse card
- * 12 - skip card
- * 13 - wild card
- * 14 - wild draw four card
- * 15 - swap card
- * 
- * Colors:
- * 1 - red
- * 2 - yellow
- * 3 - green
- * 4 - blue
-*/
 
 /**
- * Checks is there any network player
- * @param settings - struct which contains information about settings, points to setting_T
-*/
-bool isNetworkPresent(Settings* settings);
+ * Enum for numbers of the card.
+ */
+enum Cards
+{
+    ZERO,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE,
+    PLUS_TWO,
+    REVERSE_CARD,
+    SKIP_CARD,
+    WILD_CARD,
+    WILD_DRAW,
+    SWAP_CARD
+};
 
 /**
- * Check if some player finished the round.
- * @param players - number of players
- * @param player - struct which contains information about player, points to player_T
- * @param points - struct for holding information about points, points to points_T
- * @param settings - struct which contains information about settings, points to setting_T
-*/
-bool isFinished(Player player[], Points* points, Settings* settings);
+ * Enum for colors of the card.
+ */
+enum Colors
+{
+    NO_COLOR,
+    RED,
+    YELLOW,
+    GREEN,
+    BLUE
+};
 
 /**
- * Check if cards which player wants to play is compatible with the top card.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param player - struct which contains information about player, points to player_T
+ * Card's struct.
+ * @param number number of the card
+ * @param color - color of the card
 */
-bool isCompatible(Runtime* runtime, Player players_card[]);
+typedef struct cards_T
+{
+    short number;
+    short color;
+} Cards;
 
 /**
- * Generates a deck of cards
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param settings - struct which contains information about settings, points to setting_T
- * @return vector which contains cards
+ * Player's struct.
+ * @param cards vector containing cards
 */
-cvector_vector_type(Cards) GenerateDeck(Runtime* runtime, Settings* settings);
+typedef struct player_T
+{
+    cvector_vector_type(Cards) cards;
+} Player;
 
 /**
- * Swap cards bettwen two players.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param player - struct which contains information about player, points to player_T
- * @param settings - struct which contains information about settings, points to setting_T
- * @param swap_id - player which will got the cards from player which asked for swap
+ * Struct containing information related to storing points.
+ * @param path path to the JSON file containing points
+ * @param match_points number of points needed in order to win the game
+ */
+typedef struct points_T
+{
+    char path[257];
+    int match_points;
+} Points;
+
+/**
+ * Struct containing runtime information.
+ * @param number_of_players number of players in the game
+ * @param current_player id (array index) of the current player
+ * @param isPositive direction of the next player
+ * @param top_card top card
 */
-void Swap(Runtime* runtime, Player player[], Settings* settings, int swap_id);
+typedef struct runtime_T
+{
+    int number_of_players;
+    int current_player;
+    bool isPositive;
+    Cards top_card;
+
+    /**
+     * Struct related to stacking of +2 and +4 cards.
+     * @param happening is stacking in progress
+     * @param type +2 or +4 card
+     * @param number_of_cards how many cards have been stacked
+     */
+    struct
+    {
+        bool happening;
+        short type;
+        int number_of_cards;
+    } stacking;
+} Runtime;
+
+/**
+ * Struct containing tweaks of the game.
+ * @param colors are colors enabled
+ * @param stacking allow stacking of +2 and +4 cards
+ * @param swap_card is swap card enabled
+ * @param seven_o is SevenO rule enabled
+*/
+typedef struct tweaks_T
+{
+    bool colors;
+    bool stacking;
+    bool swap_card;
+    bool seven_o;
+} Tweaks;
+
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Check if a card player wants to play is compatible with the top card.
+ * @param top_card reference
+ * @param players_card candidate
+ * @return bool
+*/
+bool isCompatible(Cards top_card, Cards players_card);
+
+/**
+ * Generate a deck of cards.
+ * @param tweaks struct containing tweaks settings
+ * @return cvector_vector_type(Cards)
+*/
+cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks);
+
+/**
+ * Swap cards between two players.
+ * @param src source
+ * @param dest destination
+ * @return void
+*/
+void Swap(Player src, Player dest);
 
 /**
  * Switch turn to the next player.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param settings - struct which contains information about settings, points to setting_T
- * @param doReturn - do return of next player turn 
+ * @param runtime struct containing runtime information
+ * @return void
 */
-int NextPlayer(Runtime* runtime, Settings* settings, bool doReturn);
+void NextPlayer(Runtime* runtime);
 
 /**
- * Perform action on the card which user wants to play.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param player - struct which contains information about player, points to player_T
- * @param stacking - struct which contains information about stacking, points to stacking_T
- * @param cards - struct which contains information about cards, points to cards_T
- * @param settings - struct which contains information about settings, points to setting_T
+ * Perform an action of the given card.
+ * @param runtime struct containing runtime information
+ * @param tweaks struct containing tweaks settings
+ * @param cards cards in the deck
+ * @param card card which will perform an action
+ * @return void
 */
-void Action(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings);
+void Action(Runtime* runtime, Tweaks* tweaks, cvector_vector_type(Cards) cards, Cards card);
 
 /**
- * Perform action on the top card.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param player - struct which contains information about player, points to player_T
- * @param stacking - struct which contains information about stacking, points to stacking_T
- * @param cards - struct which contains information about cards, points to cards_T
- * @param settings - struct which contains information about settings, points to setting_T
-*/
-void TopCardAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings);
+ * Manage points.
+ * @param runtime struct containing runtime information
+ * @param points struct containing information related to storing points
+ * @param players an array of players
+ * @return void
+ */
+void PointsManager(Runtime* runtime, Points* points, Player* players);
 
 /**
- * Perform an action on the card which AI wants to play.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param player - struct which contains information about player, points to player_T
- * @param stacking - struct which contains information about stacking, points to stacking_T
- * @param cards - struct which contains information about cards, points to cards_T
- * @param settings - struct which contains information about settings, points to setting_T
+ * Entry point for gameplay.
+ * @param runtime struct containing runtime information
+ * @param tweaks struct containing tweaks settings
+ * @param points struct containing information related to storing points
+ * @return void
 */
-void AIAction(Runtime* runtime, Player player[], Stacking* stacking, Cards cards[], Settings* settings);
-
-/**
- * Read or write points to text file.
- * @param points - struct for holding information about points, points to points_T
- * @param settings - struct which contains information about settings, points to setting_T
- * @param write - perform read of write
- * @param players - number of players
- * @param point - points, see function code in gameplay.c for naming convention
-*/
-int PointsFromFile(Points* points, Settings* settings, bool write, int player, int point);
-
-/**
- * Assigning points and determining winner of the match.
- * @param player - struct which contains information about player, points to player_T
- * @param settings - struct which contains information about settings, points to setting_T
- * @param points - struct for holding information about points, points to points_T
- * @param players - number of players
-*/
-void PointsManager(Player player[], Settings* settings, Points* points, int players);
-
-/**
- * Entry point for gameplay mechanics, calls all other functions in gameplay.h and gameplay.c.
- * @param runtime - struct for holding information during the game, points to runtime_T
- * @param settings - struct which contains information about settings, points to setting_T
- * @param points - struct for holding information about points, points to points_T
- * @param theme - struct for holding graphics (theme releated stuff mostly) informations during runtime, points to theme_T
- * @param network - struct which holds all informations on network, points to network_T
-*/
-void Gameplay(Runtime* runtime, Settings* settings, Points* points, Theme* theme);
+void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points);

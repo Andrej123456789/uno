@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -g -lm -ljson-c
+CFLAGS = -Wall -Wextra -Werror -pedantic -g
+LDFLAGS = -lm -ljson-c
 
 OBJDIR = objects
 OBJS = $(addprefix $(OBJDIR)/, $(patsubst %.c, %.o, $(wildcard *.c)))
@@ -16,10 +17,7 @@ $(BINFOLDER):
 	mkdir $(BINFOLDER)
 
 $(BIN) : $(OBJS)
-	$(CC) $(OBJS) -o $(BIN) $(CFLAGS)
-
-$(OBJDIR)/server.o : server.c
-	$(CC) -c $< -o $@
+	$(CC) $(OBJS) -o $(BIN) $(LDFLAGS)
 
 $(OBJDIR)/%.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -28,7 +26,4 @@ run:
 	@./$(BIN) settings/default.json
 
 clean:
-	rm -rf $(wildcard *.o) objects
-
-full_clean:
-	rm -rf $(BIN) executable $(wildcard *.o) objects
+	rm -rf $(OBJDIR) $(BINFOLDER)

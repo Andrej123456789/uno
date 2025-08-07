@@ -1,6 +1,6 @@
 /**
  * @author Andrej123456789 (Andrej Bartulin)
- * PROJECT: uno++, simple game inspired by Uno in terminal
+ * PROJECT: uno++
  * LICENSE: MIT License
  * DESCRIPTION: ANSI.h, ansi color escape codes for terminal
 */
