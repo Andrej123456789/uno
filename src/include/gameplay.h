@@ -89,6 +89,7 @@ typedef struct runtime_T
     int current_player;
     bool isPositive;
     Cards top_card;
+    Cards previous_top_card;
 
     /**
      * Struct related to stacking of +2 and +4 cards.
@@ -130,7 +131,7 @@ typedef struct tweaks_T
  * @param card card which will perform an action
  * @return void
 */
-void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards) cards, Cards card);
+void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards)* cards, Cards card);
 
 /**
  * Generate a deck of cards.
@@ -138,6 +139,13 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
  * @return cvector_vector_type(Cards)
 */
 cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks);
+
+/**
+ * Return an index of a random card from the deck.
+ * @param cards deck of cards
+ * @return size_t
+ */
+size_t GetRandomCard(cvector_vector_type(Cards)* cards, Tweaks* tweaks);
 
 /**
  * Return points value of a card.
