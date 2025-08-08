@@ -78,6 +78,23 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
         case PLUS_TWO:
             next_player = NextPlayer(runtime, false);
 
+            /* Stacking - move cards */
+            if (tweaks->stacking == true && runtime->stacking.happening == true)
+            {
+                printf((tweaks->colors == true) ? stacking_stacked_color : stacking_stacked);
+
+                for (int i = 0; i < runtime->stacking.number_of_cards; i++)
+                {
+                    size_t index = cvector_size(players[runtime->current_player].cards);
+
+                    cvector_push_back(players[next_player].cards, players[runtime->current_player].cards[index]);
+                    cvector_pop_back(players[runtime->current_player].cards);
+                }      
+                
+                runtime->stacking.number_of_cards += 2;
+            }
+
+            /* Usual operation */
             for (int i = 0; i < 2; i++)
             {
                 size_t random = GetRandomCard(cards, tweaks);
@@ -85,11 +102,18 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
                 cvector_push_back(players[next_player].cards, (*cards)[random]);
                 cvector_erase(*cards, random);
             }
-            NextPlayer(runtime, true);
 
-            /* add stacking */
+            /* Stacking - initialize it */
+            if (tweaks->stacking == true && runtime->stacking.happening == false)
+            {
+                printf((tweaks->colors == true) ? stacking_on_color : stacking_on);
+
+                runtime->stacking.happening = true;
+                runtime->stacking.type = 2;
+                runtime->stacking.number_of_cards = 2;
+            }
             
-            break;
+            return;
 
         case REVERSE_CARD:
             runtime->isPositive = !runtime->isPositive;
@@ -152,17 +176,32 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
 
                     if (match == true)
                     {
-                        printf("Doubt was correct!\n");
+                        printf((tweaks->colors == true) ? doubt_correct_color : doubt_correct);
                         player_to_draw = runtime->current_player;
                     }
 
                     else
                     {
-                        printf("Doubt was incorrect!\n");
+                        printf((tweaks->colors == true) ? doubt_incorrect_color : doubt_incorrect);
                         number_of_cards_to_draw = 6;
                     }
                     
                 }
+            }
+
+            /* Stacking - move cards */
+            if (tweaks->stacking == true && runtime->stacking.happening == true)
+            {
+                printf((tweaks->colors == true) ? stacking_stacked_color : stacking_stacked);
+                for (int i = 0; i < runtime->stacking.number_of_cards; i++)
+                {
+                    size_t index = cvector_size(players[runtime->current_player].cards);
+
+                    cvector_push_back(players[next_player].cards, players[runtime->current_player].cards[index]);
+                    cvector_pop_back(players[runtime->current_player].cards);
+                }
+
+                runtime->stacking.number_of_cards += 4;
             }
 
             /* Draw cards */
@@ -174,11 +213,17 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
                 cvector_erase(*cards, random);
             }
 
-            NextPlayer(runtime, true);
+            /* Stacking - initialize it */
+            if (tweaks->stacking == true && runtime->stacking.happening == false)
+            {
+                printf((tweaks->colors == true) ? stacking_on_color : stacking_on);
 
-            /* add stacking */
+                runtime->stacking.happening = true;
+                runtime->stacking.type = 4;
+                runtime->stacking.number_of_cards = 4;
+            }
 
-            break;
+            return;
 
         case SWAP_CARD:
             printf((tweaks->colors == true) ? enter_color_color : enter_color);
@@ -209,6 +254,17 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
         
         default:
             break;
+    }
+
+    // +2 and +4 cases exit the function before reaching this point
+    // if other card is played, stacking is aborted
+    if (tweaks->stacking == true && runtime->stacking.happening == true)
+    {
+        printf((tweaks->colors == true) ? stacking_off_color : stacking_off);
+
+        runtime->stacking.happening = false;
+        runtime->stacking.type = 0;
+        runtime->stacking.number_of_cards = 0;    
     }
 }
 
@@ -369,7 +425,6 @@ int NextPlayer(Runtime* runtime, bool execute)
 void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* players)
 {
     printf((tweaks->colors == true) ? game_finished_color : game_finished);
-    printf((tweaks->colors == true) ? won_round_color : won_round, runtime->current_player);
 
     /* Open JSON file */
     FILE *fp = fopen(points->path, "r");
@@ -425,6 +480,9 @@ void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* pla
         }
     }
 
+    printf((tweaks->colors == true) ? won_round_color : won_round,
+           runtime->current_player, add_points);
+
     /* Build key string: "Player X" */
     char player_key[32];
     snprintf(player_key, sizeof(player_key), "Player %d", player_num);
@@ -439,7 +497,8 @@ void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* pla
 
         if ((current_points + add_points) >= points->match_points)
         {
-            printf((tweaks->colors == true) ? won_match_color : won_match, runtime->current_player);
+            printf((tweaks->colors == true) ? won_match_color : won_match, 
+                   runtime->current_player, (current_points + add_points));
         }
     }
 

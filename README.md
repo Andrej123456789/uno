@@ -1,5 +1,5 @@
 # uno++
-Simple game inspired by Uno in terminal with some extra features and networking in mind.
+Simple game inspired by Uno with extra tweaks.
 
 Written using C programming language and uses around 230 kilobytes of RAM.
 
@@ -10,9 +10,11 @@ Written using C programming language and uses around 230 kilobytes of RAM.
 [v1.1.0](https://github.com/Andrej123456789/uno_pp/releases/tag/v1.1.0)
 
 ## Rules
-[Credits](https://en.wikipedia.org/wiki/Uno_(card_game))
+[Uno rules](https://en.wikipedia.org/wiki/Uno_(card_game))
 
 In short, this game uses official Uno rules with additional house rules.
+
+Most notable differences are those that you don't have to say word `uno` when you have only one card left; and when +2 and +4 cards are played, next player is not skipped.
 
 ## Compile
 

@@ -194,6 +194,10 @@ int main(int argc, const char** argv)
     runtime->current_player = 0;
     runtime->isPositive = true;
 
+    runtime->stacking.happening = false;
+    runtime->stacking.type = 0;
+    runtime->stacking.number_of_cards = 0;
+
     int result = copy_json(runtime, tweaks, &points, settings_path);
     if (result == 0)
     {

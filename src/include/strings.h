@@ -30,8 +30,8 @@ static const char all_cards_color[] = "\tNumber: \x1b[32m%d\x1b[0m, Color: \x1b[
 static const char new_card[] = "Your new card is: Number: %d, Color: %d\n";
 static const char new_card_color[] = "Your new card is: Number: %d, Color: %d\n";
 
-static const char option_text[] = "Enter card id or do something else ['new' - take card from deck, 'all' - show all player's cards]: ";
-static const char option_color[] = "Enter card id or do something else ['\x1b[36mnew\x1b[0m' - take card from deck, '\x1b[31mall\x1b[0m' - show all player's cards]: \x1b[0m";
+static const char option_text[] = "Enter card id or do something else ['new' - take card from deck, 'all' - cards, ...]: ";
+static const char option_color[] = "Enter card id or do something else ['\x1b[36mnew\x1b[0m' - take card from deck, '\x1b[31mall\x1b[0m' - show cards, ...]: \x1b[0m";
 
 static const char player_turn[] = "Player %d turn\n";
 static const char player_turn_color[] = "Player \x1b[35m%d\x1b[0m turn\n";
@@ -39,14 +39,11 @@ static const char player_turn_color[] = "Player \x1b[35m%d\x1b[0m turn\n";
 static const char game_finished[] = "Game finished!\n";
 static const char game_finished_color[] = "\x1b[32mGame finished!\n\x1b[0m";
 
-static const char won_match[] = "Player %d won the match!\n";
-static const char won_match_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the match!\n\x1b[0m";
+static const char won_match[] = "Player %d won the match! (%d)\n";
+static const char won_match_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the match! \x1b[33m(%d)\n\x1b[0m";
 
-static const char won_round[] = "Player %d won the round!\n";
-static const char won_round_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the round!\n\x1b[0m";
-
-static const char points_text[] = "Points: %d\n";
-static const char points_color[] = "Points: \x1b[35m%d\x1b[0m\n";
+static const char won_round[] = "Player %d won the round! (%d)\n";
+static const char won_round_color[] = "\x1b[32mPlayer \x1b[35m%d\x1b[32m won the round! \x1b[33m(%d)\n\x1b[0m";
 
 static const char exiting[] = "Exiting...\n";
 static const char exiting_color[] = "\x1b[31mExiting...\n\x1b[0m";
@@ -56,3 +53,18 @@ static const char card_not_compatible_color[] = "\x1b[31mCard is not compatible!
 
 static const char discard_or_play[] = "You have already drawn a card from the deck, you can play a card or discard a turn!\n";
 static const char discard_or_play_color[] = "\x1b[33mYou have already drawn a card from the deck, you can play a card or discard a turn!\n\x1b[0m";
+
+static const char stacking_on_color[] = "\x1b[36mStacking on.\x1b[0m\n";
+static const char stacking_on[] = "Stacking on.\n";
+
+static const char stacking_off_color[] = "\x1b[36mStacking off.\x1b[0m\n";
+static const char stacking_off[] = "Stacking off.\n";
+
+static const char stacking_stacked_color[] = "\x1b[36mStacked.\x1b[0m\n";
+static const char stacking_stacked[] = "Stacked.\n";
+
+static const char doubt_correct_color[] = "\x1b[32mDoubt was correct!\x1b[0m\n";
+static const char doubt_correct[] = "Doubt was correct!\n";
+
+static const char doubt_incorrect_color[] = "\x1b[31mDoubt was incorrect!\x1b[0m\n";
+static const char doubt_incorrect[] = "Doubt was incorrect!\n";

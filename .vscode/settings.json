@@ -30,6 +30,6 @@
         "inet.h": "c",
         "in.h": "c",
         "math.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
     }
 }
