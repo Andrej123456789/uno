@@ -12,69 +12,50 @@ Written using C programming language and uses around 230 kilobytes of RAM.
 ## Rules
 [Credits](https://en.wikipedia.org/wiki/Uno_(card_game))
 
-In short, this game mostly uses official Uno rules which you can find on link above with swap card and special mode from Crazy Games.
+In short, this game uses official Uno rules with additional house rules.
 
-### Rules which are different from Uno
-1. New deck will not be generated from played cards
-2. If 0 is played and `Seven-O` rule is enabled, all players except player which receives other players' cards get one card because there is only one winner in the both round and match
-3. There can be players how much the computer allows (segmentation fault is an issue mostly)
-4. There is no `Jump-In` rule which you can find on some implementations
+## Compile
 
-## TODO
-- [x] Basic AI (TODO: get rid of cards guesses)
-- [x] Colors
-- [x] Gameplay (most of gameplay)
-- [x] Networking (TODO: implement it fully)
-- [ ] Nice graphics
-- [x] Settings (in .json files)
-- [ ] Windows port (Win32 API)
+### Installing dependencies
 
-## How to compile/run?
-1. Install `gcc` compiler, if you use Windows use `WSL`, `Cygwin` or `MinGW`.
-2. Install `json-c` library
-    - Debian based distros: `apt-get install libjson-c-dev`
-    - Arch based distros: `pacman -S json-c`
-    - Distros which use `yum` package manager: `yum install json-c-devel`
-2. Go to `src` folder/directory and type in your terminal (emulator) `make` and then if you want run from `Makefile` (be aware that by default 
-will load default config file) type in your terminal (emulator) `make run`.
-3. To clean `*.o`, simply type in your terminal (emulator) `make clean`.
-4. To clean everything (`*.o` files and `uno` executable) type in your terminal (emulator) `make full_clean`
+| Package: | Command:                                                                                                                                |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| git      | <table><tr><th>Debian</th><th>Arch Linux</th></tr><td>`apt-get install git`</td><td>`pacman -S git`</td></tr></table>                   |
+| make     | <table><tr><th>Debian</th><th>Arch Linux</th></tr><td>`apt-get install make`</td><td>`pacman -S make`</td></tr></table>                 |
+| gcc      | <table><tr><th>Debian</th><th>Arch Linux</th></tr><td>`apt-get install gcc`</td><td>`pacman -S gcc`</td></tr></table>                   |
+| json-c   | <table><tr><th>Debian</th><th>Arch Linux</th></tr><td>`apt-get install libjson-c-dev`</td><td>`sudo pacman -S json-c`</td></tr></table> |
 
-## How to change settings?
-- Follow next rules to see what each settings represents.
-0. Points required for players to win match
-1. Path of file where points will be stored
-2. debug_mode [0 - disabled, 1 - enabled]
-3. colors [0 - disabled, 1 - enabled]
-4. number of players
-5. `special`
-```
-[
-    {
-        "swap_card": [0 - disabled, 1 - enabled],
-        "stacking": [0 - disabled, 1 - enabled],
-        "seven_o": [0 - disabled, 1 - enabled]
-    }
-]
-```
-6. AI sequence {[0 - disabled, 1 - enabled] per player}
-7. `network`
-```
-[
-    {
-        "network_sequence": {[0 - disabled, 1 - enabled] per player} // also see client.c on how to properly connect client to server,
-        "ip": "127.0.0.1", // example
-        "port": 5956 // example
-    }
-]
+### Compiling & running
+
+| Number: | Step:                     | Command:                                              |
+| ------- | ------------------------- | ----------------------------------------------------- |
+| 1       | Clone a repository        | `git clone https://github.com/Andrej123456789/uno_pp` |
+| 2       | Enter the `src` directory | `cd uno_pp/src`                                       |
+| 3       | Compile                   | `make`                                                |
+| 4       | Run the program           | `make run`                                            |
+
+## Default settings
+default.json:
+```json
+{
+	"match_points": 250, // number of points required to win a match
+	"points_path": "settings/points.json", // path to the JSON file storing points
+	"players": 2, // number of players in the game [2, INT32_MAX>
+	"tweaks": [{
+		"colors": true, // are colors enabled
+		"stacking": true, // is stacking allowed
+		"swap_card": true, // is swap card present
+		"seven_o": false // is SevenO house rule enabled
+	}]
+}
 ```
 
-## Known issues
-- `points.txt` deleted upon winning match, to fix this problem, restart program
-- If you get weird letters before string, try to disable colors
+points.json:
+```json
+// reset manually after finishing a match
+// otherwise, don't change these values manually
+{ "Player 0": 0, "Player 1": 0 }
+```
 
-If you find new issue or can't fix issues above, report issue on GitHub with needed informations.
-
-## External dependencies/stuff
+## External dependencies
 - [c-vector](https://github.com/eteran/c-vector)
-- [Chatroom-in-C](https://github.com/nikhilroxtomar/Chatroom-in-C)

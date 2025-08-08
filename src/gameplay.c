@@ -11,127 +11,10 @@
 #include <string.h>
 #include <time.h>
 
+#include <json-c/json.h>
+
 #include "include/gameplay.h"
 #include "include/strings.h"
-
-bool isCompatible(Cards top_card, Cards players_card)
-{
-    if (players_card.number >= WILD_CARD)
-    {
-        return true;
-    }
-
-    if ((top_card.number == players_card.number) || (top_card.color == players_card.color))
-    {
-        return true;
-    }
-
-    return false;
-}
-
-cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks)
-{
-    cvector_vector_type(Cards) cards = NULL;
-    Cards temp;
-
-    /* Wild draw four cards */
-    for (int i = 0; i < 4; i++)
-    {
-        temp.number = WILD_DRAW;
-        temp.color = NO_COLOR;
-
-        cvector_push_back(cards, temp);
-    }
-
-    /* Wild cards */
-    for (int i = 0; i < 4; i++)
-    {
-        temp.number = WILD_CARD;
-        temp.color = NO_COLOR;
-
-        cvector_push_back(cards, temp);
-    }
-
-    /* Zero cards */
-    for (int i = RED; i < BLUE + 1; i++)
-    {
-        temp.number = ZERO;
-        temp.color = i;
-
-        cvector_push_back(cards, temp);
-    }
-
-    /* 1 - skip card */
-    for (int i = 0; i < 2; i++)
-    {
-        for (int j = RED; j < BLUE + 1; j++)
-        {
-            for (int k = ONE; k < WILD_CARD; k++)
-            {
-                temp.number = k;
-                temp.color = j;
-
-                cvector_push_back(cards, temp);
-            }
-        }
-    }
-
-    /* Swap card */
-    if (tweaks->swap_card == true)
-    {
-        temp.number = SWAP_CARD;
-        temp.color = NO_COLOR;
-         
-        cvector_push_back(cards, temp);
-    }
-
-    return cards;
-}
-
-void Swap(Player* src, Player* dest)
-{
-    cvector_vector_type(Cards) temp = src->cards;
-    src->cards = dest->cards;
-    dest->cards = temp;
-}
-
-int NextPlayer(Runtime* runtime, bool execute)
-{
-    int player = runtime->current_player;
-
-    if (runtime->isPositive == true)
-    {
-        if (runtime->current_player + 1 >= runtime->number_of_players)
-        {
-           player = 0;
-        }
-
-        else
-        {
-            player++;
-        }
-    }
-
-    else
-    {
-        if (runtime->current_player - 1 < 0)
-        {
-            player = runtime->number_of_players - 1;
-        }
-
-        else
-        {
-            player--;
-        }
-    }
-
-    if (execute == true)
-    {
-        runtime->current_player = player;
-    }
-
-    return player;
-}
 
 void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards) cards, Cards card)
 {
@@ -172,20 +55,18 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
         case SEVEN:
             if (tweaks->seven_o == true)
             {
-                while (true)
-                {
-                    printf("\nEnter player's number with whom you want to swap cards: ");
-                    scanf("%d", &player);
-    
-                    if (player < 0 || player >= runtime->number_of_players)
-                    {
-                        printf("Invalid player! Try again\n");
-                    }
+                printf("\nEnter player's number with whom you want to swap cards: ");
+                scanf("%d", &player);
 
-                    else
-                    {
-                        break;
-                    }
+                if (player < 0 || player >= runtime->number_of_players)
+                {
+                    player = !runtime->current_player;
+                    printf("Invalid player! Defaulting to %d\n", player);
+                }
+
+                else
+                {
+                    break;
                 }
 
                 Swap(&players[runtime->current_player], &players[player]);
@@ -261,25 +142,23 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
 
             if (color < 1 || color > 4)
             {
-                printf("Invalid color! Defaulting to red.\n");
+                printf((tweaks->colors == true) ? invalid_color_color : invalid_color);
                 color = 1;
             }
             runtime->top_card.color = color;
 
-            while (true)
+            printf("\nEnter player's number with whom you want to swap cards: ");
+            scanf("%d", &player);
+
+            if (player < 0 || player >= runtime->number_of_players)
             {
-                printf("\nEnter player's number with whom you want to swap cards: ");
-                scanf("%d", &player);
+                player = !runtime->current_player;
+                printf("Invalid player! Defaulting to %d\n", player);
+            }
 
-                if (player < 0 || player >= runtime->number_of_players)
-                {
-                    printf((tweaks->colors == true) ? invalid_color_color : invalid_color);
-                }
-
-                else
-                {
-                    break;
-                }
+            else
+            {
+                break;
             }
 
             Swap(&players[runtime->current_player], &players[player]);
@@ -290,12 +169,253 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
     }
 }
 
-void PointsManager(Runtime* runtime, Points* points, Player* players)
+cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks)
 {
-    (void)(runtime);
-    (void)(points);
-    (void)(players);
+    cvector_vector_type(Cards) cards = NULL;
+    Cards temp;
+
+    /* Wild draw four cards */
+    for (int i = 0; i < 4; i++)
+    {
+        temp.number = WILD_DRAW;
+        temp.color = NO_COLOR;
+
+        cvector_push_back(cards, temp);
+    }
+
+    /* Wild cards */
+    for (int i = 0; i < 4; i++)
+    {
+        temp.number = WILD_CARD;
+        temp.color = NO_COLOR;
+
+        cvector_push_back(cards, temp);
+    }
+
+    /* Zero cards */
+    for (int i = RED; i < BLUE + 1; i++)
+    {
+        temp.number = ZERO;
+        temp.color = i;
+
+        cvector_push_back(cards, temp);
+    }
+
+    /* 1 - skip card */
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = RED; j < BLUE + 1; j++)
+        {
+            for (int k = ONE; k < WILD_CARD; k++)
+            {
+                temp.number = k;
+                temp.color = j;
+
+                cvector_push_back(cards, temp);
+            }
+        }
+    }
+
+    /* Swap card */
+    if (tweaks->swap_card == true)
+    {
+        temp.number = SWAP_CARD;
+        temp.color = NO_COLOR;
+         
+        cvector_push_back(cards, temp);
+    }
+
+    return cards;
 }
+
+int GetValue(Cards card)
+{
+    if (card.number >= 0 && card.number <= 9)
+    {
+        return card.number;
+    }
+
+    else if (card.number >= PLUS_TWO && card.number <= SKIP_CARD)
+    {
+        return 20;
+    }
+
+    else if (card.number >= WILD_CARD && card.number <= WILD_DRAW)
+    {
+        return 50;
+    }
+
+    else if (card.number >= SWAP_CARD)
+    {
+        return 40;
+    }
+
+    else
+    {
+        return 0;
+    }
+}
+
+bool isCompatible(Cards top_card, Cards players_card)
+{
+    if (players_card.number >= WILD_CARD)
+    {
+        return true;
+    }
+
+    if ((top_card.number == players_card.number) || (top_card.color == players_card.color))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+int NextPlayer(Runtime* runtime, bool execute)
+{
+    int player = runtime->current_player;
+
+    if (runtime->isPositive == true)
+    {
+        if (runtime->current_player + 1 >= runtime->number_of_players)
+        {
+           player = 0;
+        }
+
+        else
+        {
+            player++;
+        }
+    }
+
+    else
+    {
+        if (runtime->current_player - 1 < 0)
+        {
+            player = runtime->number_of_players - 1;
+        }
+
+        else
+        {
+            player--;
+        }
+    }
+
+    if (execute == true)
+    {
+        runtime->current_player = player;
+    }
+
+    return player;
+}
+
+void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* players)
+{
+    printf((tweaks->colors == true) ? game_finished_color : game_finished);
+    printf((tweaks->colors == true) ? won_round_color : won_round, runtime->current_player);
+
+    /* Open JSON file */
+    FILE *fp = fopen(points->path, "r");
+    if (!fp)
+    {
+        perror("Failed to open file");
+        return;
+    }
+
+    /* Read file into buffer */
+    fseek(fp, 0, SEEK_END);
+    long fsize = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    char* buffer = malloc(fsize + 1);
+    if (!buffer)
+    {
+        printf("Error during memory allocation!\n");
+        fclose(fp);
+
+        return;
+    }
+
+    fread(buffer, 1, fsize, fp);
+    buffer[fsize] = '\0';
+    fclose(fp);
+
+    /* Parse JSON */
+    struct json_object* root = json_tokener_parse(buffer);
+    free(buffer);
+
+    if (!root)
+    {
+        printf("Error parsing JSON!\n");
+        return;
+    }
+
+    /* Get player number */
+    int player_num = runtime->current_player;
+
+    /* Get points */
+    int add_points = 0;
+    for (int i = 0; i < runtime->number_of_players; i++)
+    {
+        if (i == runtime->current_player)
+        {
+            continue;
+        }
+
+        for (size_t j = 0; j < cvector_size(players[i].cards); j++)
+        {
+            add_points += GetValue(players[i].cards[j]);
+        }
+    }
+
+    /* Build key string: "Player X" */
+    char player_key[32];
+    snprintf(player_key, sizeof(player_key), "Player %d", player_num);
+
+    /* Get or create player entry */
+    struct json_object* player_score;
+    if (json_object_object_get_ex(root, player_key, &player_score))
+    {
+        /* Update in place */
+        int current_points = json_object_get_int(player_score);
+        json_object_set_int(player_score, current_points + add_points);
+
+        if ((current_points + add_points) >= points->match_points)
+        {
+            printf((tweaks->colors == true) ? won_match_color : won_match, runtime->current_player);
+        }
+    }
+
+    else
+    {
+        /* Create new entry */
+        json_object_object_add(root, player_key, json_object_new_int(add_points));
+    }
+
+    /* Write updated JSON back to file */
+    fp = fopen(points->path, "w");
+    if (!fp)
+    {
+        printf("Failed to open file for writing!\n");
+        json_object_put(root);
+
+        return;
+    }
+
+    fprintf(fp, "%s\n", json_object_to_json_string(root));
+    fclose(fp);
+
+    json_object_put(root);
+}
+
+void Swap(Player* src, Player* dest)
+{
+    cvector_vector_type(Cards) temp = src->cards;
+    src->cards = dest->cards;
+    dest->cards = temp;
+}
+
+/* ----------------------------------------------------- */
 
 void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
 {
@@ -347,6 +467,8 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
     Action(runtime, tweaks, players, cards, runtime->top_card);
 
     bool game_loop = true;
+    bool round_ended = false;
+
     while (game_loop)
     {
         /* Check if the deck is empty */
@@ -440,6 +562,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                 if (cvector_size(players[runtime->current_player].cards) == 0)
                 {
                     game_loop = false;
+                    round_ended = true;
                 }
 
                 NextPlayer(runtime, true);
@@ -449,7 +572,10 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
     }
 
     /* Write points */
-    PointsManager(runtime, points, players);
+    if (round_ended == true)
+    {
+        PointsManager(runtime, tweaks, points, players);
+    }
 
     /* Free everything up */
     for (int i = 0; i < runtime->number_of_players; i++)

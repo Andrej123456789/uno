@@ -122,37 +122,6 @@ typedef struct tweaks_T
 /* ------------------------------------------------------------------------ */
 
 /**
- * Check if a card player wants to play is compatible with the top card.
- * @param top_card reference
- * @param players_card candidate
- * @return bool
-*/
-bool isCompatible(Cards top_card, Cards players_card);
-
-/**
- * Generate a deck of cards.
- * @param tweaks struct containing tweaks settings
- * @return cvector_vector_type(Cards)
-*/
-cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks);
-
-/**
- * Swap cards between two players.
- * @param src source
- * @param dest destination
- * @return void
-*/
-void Swap(Player* src, Player* dest);
-
-/**
- * Switch turn to the next player.
- * @param runtime struct containing runtime information
- * @param execute set id (array index) to the next player
- * @return int
-*/
-int NextPlayer(Runtime* runtime, bool execute);
-
-/**
  * Perform an action of the given card.
  * @param runtime struct containing runtime information
  * @param tweaks struct containing tweaks settings
@@ -164,13 +133,54 @@ int NextPlayer(Runtime* runtime, bool execute);
 void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards) cards, Cards card);
 
 /**
+ * Generate a deck of cards.
+ * @param tweaks struct containing tweaks settings
+ * @return cvector_vector_type(Cards)
+*/
+cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks);
+
+/**
+ * Return points value of a card.
+ * @param card card to be evaluated
+ * @return int
+ */
+int GetValue(Cards card);
+
+/**
+ * Check if a card player wants to play is compatible with the top card.
+ * @param top_card reference
+ * @param players_card candidate
+ * @return bool
+*/
+bool isCompatible(Cards top_card, Cards players_card);
+
+/**
+ * Switch turn to the next player.
+ * @param runtime struct containing runtime information
+ * @param execute set id (array index) to the next player
+ * @return int
+*/
+int NextPlayer(Runtime* runtime, bool execute);
+
+/**
  * Manage points.
  * @param runtime struct containing runtime information
+ * @param tweaks struct containing tweaks settings
  * @param points struct containing information related to storing points
  * @param players an array of players
  * @return void
  */
-void PointsManager(Runtime* runtime, Points* points, Player* players);
+void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* players);
+
+/**
+ * Swap cards between two players.
+ * @param src source
+ * @param dest destination
+ * @return void
+*/
+void Swap(Player* src, Player* dest);
+
+/* ----------------------------------------------------- */
 
 /**
  * Entry point for gameplay.

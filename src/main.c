@@ -59,10 +59,10 @@ int copy_json(Runtime* runtime, Tweaks* tweaks, Points* points, char* path)
         {
             points->match_points = json_object_get_int(val);
 
-            if (points->match_points == INT32_MIN || points->match_points == INT32_MAX)
+            if (points->match_points < 1 || points->match_points == INT32_MAX)
             {
                 printf("Invalid number of match points!\n");
-                printf("Allowed range: <INT32_MIN, INT32_MAX>\n");
+                printf("Allowed range: [1, INT32_MAX>\n");
 
                 return 1;
             }
@@ -78,10 +78,10 @@ int copy_json(Runtime* runtime, Tweaks* tweaks, Points* points, char* path)
         {
             runtime->number_of_players = json_object_get_int(val);
 
-            if (runtime->number_of_players == INT32_MIN || runtime->number_of_players == INT32_MAX)
+            if (runtime->number_of_players < 2 || runtime->number_of_players == INT32_MAX)
             {
                 printf("Invalid number of players!\n");
-                printf("Allowed range <INT32_MIN, INT32_MAX>\n");
+                printf("Allowed range [2, INT32_MAX>\n");
 
                 return 1;
             }
