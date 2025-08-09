@@ -29,12 +29,14 @@ Most notable differences are those that you don't have to say word `uno` when yo
 
 ### Compiling & running
 
-| Number: | Step:                     | Command:                                              |
-| ------- | ------------------------- | ----------------------------------------------------- |
-| 1       | Clone a repository        | `git clone https://github.com/Andrej123456789/uno_pp` |
-| 2       | Enter the `src` directory | `cd uno_pp/src`                                       |
-| 3       | Compile                   | `make`                                                |
-| 4       | Run the program           | `make run`                                            |
+| Number: | Step:                        | Command:                                              |
+| ------- | ---------------------------- | ----------------------------------------------------- |
+| 1       | Clone a repository           | `git clone https://github.com/Andrej123456789/uno_pp` |
+| 2       | Enter the `src` directory    | `cd uno_pp/src`                                       |
+| 3       | Compile                      | `make`                                                |
+| 4       | Run the program              | `make run`                                            |
+| 5       | Enter the `client` directory | `cd ../client`                                        |
+| 6       | Compile and run the client   | `gcc client.c -o client && ./client <ip> <port>`      |
 
 ## Default settings
 default.json:
@@ -48,6 +50,10 @@ default.json:
 		"stacking": true, // is stacking allowed
 		"swap_card": true, // is swap card present
 		"seven_o": false // is SevenO house rule enabled
+	}],
+	"network": [{
+		"enabled": true, // is multiplayer enabled
+		"port": 5555 // port number
 	}]
 }
 ```

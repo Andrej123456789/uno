@@ -7,5 +7,9 @@
 		"stacking": true,
 		"swap_card": true,
 		"seven_o": false
+	}],
+	"network": [{
+		"enabled": true,
+		"port": 5555
 	}]
 }

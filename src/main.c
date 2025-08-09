@@ -33,9 +33,10 @@ char logo[11][106] =
  * @param runtime struct containing runtime information 
  * @param tweaks struct containing tweaks settings
  * @param points struct containing information related to points storing
+ * @param network struct containing network information
  * @param path path of the JSON file
 */
-int copy_json(Runtime* runtime, Tweaks* tweaks, Points* points, char* path)
+int copy_json(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network, char* path)
 {
     struct json_object_iterator it;
     struct json_object_iterator itEnd;
@@ -135,6 +136,44 @@ int copy_json(Runtime* runtime, Tweaks* tweaks, Points* points, char* path)
             json_object_put(tweaks_json);
         }
 
+        else if (strcmp(key, "network") == 0)
+        {
+            struct json_object* network_json;
+            
+            struct json_object_iterator it3;
+            struct json_object_iterator itEnd3;
+
+            for (size_t i = 0; i < json_object_array_length(val); i++)
+            {
+                struct json_object* element = json_object_array_get_idx(val, i);
+                network_json = json_tokener_parse(json_object_get_string(element));
+            }
+
+            it3 = json_object_iter_init_default();
+            it3 = json_object_iter_begin(network_json);
+            itEnd3 = json_object_iter_end(network_json);
+
+            while (!json_object_iter_equal(&it3, &itEnd3))
+            {
+                const char* key3 = json_object_iter_peek_name(&it3);
+                json_object* val3 = json_object_iter_peek_value(&it3);
+
+                if (strcmp(key3, "enabled") == 0)
+                {
+                    network->enabled = json_object_get_boolean(val3);
+                }
+
+                else if (strcmp(key3, "port") == 0)
+                {
+                    network->port = (uint16_t)json_object_get_int(val3);
+                }
+
+                json_object_iter_next(&it3);
+            }
+
+            json_object_put(network_json);
+        }
+
         json_object_iter_next(&it);
     }
 
@@ -169,6 +208,12 @@ int main(int argc, const char** argv)
         scanf("%255s", settings_path);
     }
 
+    Network network =
+    {
+        .enabled = false,
+        .port = 0,
+    };
+
     Points points =
     {
         .path = {'\0'},
@@ -182,14 +227,13 @@ int main(int argc, const char** argv)
         return 0;
     }
 
-    Tweaks* tweaks = malloc(sizeof(Tweaks));
-    if (tweaks == NULL)
+    Tweaks tweaks =
     {
-        printf("Error during memory allocation!\nExiting...\n");
-
-        free(runtime);
-        return 0;
-    }
+        .colors = false,
+        .stacking = false,
+        .swap_card = false,
+        .seven_o = false,
+    };
 
     runtime->current_player = 0;
     runtime->isPositive = true;
@@ -198,15 +242,14 @@ int main(int argc, const char** argv)
     runtime->stacking.type = 0;
     runtime->stacking.number_of_cards = 0;
 
-    int result = copy_json(runtime, tweaks, &points, settings_path);
+    int result = copy_json(runtime, &tweaks, &points, &network, settings_path);
     if (result == 0)
     {
-        Gameplay(runtime, tweaks, &points);
+        Gameplay(runtime, &tweaks, &points, &network);
     }
 
-    /* Frees structs */
+    /* Free structs */
     free(runtime);
-    free(tweaks);
 
     return 0;
 }

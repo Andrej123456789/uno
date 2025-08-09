@@ -10,6 +10,8 @@
 #include <stdbool.h>
 #include "c_vector.h"
 
+#define BUFFER_LIMIT 255
+
 /**
  * Enum for numbers of the card.
  */
@@ -57,12 +59,36 @@ typedef struct cards_T
 } Cards;
 
 /**
+ * Struct containing network information.
+ * @param enabled is multiplayer enabled
+ * @param port port number
+ */
+typedef struct network_T
+{
+    bool enabled;
+    uint16_t port;
+} Network;
+
+/**
  * Player's struct.
  * @param cards vector containing cards
 */
 typedef struct player_T
 {
     cvector_vector_type(Cards) cards;
+
+    /**
+     * Struct related to network profile of a player.
+     * @param sockfd socket number, <= 0 is free slot
+     * @param inbuf player's input
+     * @param ready did player send an input
+     */
+    struct
+    {
+        int sockfd;
+        char inbuf[BUFFER_LIMIT];
+        bool ready;
+    } network;
 } Player;
 
 /**
@@ -126,12 +152,22 @@ typedef struct tweaks_T
  * Perform an action of the given card.
  * @param runtime struct containing runtime information
  * @param tweaks struct containing tweaks settings
+ * @param network struct containing network information
  * @param players an array of players
  * @param cards cards in the deck
  * @param card card which will perform an action
  * @return void
 */
-void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards)* cards, Cards card);
+void Action(Runtime* runtime, Tweaks* tweaks, Network* network, Player* players, cvector_vector_type(Cards)* cards, Cards card);
+
+/**
+ * Perform an user input for certain action.
+ * @param runtime struct containing runtime information
+ * @param network struct containing network information
+ * @param players an array of players
+ * @param input_player from which player to poll an input
+ */
+int ActionInput(Runtime* runtime, Network* network, Player* players, int input_player);
 
 /**
  * Generate a deck of cards.
@@ -175,10 +211,11 @@ int NextPlayer(Runtime* runtime, bool execute);
  * @param runtime struct containing runtime information
  * @param tweaks struct containing tweaks settings
  * @param points struct containing information related to storing points
+ * @param network struct containing network information
  * @param players an array of players
  * @return void
  */
-void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* players);
+void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network, Player* players);
 
 /**
  * Swap cards between two players.
@@ -195,6 +232,7 @@ void Swap(Player* src, Player* dest);
  * @param runtime struct containing runtime information
  * @param tweaks struct containing tweaks settings
  * @param points struct containing information related to storing points
+ * @param network struct containing network information
  * @return void
 */
-void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points);
+void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network);

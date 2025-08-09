@@ -9,14 +9,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <time.h>
 
 #include <json-c/json.h>
 
 #include "include/gameplay.h"
+#include "include/server.h"
 #include "include/strings.h"
 
-void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_type(Cards)* cards, Cards card)
+void Action(Runtime* runtime, Tweaks* tweaks, Network* network, Player* players, cvector_vector_type(Cards)* cards, Cards card)
 {
     int color = 0;
     int doubt = -1;
@@ -57,17 +59,22 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             if (tweaks->seven_o == true)
             {
                 printf("\nEnter player's number with whom you want to swap cards: ");
-                scanf("%d", &player);
+                if (network->enabled == true)
+                {
+                    send_to_player(&players[runtime->current_player], "\nEnter player's number with whom you want to swap cards: ");
+                }
+
+                player = ActionInput(runtime, network, players, runtime->current_player);
 
                 if (player < 0 || player >= runtime->number_of_players)
                 {
                     player = !runtime->current_player;
                     printf("Invalid player! Defaulting to %d\n", player);
-                }
 
-                else
-                {
-                    break;
+                    if (network->enabled == true)
+                    {
+                        send_to_player(&players[runtime->current_player], "Invalid player! Defaulting to %d\n", player);
+                    }
                 }
 
                 Swap(&players[runtime->current_player], &players[player]);
@@ -82,6 +89,11 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             if (tweaks->stacking == true && runtime->stacking.happening == true)
             {
                 printf((tweaks->colors == true) ? stacking_stacked_color : stacking_stacked);
+                if (network->enabled == true)
+                {
+                    broadcast(players, runtime->number_of_players,
+                            (tweaks->colors == true) ? stacking_stacked_color : stacking_stacked);
+                }
 
                 for (int i = 0; i < runtime->stacking.number_of_cards; i++)
                 {
@@ -107,6 +119,11 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             if (tweaks->stacking == true && runtime->stacking.happening == false)
             {
                 printf((tweaks->colors == true) ? stacking_on_color : stacking_on);
+                if (network->enabled == true)
+                {
+                    broadcast(players, runtime->number_of_players,
+                            (tweaks->colors == true) ? stacking_on_color : stacking_on);
+                }
 
                 runtime->stacking.happening = true;
                 runtime->stacking.type = 2;
@@ -125,7 +142,12 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
 
         case WILD_CARD:
             printf((tweaks->colors == true) ? enter_color_color : enter_color);
-            scanf("%d", &color);
+            if (network->enabled == true)
+            {
+                send_to_player(&players[runtime->current_player], (tweaks->colors == true) ? enter_color_color : enter_color);
+            }
+
+            color = ActionInput(runtime, network, players, runtime->current_player);
 
             if (color < 1 || color > 4)
             {
@@ -142,7 +164,12 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             
             /* Get color */
             printf((tweaks->colors == true) ? enter_color_color : enter_color);
-            scanf("%d", &color);
+            if (network->enabled == true)
+            {
+                send_to_player(&players[runtime->current_player], (tweaks->colors == true) ? enter_color_color : enter_color);
+            }
+
+            color = ActionInput(runtime, network, players, runtime->current_player);
 
             if (color < 1 || color > 4)
             {
@@ -152,40 +179,59 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             runtime->top_card.color = color;
 
             /* Doubt */
-            if (tweaks->stacking == false)
+            printf("Player %d, are you doubting? (0 - no, 1 - yes): ", player_to_draw);
+            if (network->enabled == true)
             {
-                printf("Player %d, are you doubting? (0 - no, 1 - yes) ", player_to_draw);
-                scanf("%d", &doubt);
+                send_to_player(&players[player_to_draw], "Player %d, are you doubting? (0 - no, 1 - yes): ", player_to_draw);
+            }
 
-                if (doubt != 1)
+            doubt = ActionInput(runtime, network, players, player_to_draw);
+
+            if (doubt != 1)
+            {
+                printf("Not doubting!\n");
+                if (network->enabled == true)
                 {
-                    printf("Not doubting!\n");
+                    send_to_player(&players[player_to_draw], "Not doubting!\n");
+                }
+            }
+
+            else
+            {
+                bool match = false;
+                for (size_t i = 0; i < cvector_size(players[runtime->current_player].cards); i++)
+                {
+                    if (players[runtime->current_player].cards[i].color == runtime->previous_top_card.color)
+                    {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (match == true)
+                {
+                    printf((tweaks->colors == true) ? doubt_correct_color : doubt_correct);
+
+                    if (network->enabled == true)
+                    {
+                        broadcast(players, runtime->number_of_players,
+                                  (tweaks->colors == true) ? doubt_correct_color : doubt_correct);
+                    }
+
+                    player_to_draw = runtime->current_player;
                 }
 
                 else
                 {
-                    bool match = false;
-                    for (size_t i = 0; i < cvector_size(players[runtime->current_player].cards); i++)
+                    printf((tweaks->colors == true) ? doubt_incorrect_color : doubt_incorrect);
+
+                    if (network->enabled == true)
                     {
-                        if (players[runtime->current_player].cards[i].color == runtime->previous_top_card.color)
-                        {
-                            match = true;
-                            break;
-                        }
+                        broadcast(players, runtime->number_of_players,
+                                  (tweaks->colors == true) ? doubt_incorrect_color : doubt_incorrect);
                     }
 
-                    if (match == true)
-                    {
-                        printf((tweaks->colors == true) ? doubt_correct_color : doubt_correct);
-                        player_to_draw = runtime->current_player;
-                    }
-
-                    else
-                    {
-                        printf((tweaks->colors == true) ? doubt_incorrect_color : doubt_incorrect);
-                        number_of_cards_to_draw = 6;
-                    }
-                    
+                    number_of_cards_to_draw = 6;
                 }
             }
 
@@ -193,6 +239,12 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             if (tweaks->stacking == true && runtime->stacking.happening == true)
             {
                 printf((tweaks->colors == true) ? stacking_stacked_color : stacking_stacked);
+                if (network->enabled == true)
+                {
+                    broadcast(players, runtime->number_of_players,
+                            (tweaks->colors == true) ? stacking_stacked_color : stacking_stacked);
+                }
+
                 for (int i = 0; i < runtime->stacking.number_of_cards; i++)
                 {
                     size_t index = cvector_size(players[runtime->current_player].cards);
@@ -217,6 +269,11 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             if (tweaks->stacking == true && runtime->stacking.happening == false)
             {
                 printf((tweaks->colors == true) ? stacking_on_color : stacking_on);
+                if (network->enabled == true)
+                {
+                    broadcast(players, runtime->number_of_players,
+                            (tweaks->colors == true) ? stacking_on_color : stacking_on);
+                }
 
                 runtime->stacking.happening = true;
                 runtime->stacking.type = 4;
@@ -227,7 +284,12 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
 
         case SWAP_CARD:
             printf((tweaks->colors == true) ? enter_color_color : enter_color);
-            scanf("%d", &color);
+            if (network->enabled == true)
+            {
+                send_to_player(&players[runtime->current_player], (tweaks->colors == true) ? enter_color_color : enter_color);
+            }
+
+            color = ActionInput(runtime, network, players, runtime->current_player);
 
             if (color < 1 || color > 4)
             {
@@ -236,17 +298,25 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
             }
             runtime->top_card.color = color;
 
+            /* ------------------------ */
+
             printf("\nEnter player's number with whom you want to swap cards: ");
+            if (network->enabled == true)
+            {
+                send_to_player(&players[runtime->current_player], "\nEnter player's number with whom you want to swap cards: ");
+            }
+
+            player = ActionInput(runtime, network, players, runtime->current_player);
 
             if (player < 0 || player >= runtime->number_of_players)
             {
                 player = !runtime->current_player;
                 printf("Invalid player! Defaulting to %d\n", player);
-            }
 
-            else
-            {
-                break;
+                if (network->enabled == true)
+                {
+                    send_to_player(&players[runtime->current_player], "Invalid player! Defaulting to %d\n", player);
+                }
             }
 
             Swap(&players[runtime->current_player], &players[player]);
@@ -261,11 +331,64 @@ void Action(Runtime* runtime, Tweaks* tweaks, Player* players, cvector_vector_ty
     if (tweaks->stacking == true && runtime->stacking.happening == true)
     {
         printf((tweaks->colors == true) ? stacking_off_color : stacking_off);
+        if (network->enabled == true)
+        {
+            broadcast(players, runtime->number_of_players,
+                    (tweaks->colors == true) ? stacking_off_color : stacking_off);
+        }
 
         runtime->stacking.happening = false;
         runtime->stacking.type = 0;
         runtime->stacking.number_of_cards = 0;    
     }
+}
+
+int ActionInput(Runtime* runtime, Network* network, Player* players, int input_player)
+{
+    int value = -1;
+
+    if (network->enabled == true)
+    {
+        char user_input[BUFFER_LIMIT];
+
+        const int TIME_LIMIT_SEC = 30;
+        const int POLL_SLEEP_US = 10000; // 10 ms
+
+        time_t deadline = time(NULL) + TIME_LIMIT_SEC;
+
+        /* poll until we get a full line or the timer expires */
+        while (!players[input_player].network.ready && time(NULL) < deadline)
+        {
+            net_poll_clients(players, runtime->number_of_players);   /* non‑blocking socket pump  */
+            usleep(POLL_SLEEP_US);         /* nap to save CPU */
+
+            value = atoi(user_input);
+        }
+
+        if (players[input_player].network.ready)
+        {
+            strncpy(user_input, players[input_player].network.inbuf, BUFFER_LIMIT - 1);
+            user_input[BUFFER_LIMIT] = '\0';
+
+            value = atoi(user_input);
+        }
+
+        else
+        {
+            value = -1;
+        }
+
+        /* reset buffer */
+        players[input_player].network.inbuf[0] = '\0';
+        players[input_player].network.ready = false;
+    }
+
+    else
+    {
+        scanf("%d", &value);
+    }
+
+    return value;
 }
 
 cvector_vector_type(Cards) GenerateDeck(Tweaks* tweaks)
@@ -422,9 +545,14 @@ int NextPlayer(Runtime* runtime, bool execute)
     return player;
 }
 
-void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* players)
+void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network, Player* players)
 {
     printf((tweaks->colors == true) ? game_finished_color : game_finished);
+    if (network->enabled == true)
+    {
+        broadcast(players, runtime->number_of_players,
+                  (tweaks->colors == true) ? game_finished_color : game_finished);
+    }
 
     /* Open JSON file */
     FILE *fp = fopen(points->path, "r");
@@ -483,6 +611,13 @@ void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* pla
     printf((tweaks->colors == true) ? won_round_color : won_round,
            runtime->current_player, add_points);
 
+    if (network->enabled == true)
+    {
+        broadcast(players, runtime->number_of_players,
+                  (tweaks->colors == true) ? won_round_color : won_round,
+                  runtime->current_player, add_points);
+    }
+
     /* Build key string: "Player X" */
     char player_key[32];
     snprintf(player_key, sizeof(player_key), "Player %d", player_num);
@@ -499,6 +634,13 @@ void PointsManager(Runtime* runtime, Tweaks* tweaks, Points* points, Player* pla
         {
             printf((tweaks->colors == true) ? won_match_color : won_match, 
                    runtime->current_player, (current_points + add_points));
+
+            if (network->enabled == true)
+            {
+                broadcast(players, runtime->number_of_players,
+                          (tweaks->colors == true) ? won_match_color : won_match, 
+                          runtime->current_player, (current_points + add_points));
+            }
         }
     }
 
@@ -533,15 +675,44 @@ void Swap(Player* src, Player* dest)
 
 /* ----------------------------------------------------- */
 
-void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
+void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network)
 {
-    char user_input[20];
+    char user_input[BUFFER_LIMIT];
     
     time_t t;
     srand((unsigned) time(&t));
     
     Player* players = calloc(runtime->number_of_players, sizeof(Player));
     cvector_vector_type(Cards) cards = GenerateDeck(tweaks);
+
+    int listener_fd = -1;
+    if (network->enabled == true)
+    {
+        listener_fd = net_start_server(network->port, runtime->number_of_players);
+    }
+
+    /* Wait for all clients to join the game */
+    if (network->enabled == true)
+    {
+        uint16_t connected_clients = 0;
+        while (connected_clients < runtime->number_of_players)
+        {
+            connected_clients = 0; // reset counter so it counts all connected clients correctly
+            if (listener_fd >= 0) 
+            {
+                net_accept_clients(listener_fd, players, runtime->number_of_players);
+                net_poll_clients(players, runtime->number_of_players);
+            }
+
+            for (uint16_t i = 0; i < runtime->number_of_players; i++) 
+            {
+                if (players[i].network.sockfd > 0) 
+                {
+                    connected_clients++;
+                }
+            }
+        }
+    }
 
     /* Deal the cards to players */
     for (int i = 0; i < runtime->number_of_players; i++)
@@ -560,6 +731,13 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
             {
                 printf((tweaks->colors == true) ? player_card_info_color : player_card_info,
                        i, z, players[i].cards[z].number, players[i].cards[z].color);
+
+                if (network->enabled == true)
+                {
+                    send_to_player(&players[i],
+                                   (tweaks->colors == true) ? player_card_info_color : player_card_info,
+                                   i, z, players[i].cards[z].number, players[i].cards[z].color);
+                }
             }
         }
 
@@ -579,13 +757,19 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
     runtime->top_card = cards[random];
     cvector_erase(cards, random);
 
-    Action(runtime, tweaks, players, &cards, runtime->top_card);
+    Action(runtime, tweaks, network, players, &cards, runtime->top_card);
 
     bool game_loop = true;
     bool round_ended = false;
 
     while (game_loop)
     {
+        if (listener_fd >= 0) 
+        {
+            net_accept_clients(listener_fd, players, runtime->number_of_players);
+            net_poll_clients(players, runtime->number_of_players);
+        }
+
         /* Check if the deck is empty */
         if (cvector_size(cards) == 0)
         {
@@ -599,18 +783,74 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
         printf((tweaks->colors == true) ? top_card_color : top_card, runtime->top_card.number, runtime->top_card.color);
         printf("\t -------------------- \t \n");
 
+        if (network->enabled == true)
+        {
+            broadcast(players, runtime->number_of_players, "\t -------------------- \t \n");
+            broadcast(players, runtime->number_of_players,
+                      (tweaks->colors == true) ? top_card_color : top_card,
+                      runtime->top_card.number, runtime->top_card.color);
+            broadcast(players, runtime->number_of_players, "\t -------------------- \t \n");
+        }
+
         printf((tweaks->colors == true) ? player_turn_color : player_turn, runtime->current_player);
+        if (network->enabled == true)
+        {
+            broadcast(players, runtime->number_of_players,
+                      (tweaks->colors == true) ? player_turn_color : player_turn, runtime->current_player);
+        }
 
         do
         {
-            printf((tweaks->colors == true) ? option_color : option_text);
-            scanf("%20s", user_input);
+            if (network->enabled == true)
+            {
+                send_to_player(&players[runtime->current_player],
+                               (tweaks->colors == true) ? option_color : option_text);
+
+                const int TIME_LIMIT_SEC = 30;
+                const int POLL_SLEEP_US = 10000; // 10 ms
+
+                time_t deadline = time(NULL) + TIME_LIMIT_SEC;
+
+                /* poll until we get a full line or the timer expires */
+                while (!players[runtime->current_player].network.ready && game_loop && time(NULL) < deadline)
+                {
+                    net_poll_clients(players, runtime->number_of_players);   /* non‑blocking socket pump  */
+                    usleep(POLL_SLEEP_US);         /* nap to save CPU */
+                }
+
+                if (players[runtime->current_player].network.ready)
+                {
+                    strncpy(user_input, players[runtime->current_player].network.inbuf, BUFFER_LIMIT - 1);
+                    user_input[BUFFER_LIMIT] = '\0';
+                }
+
+                else
+                {
+                    strcpy(user_input, "<timeout>");
+                }
+
+                /* reset buffer */
+                players[runtime->current_player].network.inbuf[0] = '\0';
+                players[runtime->current_player].network.ready = false;
+            }
+            
+            else
+            {
+                printf((tweaks->colors == true) ? option_color : option_text);
+                scanf("%254s", user_input);
+            }
 
             if (strcmp(user_input, "new") == 0)
             {
                 if (alReadyNew == true)
                 {
                     printf((tweaks->colors == 1) ? discard_or_play_color : discard_or_play);
+                    if (network->enabled == true)
+                    {
+                        send_to_player(&players[runtime->current_player],
+                                       (tweaks->colors == 1) ? discard_or_play_color : discard_or_play);
+                    }
+
                     continue;
                 }
 
@@ -619,6 +859,13 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
 
                 printf((tweaks->colors == true) ? new_card_color : new_card,
                        cards[random].number, cards[random].color);
+
+                if (network->enabled == true)
+                {
+                    send_to_player(&players[runtime->current_player],
+                                    (tweaks->colors == true) ? new_card_color : new_card,
+                                    cards[random].number, cards[random].color);
+                }
 
                 cvector_erase(cards, random);
                 alReadyNew = true;
@@ -633,6 +880,14 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                         printf((tweaks->colors == true) ? card_info_color : card_info,
                                i, players[runtime->current_player].cards[i].number,
                                players[runtime->current_player].cards[i].color);
+
+                        if (network->enabled == true)
+                        {
+                            send_to_player(&players[runtime->current_player],
+                                           (tweaks->colors == true) ? card_info_color : card_info,
+                                           i, players[runtime->current_player].cards[i].number,
+                                           players[runtime->current_player].cards[i].color);
+                        }
                     }
                 }
             }
@@ -640,12 +895,33 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
             else if (strcmp(user_input, "discard") == 0)
             {
                 NextPlayer(runtime, true);
+
+                if (tweaks->stacking == true && runtime->stacking.happening == true)
+                {
+                    printf((tweaks->colors == true) ? stacking_off_color : stacking_off);
+                    if (network->enabled == true)
+                    {
+                        broadcast(players, runtime->number_of_players,
+                                (tweaks->colors == true) ? stacking_off_color : stacking_off);
+                    }
+
+                    runtime->stacking.happening = false;
+                    runtime->stacking.type = 0;
+                    runtime->stacking.number_of_cards = 0;    
+                }
+
                 break;
             }
 
             else if (strcmp(user_input, "exit") == 0)
             {
                 printf((tweaks->colors == true) ? exiting_color : exiting);
+
+                if (network->enabled == true)
+                {
+                    broadcast(players, runtime->number_of_players,
+                              (tweaks->colors == true) ? exiting_color : exiting);
+                }
 
                 game_loop = false;
                 break;
@@ -657,12 +933,24 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                 if (card_id < 0 || (size_t)card_id >= cvector_size(players[runtime->current_player].cards))
                 {
                     printf((tweaks->colors == true) ? card_not_compatible_color : card_not_compatible);
+                    if (network->enabled == true)
+                    {
+                        send_to_player(&players[runtime->current_player],
+                                       (tweaks->colors == true) ? card_not_compatible_color : card_not_compatible);
+                    }
+
                     continue;
                 }
 
                 if (!isCompatible(runtime->top_card, players[runtime->current_player].cards[card_id]))
                 {
                     printf((tweaks->colors == true) ? card_not_compatible_color : card_not_compatible);
+                    if (network->enabled == true)
+                    {
+                        send_to_player(&players[runtime->current_player],
+                                       (tweaks->colors == true) ? card_not_compatible_color : card_not_compatible);
+                    }
+
                     continue;
                 }
 
@@ -670,7 +958,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
                 runtime->top_card = players[runtime->current_player].cards[card_id];
                 cvector_erase(players[runtime->current_player].cards, card_id);
 
-                Action(runtime, tweaks, players, &cards, runtime->top_card);
+                Action(runtime, tweaks, network, players, &cards, runtime->top_card);
 
                 /* Check if player won */
                 if (cvector_size(players[runtime->current_player].cards) == 0)
@@ -688,7 +976,7 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points)
     /* Write points */
     if (round_ended == true)
     {
-        PointsManager(runtime, tweaks, points, players);
+        PointsManager(runtime, tweaks, points, network, players);
     }
 
     /* Free everything up */
