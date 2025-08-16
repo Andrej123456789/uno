@@ -7,6 +7,8 @@ Written using C programming language and uses around 230 kilobytes of RAM.
 
 [v2.0.0](https://github.com/Andrej123456789/uno/releases/tag/v2.0.0)
 
+[v3.0.0](https://github.com/Andrej123456789/uno/releases/tag/v3.0.0)
+
 ## Rules
 [Uno rules](<https://en.wikipedia.org/wiki/Uno_(card_game)>)
 
