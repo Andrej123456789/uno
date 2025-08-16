@@ -9,8 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <time.h>
+
+#if defined _WIN32 || defined _WIN64
+    #include <Windows.h>
+#else
+    #include <unistd.h>
+#endif
 
 #include <json-c/json.h>
 
@@ -349,7 +354,7 @@ int ActionInput(Runtime* runtime, Network* network, Player* players, int input_p
 
     if (network->enabled == true)
     {
-        char user_input[BUFFER_LIMIT];
+        char user_input[BUFFER_LIMIT + 1];
 
         const int TIME_LIMIT_SEC = 30;
         const int POLL_SLEEP_US = 10000; // 10 ms
@@ -360,7 +365,12 @@ int ActionInput(Runtime* runtime, Network* network, Player* players, int input_p
         while (!players[input_player].network.ready && time(NULL) < deadline)
         {
             net_poll_clients(players, runtime->number_of_players);   /* non‑blocking socket pump  */
-            usleep(POLL_SLEEP_US);         /* nap to save CPU */
+
+            #if defined _WIN32 || defined _WIN64
+                Sleep(POLL_SLEEP_US / 100);    /* nap to save CPU */
+            #else
+                usleep(POLL_SLEEP_US);         /* nap to save CPU */
+            #endif
 
             value = atoi(user_input);
         }
@@ -677,7 +687,7 @@ void Swap(Player* src, Player* dest)
 
 void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network)
 {
-    char user_input[BUFFER_LIMIT];
+    char user_input[BUFFER_LIMIT + 1];
     
     time_t t;
     srand((unsigned) time(&t));
@@ -815,7 +825,12 @@ void Gameplay(Runtime* runtime, Tweaks* tweaks, Points* points, Network* network
                 while (!players[runtime->current_player].network.ready && game_loop && time(NULL) < deadline)
                 {
                     net_poll_clients(players, runtime->number_of_players);   /* non‑blocking socket pump  */
-                    usleep(POLL_SLEEP_US);         /* nap to save CPU */
+
+                    #if defined _WIN32 || defined _WIN64
+                        Sleep(POLL_SLEEP_US / 100);    /* nap to save CPU */
+                    #else
+                        usleep(POLL_SLEEP_US);         /* nap to save CPU */
+                    #endif
                 }
 
                 if (players[runtime->current_player].network.ready)

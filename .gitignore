@@ -1,3 +1,6 @@
 **/src/executable/
 **/src/objects/
-client/client
+**/src/build/
+client/client_posix
+client/client_windows.obj
+client/client_windows.exe

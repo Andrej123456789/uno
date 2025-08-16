@@ -248,6 +248,11 @@ int main(int argc, const char** argv)
         Gameplay(runtime, &tweaks, &points, &network);
     }
 
+    else
+    {
+        printf("Error has occurred!\nExiting...\n");
+    }
+
     /* Free structs */
     free(runtime);
 

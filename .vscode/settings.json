@@ -31,6 +31,9 @@
         "in.h": "c",
         "math.h": "c",
         "stdbool.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "stdarg.h": "c",
+        "windows.h": "c",
+        "stdint.h": "c"
     }
 }

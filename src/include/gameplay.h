@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 #include "c_vector.h"
 
 #define BUFFER_LIMIT 255

@@ -2,7 +2,7 @@
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++
  * LICENSE: MIT license
- * DESCRIPTION: Client code
+ * DESCRIPTION: Client code (POSIX)
  */
 
 #include <stdio.h>

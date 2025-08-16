@@ -2,7 +2,7 @@
  * @author Andrej123456789 (Andrej Bartulin)
  * PROJECT: uno++
  * LICENSE: MIT license
- * DESCRIPTION: Server code
+ * DESCRIPTION: Server code (POSIX)
  */
 
 #include <stdarg.h>
@@ -18,8 +18,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "include/gameplay.h"
-#include "include/server.h"
+#include "../include/gameplay.h"
+#include "../include/server.h"
 
 /**
  * Enables non-blocking mode on a file descriptor.
